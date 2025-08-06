@@ -1,0 +1,205 @@
+/* song-request-form.css */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+:root {
+  --bg: #f4f4f4;
+  --fg: #222;
+  --card-bg: #fff;
+  --primary: #3e2c6d;
+  --primary-hover: #2d2050;
+  --success: #00796b;
+  --border: #ccc;
+  --shadow: rgba(0, 0, 0, 0.15);
+  --font: "Inter", sans-serif;
+  --radius: 8px;
+  --spacing: 1rem;
+  --font-size-base: 18px;
+  --input-text: var(--fg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: var(--spacing);
+  font-family: var(--font);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+}
+
+.input,
+.button {
+  width: 100%;
+  font-size: 1.125rem;
+  padding: var(--spacing);
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-family: var(--font);
+}
+
+.input {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--input-text);
+}
+
+.button {
+  display: inline-block;
+  text-align: center;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+  border: none;
+  font-family: var(--font);
+  font-weight: 500;
+}
+
+.button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.button:not(:disabled):hover {
+  background: var(--primary-hover);
+}
+
+.confirmation {
+  margin-top: var(--spacing);
+  text-align: center;
+  font-weight: 500;
+  color: var(--success);
+  font-family: var(--font);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.suggestions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px var(--shadow);
+  max-height: none;
+  overflow-y: visible;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-thumb,
+.card-thumb {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.suggestion-text .track-title,
+.card-title {
+  font-weight: 600;
+}
+
+.suggestion-text .track-artist,
+.card-artist {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-heading {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-family: var(--font);
+}
+
+.card-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--spacing) 0;
+}
+
+.tip-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing);
+}
+
+.tip-footer h2 {
+  margin: 0;
+  text-align: left;
+  color: var(--fg);
+  font-family: var(--font);
+  font-weight: 500;
+}
+
+.tip-footer .button {
+  margin-top: 0;
+  padding: calc(var(--spacing) * 0.75) var(--spacing);
+  font-family: var(--font);
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #fff;
+    --card-bg: #1e1e1e;
+    --border: #333;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --input-text: #222;
+  }
+  .suggestion-text .track-artist,
+  .card-artist {
+    color: #ccc;
+  }
+}

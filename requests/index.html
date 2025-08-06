@@ -1,0 +1,256 @@
+<!-- song-request-form.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Song Request</title>
+    <link rel="stylesheet" href="song-request-form.css" />
+  </head>
+  <body>
+    <main class="wrapper">
+      <h1 class="title">🎵 Request a Song</h1>
+      <form
+        id="requestForm"
+        class="form"
+        aria-describedby="confirmation"
+        novalidate
+      >
+        <label for="searchInput" class="visually-hidden">🔍 Search song</label>
+        <input
+          type="search"
+          id="searchInput"
+          class="input"
+          placeholder="Start typing a song…"
+          autocomplete="off"
+          required
+          aria-autocomplete="list"
+          aria-controls="suggestions"
+          aria-live="polite"
+        />
+
+        <ul
+          id="suggestions"
+          class="suggestions"
+          role="listbox"
+          aria-label="Song suggestions"
+        ></ul>
+
+        <!-- Hidden fields populated on select -->
+        <input type="hidden" id="artist" name="artist" />
+        <input type="hidden" id="title" name="title" />
+        <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
+        <input type="hidden" id="artworkUrl" name="artworkUrl" />
+
+        <div
+          id="selectedSongCard"
+          class="card hidden"
+          role="region"
+          aria-live="polite"
+        >
+          <h2 class="card-heading">Your request</h2>
+          <div class="card-body">
+            <img id="cardArtwork" src="" alt="" class="card-thumb" />
+            <div>
+              <div id="cardTitle" class="card-title"></div>
+              <div id="cardArtist" class="card-artist"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitButton" class="button" disabled>
+          Submit
+        </button>
+      </form>
+
+      <div id="confirmation" class="confirmation hidden" role="status">
+        ✅ Song request sent!
+      </div>
+
+      <hr class="divider" />
+      <section class="tip-footer">
+        <h2>🎧 Follow the DJ</h2>
+        <a
+          href="https://www.instagram.com/lewiswakedj"
+          class="button"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          📸 Instagram
+        </a>
+        <a
+          href="https://www.tiktok.com/@lewiswakedj"
+          class="button"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          🎶 TikTok
+        </a>
+      </section>
+
+      <hr class="divider" />
+      <section class="tip-footer">
+        <h2>🍻 Buy the DJ a drink</h2>
+        <a
+          href="https://www.paypal.me/lewiswake"
+          class="button"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          💳 PayPal
+        </a>
+      </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+      (function () {
+        // ——— Configuration ———
+        const firebaseConfig = {
+          apiKey: "AIzaSyBLZp3f5WAWkAJDpBidh-C2mib2nhnLys4",
+          authDomain: "song-request-a8a68.firebaseapp.com",
+          projectId: "song-request-a8a68",
+          storageBucket: "song-request-a8a68.appspot.com",
+          messagingSenderId: "522633732679",
+          appId: "1:522633732679:web:564894980a2e0484828762",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ——— DOM Caching ———
+        const searchInput = document.getElementById("searchInput");
+        const suggestions = document.getElementById("suggestions");
+        const form = document.getElementById("requestForm");
+        const submitBtn = document.getElementById("submitButton");
+        const confirmation = document.getElementById("confirmation");
+        const card = document.getElementById("selectedSongCard");
+        const cardArtwork = document.getElementById("cardArtwork");
+        const cardTitle = document.getElementById("cardTitle");
+        const cardArtist = document.getElementById("cardArtist");
+
+        let debounceTimer;
+
+        // ——— Helpers ———
+        function debounce(fn, delay = 300) {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(fn, delay);
+        }
+
+        function clearSuggestions() {
+          suggestions.innerHTML = "";
+          suggestions.setAttribute("aria-expanded", "false");
+        }
+
+        // ——— Search & Render ———
+        searchInput.addEventListener("input", () => {
+          debounce(async () => {
+            const q = searchInput.value.trim();
+            if (q.length < 2) {
+              clearSuggestions();
+              return;
+            }
+            try {
+              const res = await fetch(
+                `https://itunes.apple.com/search?term=${encodeURIComponent(
+                  q
+                )}&entity=song&limit=5`
+              );
+              const { results } = await res.json();
+              suggestions.innerHTML = "";
+              suggestions.setAttribute("aria-expanded", "true");
+
+              results.forEach((t, i) => {
+                const li = document.createElement("li");
+                li.className = "suggestion-item";
+                li.setAttribute("role", "option");
+                li.setAttribute("data-index", i);
+                li.innerHTML = `
+              <img src="${t.artworkUrl60}" alt="" class="suggestion-thumb" />
+              <div class="suggestion-text">
+                <div class="track-title">${t.trackName}</div>
+                <div class="track-artist">${t.artistName}</div>
+              </div>
+            `;
+                li.addEventListener("click", () => selectTrack(t));
+                suggestions.appendChild(li);
+              });
+            } catch (err) {
+              console.error("Search failed:", err);
+              clearSuggestions();
+            }
+          });
+        });
+
+        function selectTrack(track) {
+          // populate hidden fields
+          document.getElementById("artist").value = track.artistName;
+          document.getElementById("title").value = track.trackName;
+          document.getElementById("appleMusicUrl").value = track.trackViewUrl;
+          document.getElementById("artworkUrl").value = track.artworkUrl100;
+
+          // show card
+          cardArtwork.src = track.artworkUrl100;
+          cardArtwork.alt = `${track.trackName} artwork`;
+          cardTitle.textContent = track.trackName;
+          cardArtist.textContent = track.artistName;
+          card.classList.remove("hidden");
+
+          submitBtn.disabled = false;
+          clearSuggestions();
+        }
+
+        // ——— Form Submission ———
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          submitBtn.disabled = true;
+
+          const artist = form.artist.value.trim();
+          const title = form.title.value.trim();
+          const appleMusicUrl = form.appleMusicUrl.value.trim();
+          const artworkUrl = form.artworkUrl.value.trim();
+          const key = (artist + "||" + title).toLowerCase();
+          const now = Date.now();
+          const docRef = db.collection("requests").doc(key);
+
+          try {
+            await db.runTransaction(async (tx) => {
+              const doc = await tx.get(docRef);
+              if (doc.exists) {
+                tx.update(docRef, {
+                  count: firebase.firestore.FieldValue.increment(1),
+                  lastRequested: now,
+                });
+              } else {
+                tx.set(docRef, {
+                  artist,
+                  title,
+                  appleMusicUrl,
+                  artworkUrl,
+                  timestamp: now,
+                  lastRequested: now,
+                  fulfilled: false,
+                  count: 1,
+                });
+              }
+            });
+
+            confirmation.classList.remove("hidden");
+            setTimeout(() => confirmation.classList.add("hidden"), 5000);
+
+            form.reset();
+            card.classList.add("hidden");
+          } catch (err) {
+            console.error("Failed to submit request:", err);
+            submitBtn.disabled = false;
+          }
+        });
+
+        // hide confirmation on load
+        window.addEventListener("load", () =>
+          confirmation.classList.add("hidden")
+        );
+      })();
+    </script>
+  </body>
+</html>
