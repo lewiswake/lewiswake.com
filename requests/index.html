@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Song Request</title>
     <link rel="stylesheet" href="song-request-form.css" />
   </head>
@@ -41,6 +41,9 @@
         <input type="hidden" id="title" name="title" />
         <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
         <input type="hidden" id="artworkUrl" name="artworkUrl" />
+        <input type="hidden" id="genre" name="genre" />
+        <input type="hidden" id="releaseYear" name="releaseYear" />
+        <input type="hidden" id="bpm" name="bpm" />
 
         <div
           id="selectedSongCard"
@@ -50,7 +53,12 @@
         >
           <h2 class="card-heading">Your request</h2>
           <div class="card-body">
-            <img id="cardArtwork" src="" alt="" class="card-thumb" />
+            <img
+              id="cardArtwork"
+              src=""
+              alt="Song artwork"
+              class="card-thumb"
+            />
             <div>
               <div id="cardTitle" class="card-title"></div>
               <div id="cardArtist" class="card-artist"></div>
@@ -106,7 +114,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
       (function () {
-        // ——— Configuration ———
+        // ——— Firebase Configuration ———
         const firebaseConfig = {
           apiKey: "AIzaSyBLZp3f5WAWkAJDpBidh-C2mib2nhnLys4",
           authDomain: "song-request-a8a68.firebaseapp.com",
@@ -118,7 +126,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ——— DOM Caching ———
+        // ——— Spotify Credentials ———
+        const SPOTIFY_ID = "87b9b15a818244ef8604136016427eb8";
+        const SPOTIFY_SECRET = "6787632ded984a939f3fbef54921a3b1";
+
+        // ——— DOM Elements ———
         const searchInput = document.getElementById("searchInput");
         const suggestions = document.getElementById("suggestions");
         const form = document.getElementById("requestForm");
@@ -131,25 +143,23 @@
 
         let debounceTimer;
 
-        // ——— Helpers ———
         function debounce(fn, delay = 300) {
           clearTimeout(debounceTimer);
           debounceTimer = setTimeout(fn, delay);
         }
-
         function clearSuggestions() {
           suggestions.innerHTML = "";
           suggestions.setAttribute("aria-expanded", "false");
         }
+        function showCard() {
+          card.classList.remove("hidden");
+          submitBtn.disabled = false;
+        }
 
-        // ——— Search & Render ———
         searchInput.addEventListener("input", () => {
           debounce(async () => {
             const q = searchInput.value.trim();
-            if (q.length < 2) {
-              clearSuggestions();
-              return;
-            }
+            if (q.length < 2) return clearSuggestions();
             try {
               const res = await fetch(
                 `https://itunes.apple.com/search?term=${encodeURIComponent(
@@ -159,19 +169,17 @@
               const { results } = await res.json();
               suggestions.innerHTML = "";
               suggestions.setAttribute("aria-expanded", "true");
-
-              results.forEach((t, i) => {
+              results.forEach((t) => {
                 const li = document.createElement("li");
                 li.className = "suggestion-item";
                 li.setAttribute("role", "option");
-                li.setAttribute("data-index", i);
                 li.innerHTML = `
-              <img src="${t.artworkUrl60}" alt="" class="suggestion-thumb" />
-              <div class="suggestion-text">
-                <div class="track-title">${t.trackName}</div>
-                <div class="track-artist">${t.artistName}</div>
-              </div>
-            `;
+                  <img src="${t.artworkUrl60}" class="suggestion-thumb" />
+                  <div class="suggestion-text">
+                    <div class="track-title">${t.trackName}</div>
+                    <div class="track-artist">${t.artistName}</div>
+                  </div>
+                `;
                 li.addEventListener("click", () => selectTrack(t));
                 suggestions.appendChild(li);
               });
@@ -183,70 +191,117 @@
         });
 
         function selectTrack(track) {
-          // populate hidden fields
-          document.getElementById("artist").value = track.artistName;
-          document.getElementById("title").value = track.trackName;
-          document.getElementById("appleMusicUrl").value = track.trackViewUrl;
-          document.getElementById("artworkUrl").value = track.artworkUrl100;
+          form.artist.value = track.artistName;
+          form.title.value = track.trackName;
+          form.appleMusicUrl.value = track.trackViewUrl;
+          form.artworkUrl.value = track.artworkUrl100;
 
-          // show card
           cardArtwork.src = track.artworkUrl100;
           cardArtwork.alt = `${track.trackName} artwork`;
           cardTitle.textContent = track.trackName;
           cardArtist.textContent = track.artistName;
-          card.classList.remove("hidden");
-
-          submitBtn.disabled = false;
           clearSuggestions();
+
+          // Genre & Year
+          const genreVal = track.primaryGenreName;
+          const yearVal = new Date(track.releaseDate).getFullYear();
+          form.genre.value = genreVal;
+          form.releaseYear.value = yearVal;
+
+          // Fetch BPM directly
+          fetchSpotifyBPM(track.trackName, track.artistName)
+            .then((tempo) => {
+              form.bpm.value = Math.round(tempo);
+              showCard();
+            })
+            .catch((err) => {
+              console.warn("BPM fetch failed:", err);
+              form.bpm.value = 0;
+              showCard();
+            });
         }
 
-        // ——— Form Submission ———
+        async function fetchSpotifyBPM(title, artist) {
+          const creds = btoa(`${SPOTIFY_ID}:${SPOTIFY_SECRET}`);
+          const tokenRes = await fetch(
+            "https://accounts.spotify.com/api/token",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Basic ${creds}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: "grant_type=client_credentials",
+            }
+          );
+          if (!tokenRes.ok) throw new Error("Failed to fetch token");
+          const { access_token } = await tokenRes.json();
+
+          const q = encodeURIComponent(`track:${title} artist:${artist}`);
+          const searchRes = await fetch(
+            `https://api.spotify.com/v1/search?q=${q}&type=track&limit=1`,
+            { headers: { Authorization: `Bearer ${access_token}` } }
+          );
+          const items = (await searchRes.json()).tracks.items;
+          if (!items.length) throw new Error("No track match");
+
+          const featRes = await fetch(
+            `https://api.spotify.com/v1/audio-features/${items[0].id}`,
+            { headers: { Authorization: `Bearer ${access_token}` } }
+          );
+          const { tempo } = await featRes.json();
+          return tempo;
+        }
+
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
           submitBtn.disabled = true;
 
-          const artist = form.artist.value.trim();
-          const title = form.title.value.trim();
-          const appleMusicUrl = form.appleMusicUrl.value.trim();
-          const artworkUrl = form.artworkUrl.value.trim();
-          const key = (artist + "||" + title).toLowerCase();
+          const artistVal = form.artist.value;
+          const titleVal = form.title.value;
+          const appleMusicUrlVal = form.appleMusicUrl.value;
+          const artworkUrlVal = form.artworkUrl.value;
+          const genreVal = form.genre.value;
+          const releaseYearVal = parseInt(form.releaseYear.value, 10);
+          const bpmVal = parseInt(form.bpm.value, 10);
+
+          const key = `${artistVal.toLowerCase()}||${titleVal.toLowerCase()}`;
           const now = Date.now();
           const docRef = db.collection("requests").doc(key);
 
-          try {
-            await db.runTransaction(async (tx) => {
-              const doc = await tx.get(docRef);
-              if (doc.exists) {
-                tx.update(docRef, {
-                  count: firebase.firestore.FieldValue.increment(1),
-                  lastRequested: now,
-                });
-              } else {
-                tx.set(docRef, {
-                  artist,
-                  title,
-                  appleMusicUrl,
-                  artworkUrl,
-                  timestamp: now,
-                  lastRequested: now,
-                  fulfilled: false,
-                  count: 1,
-                });
-              }
-            });
+          await db.runTransaction(async (tx) => {
+            const doc = await tx.get(docRef);
+            const data = {
+              artist: artistVal,
+              title: titleVal,
+              appleMusicUrl: appleMusicUrlVal,
+              artworkUrl: artworkUrlVal,
+              lastRequested: now,
+              genre: genreVal,
+              releaseYear: releaseYearVal,
+              bpm: bpmVal,
+            };
+            if (doc.exists) {
+              tx.update(docRef, {
+                ...data,
+                count: firebase.firestore.FieldValue.increment(1),
+              });
+            } else {
+              tx.set(docRef, {
+                ...data,
+                timestamp: now,
+                fulfilled: false,
+                count: 1,
+              });
+            }
+          });
 
-            confirmation.classList.remove("hidden");
-            setTimeout(() => confirmation.classList.add("hidden"), 5000);
-
-            form.reset();
-            card.classList.add("hidden");
-          } catch (err) {
-            console.error("Failed to submit request:", err);
-            submitBtn.disabled = false;
-          }
+          confirmation.classList.remove("hidden");
+          setTimeout(() => confirmation.classList.add("hidden"), 5000);
+          form.reset();
+          card.classList.add("hidden");
         });
 
-        // hide confirmation on load
         window.addEventListener("load", () =>
           confirmation.classList.add("hidden")
         );
