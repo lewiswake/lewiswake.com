@@ -74,6 +74,7 @@
       <div id="confirmation" class="confirmation hidden" role="status">
         ✅ Song request sent!
       </div>
+      <div id="warning" class="warning-message hidden" role="alert"></div>
 
       <hr class="divider" />
       <section class="tip-footer">
@@ -110,6 +111,33 @@
       </section>
     </main>
 
+    <!-- Social Media Modal -->
+    <div id="socialModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button">×</span>
+        <h2>Thanks for requesting!</h2>
+        <p>Enjoying the music? Follow me on social media to stay up to date!</p>
+        <div class="modal-links">
+          <a
+            href="https://www.instagram.com/lewiswakedj"
+            class="button"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            📸 Instagram
+          </a>
+          <a
+            href="https://www.tiktok.com/@lewiswakedj"
+            class="button"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            🎶 TikTok
+          </a>
+        </div>
+      </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
@@ -136,17 +164,84 @@
         const form = document.getElementById("requestForm");
         const submitBtn = document.getElementById("submitButton");
         const confirmation = document.getElementById("confirmation");
+        const warning = document.getElementById("warning");
         const card = document.getElementById("selectedSongCard");
         const cardArtwork = document.getElementById("cardArtwork");
         const cardTitle = document.getElementById("cardTitle");
         const cardArtist = document.getElementById("cardArtist");
+        const socialModal = document.getElementById("socialModal");
+        const closeBtn = document.querySelector(".close-button");
 
         let debounceTimer;
+
+        // ——— Utility Functions ———
+        function getDeviceId() {
+          let deviceId = localStorage.getItem("deviceId");
+          if (!deviceId) {
+            deviceId =
+              "device-" +
+              Date.now() +
+              "-" +
+              Math.random().toString(36).substr(2, 9);
+            localStorage.setItem("deviceId", deviceId);
+          }
+          return deviceId;
+        }
+
+        function getRequestData() {
+          const deviceId = getDeviceId();
+          try {
+            return (
+              JSON.parse(localStorage.getItem(`requests_data_${deviceId}`)) || {
+                timestamps: [],
+                songKeys: [],
+              }
+            );
+          } catch (e) {
+            console.error("Failed to parse request data from localStorage:", e);
+            return { timestamps: [], songKeys: [] };
+          }
+        }
+
+        function saveRequestData(timestamp, songKey) {
+          const deviceId = getDeviceId();
+          let data = getRequestData();
+          data.timestamps.push(timestamp);
+          data.songKeys.push(songKey);
+          localStorage.setItem(
+            `requests_data_${deviceId}`,
+            JSON.stringify(data)
+          );
+        }
+
+        function isRateLimited() {
+          const data = getRequestData();
+          const fifteenMinutesAgo = Date.now() - 900000;
+          const recentRequests = data.timestamps.filter(
+            (ts) => ts > fifteenMinutesAgo
+          );
+
+          // Update local storage with filtered list to prevent it from growing indefinitely
+          data.timestamps = recentRequests;
+          localStorage.setItem(
+            `requests_data_${getDeviceId()}`,
+            JSON.stringify(data)
+          );
+
+          const limit = 3;
+          return recentRequests.length >= limit;
+        }
+
+        function isDuplicateRequest(songKey) {
+          const data = getRequestData();
+          return data.songKeys.includes(songKey);
+        }
 
         function debounce(fn, delay = 300) {
           clearTimeout(debounceTimer);
           debounceTimer = setTimeout(fn, delay);
         }
+
         function clearSuggestions() {
           suggestions.innerHTML = "";
           suggestions.setAttribute("aria-expanded", "false");
@@ -239,14 +334,14 @@
 
           const q = encodeURIComponent(`track:${title} artist:${artist}`);
           const searchRes = await fetch(
-            `https://api.spotify.com/v1/search?q=${q}&type=track&limit=1`,
+            `https://api.spotify.com/v1/search?q=$${q}&type=track&limit=1`,
             { headers: { Authorization: `Bearer ${access_token}` } }
           );
           const items = (await searchRes.json()).tracks.items;
           if (!items.length) throw new Error("No track match");
 
           const featRes = await fetch(
-            `https://api.spotify.com/v1/audio-features/${items[0].id}`,
+            `https://api.spotify.com/v1/audio-features/$${items[0].id}`,
             { headers: { Authorization: `Bearer ${access_token}` } }
           );
           const { tempo } = await featRes.json();
@@ -255,56 +350,105 @@
 
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
-          submitBtn.disabled = true;
+
+          if (isRateLimited()) {
+            warning.textContent =
+              "You've reached the request limit. Please try again in 15 minutes.";
+            warning.classList.remove("hidden");
+            submitBtn.disabled = true;
+            return;
+          }
 
           const artistVal = form.artist.value;
           const titleVal = form.title.value;
+          const key = `${artistVal.toLowerCase()}||${titleVal.toLowerCase()}`;
+
+          if (isDuplicateRequest(key)) {
+            warning.textContent =
+              "You've already requested this song! Anything else?";
+            warning.classList.remove("hidden");
+            submitBtn.disabled = false;
+            return;
+          }
+
+          submitBtn.disabled = true;
+
           const appleMusicUrlVal = form.appleMusicUrl.value;
           const artworkUrlVal = form.artworkUrl.value;
           const genreVal = form.genre.value;
           const releaseYearVal = parseInt(form.releaseYear.value, 10);
           const bpmVal = parseInt(form.bpm.value, 10);
 
-          const key = `${artistVal.toLowerCase()}||${titleVal.toLowerCase()}`;
           const now = Date.now();
           const docRef = db.collection("requests").doc(key);
 
-          await db.runTransaction(async (tx) => {
-            const doc = await tx.get(docRef);
-            const data = {
-              artist: artistVal,
-              title: titleVal,
-              appleMusicUrl: appleMusicUrlVal,
-              artworkUrl: artworkUrlVal,
-              lastRequested: now,
-              genre: genreVal,
-              releaseYear: releaseYearVal,
-              bpm: bpmVal,
-            };
-            if (doc.exists) {
-              tx.update(docRef, {
-                ...data,
-                count: firebase.firestore.FieldValue.increment(1),
-              });
-            } else {
-              tx.set(docRef, {
-                ...data,
-                timestamp: now,
-                fulfilled: false,
-                count: 1,
-              });
-            }
-          });
+          try {
+            await db.runTransaction(async (tx) => {
+              const doc = await tx.get(docRef);
+              const data = {
+                artist: artistVal,
+                title: titleVal,
+                appleMusicUrl: appleMusicUrlVal,
+                artworkUrl: artworkUrlVal,
+                lastRequested: now,
+                genre: genreVal,
+                releaseYear: releaseYearVal,
+                bpm: bpmVal,
+              };
+              if (doc.exists) {
+                tx.update(docRef, {
+                  ...data,
+                  count: firebase.firestore.FieldValue.increment(1),
+                });
+              } else {
+                tx.set(docRef, {
+                  ...data,
+                  timestamp: now,
+                  fulfilled: false,
+                  count: 1,
+                });
+              }
+            });
 
-          confirmation.classList.remove("hidden");
-          setTimeout(() => confirmation.classList.add("hidden"), 5000);
-          form.reset();
-          card.classList.add("hidden");
+            saveRequestData(now, key);
+
+            // Increment and check request counter for social media modal
+            let socialCount = parseInt(
+              sessionStorage.getItem("socialCount") || "0",
+              10
+            );
+            socialCount++;
+            sessionStorage.setItem("socialCount", socialCount);
+
+            if (socialCount >= 3) {
+              socialModal.classList.remove("hidden");
+              sessionStorage.setItem("socialCount", "0"); // Reset after showing
+            }
+
+            warning.classList.add("hidden");
+            confirmation.classList.remove("hidden");
+            setTimeout(() => confirmation.classList.add("hidden"), 5000);
+            form.reset();
+            card.classList.add("hidden");
+            submitBtn.disabled = true;
+          } catch (e) {
+            console.error("Submission failed:", e);
+            warning.textContent = "Request failed. Please try again.";
+            warning.classList.remove("hidden");
+            submitBtn.disabled = false;
+          }
         });
 
-        window.addEventListener("load", () =>
-          confirmation.classList.add("hidden")
-        );
+        // Close modal functionality
+        closeBtn.addEventListener("click", () => {
+          socialModal.classList.add("hidden");
+        });
+
+        window.addEventListener("load", () => {
+          confirmation.classList.add("hidden");
+          socialModal.classList.add("hidden");
+          warning.classList.add("hidden");
+        });
       })();
     </script>
   </body>
