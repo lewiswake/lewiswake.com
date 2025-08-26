@@ -8,6 +8,7 @@
   --primary: #3e2c6d;
   --primary-hover: #2d2050;
   --success: #00796b;
+  --error: #e53e3e;
   --border: #ccc;
   --shadow: rgba(0, 0, 0, 0.15);
   --font: "Inter", sans-serif;
@@ -93,6 +94,14 @@ body {
   font-family: var(--font);
 }
 
+.warning-message {
+  margin-top: var(--spacing);
+  text-align: center;
+  font-weight: 500;
+  color: var(--error);
+  font-family: var(--font);
+}
+
 .hidden {
   display: none !important;
 }
@@ -145,12 +154,13 @@ body {
 .card {
   background: var(--card-bg);
   border-radius: 10px;
-  padding: 0.75rem;
+  padding: 1.5rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card-heading {
   font-weight: 600;
+  margin-top: -0.5rem;
   margin-bottom: 0.5rem;
   font-family: var(--font);
 }
@@ -202,4 +212,63 @@ body {
   .card-artist {
     color: #ccc;
   }
+}
+
+/* Modal Styling */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  max-width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.close-button {
+  color: #aaa;
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+  margin-top: 1.5rem;
+}
+
+.modal-links .button {
+  width: auto;
+  font-size: 1rem;
+  padding: calc(var(--spacing) * 0.75) var(--spacing);
 }
