@@ -1,274 +1,363 @@
-/* song-request-form.css */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+/* --- song-request-form.css --- */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
-:root {
-  --bg: #f4f4f4;
-  --fg: #222;
-  --card-bg: #fff;
-  --primary: #3e2c6d;
-  --primary-hover: #2d2050;
-  --success: #00796b;
-  --error: #e53e3e;
-  --border: #ccc;
-  --shadow: rgba(0, 0, 0, 0.15);
-  --font: "Inter", sans-serif;
-  --radius: 8px;
-  --spacing: 1rem;
-  --font-size-base: 18px;
-  --input-text: var(--fg);
-}
+      :root {
+        --bg: #f4f4f4;
+        --fg: #222;
+        --card-bg: #fff;
+        --primary: #3e2c6d;
+        --primary-hover: #2d2050;
+        --success: #00796b;
+        --error: #e53e3e;
+        --border: #ccc;
+        --shadow: rgba(0, 0, 0, 0.15);
+        --font: "Inter", sans-serif;
+        --radius: 8px;
+        --spacing: 1rem;
+        --font-size-base: 18px;
+        --input-text: var(--fg);
+      }
 
-* {
-  box-sizing: border-box;
-}
+      * {
+        box-sizing: border-box;
+      }
 
-body {
-  margin: 0;
-  padding: var(--spacing);
-  font-family: var(--font);
-  font-size: var(--font-size-base);
-  line-height: 1.5;
-  background: var(--bg);
-  color: var(--fg);
-}
+      body {
+        margin: 0;
+        padding: var(--spacing);
+        font-family: var(--font);
+        font-size: var(--font-size-base);
+        line-height: 1.5;
+        background: var(--bg);
+        color: var(--fg);
+      }
 
-.wrapper {
-  max-width: 480px;
-  margin: 0 auto;
-}
+      .wrapper {
+        max-width: 480px;
+        margin: 0 auto;
+      }
 
-.title {
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
+      .title {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
-}
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+      }
 
-.input,
-.button {
-  width: 100%;
-  font-size: 1.125rem;
-  padding: var(--spacing);
-  border-radius: var(--radius);
-  text-decoration: none;
-  font-family: var(--font);
-}
+      .input,
+      .button {
+        width: 100%;
+        font-size: 1.125rem;
+        padding: var(--spacing);
+        border-radius: var(--radius);
+        text-decoration: none;
+        font-family: var(--font);
+      }
 
-.input {
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--input-text);
-}
+      .input {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--input-text);
+      }
 
-.button {
-  display: inline-block;
-  text-align: center;
-  background: var(--primary);
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  text-decoration: none;
-  border: none;
-  font-family: var(--font);
-  font-weight: 500;
-}
+      .button {
+        display: inline-block;
+        text-align: center;
+        background: var(--primary);
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-decoration: none;
+        border: none;
+        font-family: var(--font);
+        font-weight: 500;
+      }
 
-.button:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
+      .button:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
 
-.button:not(:disabled):hover {
-  background: var(--primary-hover);
-}
+      .button:not(:disabled):hover {
+        background: var(--primary-hover);
+      }
 
-.confirmation {
-  margin-top: var(--spacing);
-  text-align: center;
-  font-weight: 500;
-  color: var(--success);
-  font-family: var(--font);
-}
+      .confirmation {
+        margin-top: var(--spacing);
+        text-align: center;
+        font-weight: 500;
+        color: var(--success);
+        font-family: var(--font);
+      }
 
-.warning-message {
-  margin-top: var(--spacing);
-  text-align: center;
-  font-weight: 500;
-  color: var(--error);
-  font-family: var(--font);
-}
+      .warning-message {
+        margin-top: var(--spacing);
+        text-align: center;
+        font-weight: 500;
+        color: var(--error);
+        font-family: var(--font);
+      }
 
-.hidden {
-  display: none !important;
-}
+      .hidden {
+        display: none !important;
+      }
 
-.suggestions {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 6px var(--shadow);
-  max-height: none;
-  overflow-y: visible;
-}
+      .suggestions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 6px var(--shadow);
+        max-height: none;
+        overflow-y: visible;
+      }
 
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  font-family: var(--font);
-}
+      .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        font-family: var(--font);
+      }
 
-.suggestion-item:last-child {
-  border-bottom: none;
-}
+      .suggestion-item:last-child {
+        border-bottom: none;
+      }
 
-.suggestion-thumb,
-.card-thumb {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  border-radius: 4px;
-  object-fit: cover;
-}
+      .suggestion-thumb,
+      .card-thumb {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 4px;
+        object-fit: cover;
+      }
 
-.suggestion-text .track-title,
-.card-title {
-  font-weight: 600;
-}
+      .suggestion-text .track-title,
+      .card-title {
+        font-weight: 600;
+      }
 
-.suggestion-text .track-artist,
-.card-artist {
-  font-size: 0.875rem;
-  color: #666;
-}
+      .suggestion-text .track-artist,
+      .card-artist {
+        font-size: 0.875rem;
+        color: #666;
+      }
 
-.card {
-  background: var(--card-bg);
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
+      .card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
 
-.card-heading {
-  font-weight: 600;
-  margin-top: -0.5rem;
-  margin-bottom: 0.5rem;
-  font-family: var(--font);
-}
+      .card-heading {
+        font-weight: 600;
+        margin-top: -0.5rem;
+        margin-bottom: 0.5rem;
+        font-family: var(--font);
+      }
 
-.card-body {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+      .card-body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
 
-.divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: var(--spacing) 0;
-}
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: var(--spacing) 0;
+      }
 
-.tip-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing);
-}
+      .tip-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing);
+      }
 
-.tip-footer h2 {
-  margin: 0;
-  text-align: left;
-  color: var(--fg);
-  font-family: var(--font);
-  font-weight: 500;
-}
+      .tip-footer h2 {
+        margin: 0;
+        text-align: left;
+        color: var(--fg);
+        font-family: var(--font);
+        font-weight: 500;
+      }
 
-.tip-footer .button {
-  margin-top: 0;
-  padding: calc(var(--spacing) * 0.75) var(--spacing);
-  font-family: var(--font);
-  font-weight: 500;
-}
+      .tip-footer .button {
+        margin-top: 0;
+        padding: calc(var(--spacing) * 0.75) var(--spacing);
+        font-family: var(--font);
+        font-weight: 500;
+      }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #121212;
-    --fg: #fff;
-    --card-bg: #1e1e1e;
-    --border: #333;
-    --shadow: rgba(0, 0, 0, 0.5);
-    --input-text: #222;
-  }
-  .suggestion-text .track-artist,
-  .card-artist {
-    color: #ccc;
-  }
-}
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --fg: #fff;
+          --card-bg: #1e1e1e;
+          --border: #333;
+          --shadow: rgba(0, 0, 0, 0.5);
+          --input-text: #222;
+        }
+        .suggestion-text .track-artist,
+        .card-artist {
+          color: #ccc;
+        }
+      }
 
-/* Modal Styling */
-.modal {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+      /* --- Combined Modal Styles --- */
 
-.modal-content {
-  background-color: var(--card-bg);
-  padding: 2rem;
-  border-radius: var(--radius);
-  box-shadow: 0 4px 12px var(--shadow);
-  max-width: 90%;
-  text-align: center;
-  position: relative;
-}
+      /* The .modal-overlay class replaces the .modal class for the blocked artist, 
+         but we keep .modal here for the social media modal */
+      .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      /* Used for the Blocked Artist Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none; /* Default hidden state */
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
 
-.close-button {
-  color: #aaa;
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  font-size: 2.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.2s;
-}
+      /* .modal-content is shared between both modals but slightly overridden for clarity below */
+      .modal-content {
+        background-color: var(--card-bg); /* Original: uses --card-bg (#fff or #1e1e1e) */
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px var(--shadow);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        position: relative;
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      /* ****************************************************** */
+      /* --- SPECIFIC FIX FOR BLOCKED ARTIST MODAL BACKGROUND --- */
+      /* Set the content background to white for the blocked modal regardless of theme */
+      #blockedArtistModal .modal-content {
+          background-color: #fff; 
+      }
+      /* Ensure text is dark on the white background for the blocked modal */
+      /* *** FIX: Setting text color explicitly to dark gray/black *** */
+      #blockedArtistModal .modal-message {
+          color: #222; 
+      }
+      #blockedArtistModal .modal-title {
+          color: #ff4136; /* Keep title red for 'No' */
+      }
+      /* ****************************************************** */
 
-.close-button:hover,
-.close-button:focus {
-  color: var(--fg);
-  text-decoration: none;
-}
+      /* Social Modal Close Button */
+      .close-button {
+        color: #aaa;
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem;
+        font-size: 2.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
 
-.modal-content h2 {
-  margin-top: 0;
-}
+      .close-button:hover,
+      .close-button:focus {
+        color: var(--fg);
+        text-decoration: none;
+      }
 
-.modal-links {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
-  margin-top: 1.5rem;
-}
+      .modal-content h2 {
+        margin-top: 0;
+      }
 
-.modal-links .button {
-  width: auto;
-  font-size: 1rem;
-  padding: calc(var(--spacing) * 0.75) var(--spacing);
-}
+      .modal-links {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+        margin-top: 1.5rem;
+      }
+
+      .modal-links .button {
+        width: auto;
+        font-size: 1rem;
+        padding: calc(var(--spacing) * 0.75) var(--spacing);
+      }
+
+      /* Specific styles for Blocked Artist Modal */
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff4136; /* Red color for 'No' */
+        margin-bottom: 15px;
+      }
+      .modal-link-container {
+        display: flex;
+        justify-content: center; /* Center the link */
+        width: 100%;
+      }
+      .modal-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary); 
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+      .modal-link:hover {
+        background-color: var(--primary-hover);
+      }
+      /* Close button for the Blocked Artist Modal (X icon) */
+      .modal-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #333;
+        cursor: pointer;
+        padding: 5px;
+        line-height: 1;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      .modal-close-btn:hover {
+        opacity: 1;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
