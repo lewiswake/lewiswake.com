@@ -111,10 +111,41 @@
       </section>
     </main>
 
-    <!-- Social Media Modal -->
+    <!-- Blocked Artist Modal -->
+    <div id="blockedArtistModal" class="modal-overlay">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <!-- X close button -->
+        <button type="button" class="modal-close-btn" onclick="closeBlockedArtistModal()" aria-label="Close">
+          &times;
+        </button>
+
+        <h3 id="modalTitle" class="modal-title">
+          <span id="blockedArtistNameTitle">Artist</span> requests blocked
+        </h3>
+        <p class="modal-message">
+          Whoops! This artist is blocked due to serious controversy. We don't want their music killing the vibe tonight! Read the BBC article below for details.
+        </p>
+        
+        <!-- Link is centered -->
+        <div class="modal-link-container">
+          <a
+            id="blockedArtistLink"
+            href=""
+            target="_blank"
+            rel="noopener noreferrer"
+            class="modal-link"
+          >
+            Read article
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- End Blocked Artist Modal -->
+
+    <!-- Social Media Modal (Restored with updated CSS provided) -->
     <div id="socialModal" class="modal hidden">
       <div class="modal-content">
-        <span class="close-button">×</span>
+        <span class="close-button" onclick="closeSocialModal()">×</span>
         <h2>Thanks for requesting!</h2>
         <p>Enjoying the music? Follow me on social media to stay up to date!</p>
         <div class="modal-links">
@@ -137,7 +168,8 @@
         </div>
       </div>
     </div>
-
+    <!-- End Social Media Modal -->
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
@@ -169,10 +201,44 @@
         const cardArtwork = document.getElementById("cardArtwork");
         const cardTitle = document.getElementById("cardTitle");
         const cardArtist = document.getElementById("cardArtist");
+        
+        // Modal DOM Elements
+        const blockedArtistModal = document.getElementById("blockedArtistModal");
+        const blockedArtistNameTitle = document.getElementById("blockedArtistNameTitle");
+        const blockedArtistLinkAnchor = document.getElementById("blockedArtistLink");
         const socialModal = document.getElementById("socialModal");
-        const closeBtn = document.querySelector(".close-button");
 
         let debounceTimer;
+
+        // ——— Modal Functions ———
+        window.closeBlockedArtistModal = function() {
+          blockedArtistModal.classList.remove("open");
+          blockedArtistModal.setAttribute("aria-hidden", "true");
+          searchInput.disabled = false;
+          searchInput.value = ''; 
+          clearSuggestions();
+        }
+        
+        window.closeSocialModal = function() {
+          socialModal.classList.add("hidden");
+        }
+
+        function showBlockedArtistModal(artist, link) {
+          blockedArtistNameTitle.textContent = artist; 
+          blockedArtistLinkAnchor.href = link;
+          blockedArtistModal.classList.add("open");
+          blockedArtistModal.setAttribute("aria-hidden", "false");
+          searchInput.disabled = true;
+        }
+
+        // --- New: Backdrop close logic ---
+        blockedArtistModal.addEventListener('click', (e) => {
+            // Check if the click occurred directly on the modal overlay, not its content
+            if (e.target === blockedArtistModal) {
+                closeBlockedArtistModal();
+            }
+        });
+
 
         // ——— Utility Functions ———
         function getDeviceId() {
@@ -255,6 +321,8 @@
           debounce(async () => {
             const q = searchInput.value.trim();
             if (q.length < 2) return clearSuggestions();
+            searchInput.disabled = false;
+            
             try {
               const res = await fetch(
                 `https://itunes.apple.com/search?term=${encodeURIComponent(
@@ -286,6 +354,66 @@
         });
 
         function selectTrack(track) {
+          const artistName = track.artistName.toLowerCase();
+          
+          let blockedLink = null;
+          let blockedArtistDisplayName = null;
+
+          // --- Blocked Artist Logic ---
+
+          // Dizzee Rascal
+          if (artistName.includes("dizzee rascal")) {
+            blockedArtistDisplayName = "Dizzee Rascal";
+            blockedLink = "https://www.bbc.co.uk/news/uk-england-london-61037308";
+          }
+          
+          // Kanye West (Ye)
+          if (artistName.includes("kanye west") || artistName.includes("ye")) {
+            blockedArtistDisplayName = "Kanye West (Ye)";
+            blockedLink = "https://www.bbc.co.uk/news/articles/cvge48j5lplo";
+          }
+          
+          // P. Diddy (Sean Combs, Puff Daddy, Diddy)
+          if (artistName.includes("p. diddy") || artistName.includes("diddy") || artistName.includes("puff daddy") || artistName.includes("sean combs")) {
+            blockedArtistDisplayName = "P. Diddy / Sean Combs";
+            blockedLink = "https://www.bbc.co.uk/news/articles/c0qz32wzeego";
+          }
+          
+          // R. Kelly
+          if (artistName.includes("r. kelly") || artistName.includes("robert kelly")) {
+            blockedArtistDisplayName = "R. Kelly";
+            blockedLink = "https://www.bbc.co.uk/news/world-us-canada-61989606";
+          }
+
+          // Chris Brown
+          if (artistName.includes("chris brown")) {
+            blockedArtistDisplayName = "Chris Brown";
+            blockedLink = "https://www.bbc.co.uk/news/topics/c5m8r32ll7rt";
+          }
+
+          // Marilyn Manson
+          if (artistName.includes("marilyn manson") || artistName.includes("brian warner")) {
+            blockedArtistDisplayName = "Marilyn Manson";
+            blockedLink = "https://www.bbc.co.uk/news/entertainment-arts-57685153";
+          }
+          
+          // Lostprophets
+          if (artistName.includes("lostprophets") || artistName.includes("lost prophets") || artistName.includes("lost prophet")) {
+            blockedArtistDisplayName = "Lostprophets";
+            blockedLink = "https://www.bbc.co.uk/news/uk-wales-25412675";
+          }
+
+
+          // If a blocked artist is found, show the modal and stop
+          if (blockedLink) {
+            clearSuggestions();
+            card.classList.add("hidden");
+            submitBtn.disabled = true;
+            showBlockedArtistModal(blockedArtistDisplayName, blockedLink);
+            return;
+          }
+
+          // --- Normal Selection Logic ---
           form.artist.value = track.artistName;
           form.title.value = track.trackName;
           form.appleMusicUrl.value = track.trackViewUrl;
@@ -421,7 +549,7 @@
             sessionStorage.setItem("socialCount", socialCount);
 
             if (socialCount >= 3) {
-              socialModal.classList.remove("hidden");
+              socialModal.classList.remove("hidden"); 
               sessionStorage.setItem("socialCount", "0"); // Reset after showing
             }
 
@@ -439,15 +567,12 @@
           }
         });
 
-        // Close modal functionality
-        closeBtn.addEventListener("click", () => {
-          socialModal.classList.add("hidden");
-        });
-
+        // hide confirmation and modals on load
         window.addEventListener("load", () => {
           confirmation.classList.add("hidden");
           socialModal.classList.add("hidden");
           warning.classList.add("hidden");
+          blockedArtistModal.setAttribute("aria-hidden", "true"); 
         });
       })();
     </script>
