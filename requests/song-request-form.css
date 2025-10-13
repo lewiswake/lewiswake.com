@@ -162,7 +162,6 @@ body {
   box-shadow: 0 2px 6px var(--shadow);
   max-height: 320px;
   overflow-y: auto;
-  border: 1px solid var(--border);
 }
 
 .suggestion-item {
@@ -367,3 +366,126 @@ body {
     transition: none !important;
   }
 }
+
+/* Social icon buttons */
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary); /* circle uses accent */
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 150ms ease, transform 150ms ease;
+  outline: none;
+}
+
+.social-btn:hover {
+  background: var(--primary-hover);
+}
+.social-btn:active {
+  transform: translateY(1px);
+}
+.social-btn:focus-visible {
+  outline: var(--focus);
+  outline-offset: 2px;
+}
+
+.social-icon-img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  /* force icon to white regardless of original fill */
+  filter: brightness(0) invert(1);
+  /* crisp rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Force horizontal layout for social buttons in the modal */
+.modal-links.social-links {
+  display: flex; /* ensure flex is applied */
+  flex-direction: row; /* override column from .modal-links */
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* match your icon spacing */
+}
+
+/* Allow wrapping on very small screens */
+@media (max-width: 380px) {
+  .modal-links.social-links {
+    flex-wrap: wrap;
+  }
+}
+
+/* Point to your actual files/paths */
+.icon-instagram {
+  -webkit-mask-image: url("assets/icons/instagram-brands-solid-full.svg");
+  mask-image: url("assets/icons/instagram-brands-solid-full.svg");
+}
+.icon-tiktok {
+  -webkit-mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
+  mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
+}
+
+/* (Optional) more icons */
+.icon-youtube {
+  -webkit-mask-image: url("assets/icons/youtube-brands-solid-full.svg");
+  mask-image: url("assets/icons/youtube-brands-solid-full.svg");
+}
+.icon-soundcloud {
+  -webkit-mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
+  mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
+}
+.icon-patreon {
+  -webkit-mask-image: url("assets/icons/patreon-brands-solid-full.svg");
+  mask-image: url("assets/icons/patreon-brands-solid-full.svg");
+}
+
+/* --- Buy the DJ a drink: payment buttons --- */
+.pay-grid {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap; /* wrap gracefully on small screens */
+}
+
+.pay-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--primary);         /* use your existing accent */
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 150ms ease, transform 150ms ease;
+  outline: none;
+}
+
+.pay-btn:hover { background: var(--primary-hover); }
+.pay-btn:active { transform: translateY(1px); }
+.pay-btn:focus-visible { outline: var(--focus); outline-offset: 2px; }
+
+.pay-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  /* force icon to white regardless of its original fill */
+  filter: brightness(0) invert(1);
+  image-rendering: crisp-edges;
+}
+
+/* If you ever want brand-specific colors, you can override here:
+.pay-btn--paypal { background: #003087; }       /* PayPal brand blue */
+.pay-btn--paypal:hover { background: #001e5a; }
+*/
