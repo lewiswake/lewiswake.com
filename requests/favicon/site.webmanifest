@@ -1,7 +1,8 @@
 {
   "name": "Request a song",
   "short_name": "Requests",
-  "start_url": "/",
+  "start_url": "/requests/",
+  "scope": "/requests/",
   "display": "standalone",
   "background_color": "#2E226B",
   "theme_color": "#2E226B",
