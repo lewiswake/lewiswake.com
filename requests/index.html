@@ -1,4 +1,4 @@
-<!-- song-request-form.html -->
+<!-- song-request-form.html (CLEANED: removed Spotify + secrets, safer DOM, no inline handlers) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,6 +10,7 @@
   <body>
     <main class="wrapper">
       <h1 class="title">🎵 Request a Song</h1>
+
       <form
         id="requestForm"
         class="form"
@@ -43,7 +44,7 @@
         <input type="hidden" id="artworkUrl" name="artworkUrl" />
         <input type="hidden" id="genre" name="genre" />
         <input type="hidden" id="releaseYear" name="releaseYear" />
-        <input type="hidden" id="bpm" name="bpm" />
+        <input type="hidden" id="bpm" name="bpm" value="" />
 
         <div
           id="selectedSongCard"
@@ -84,17 +85,15 @@
           class="button"
           target="_blank"
           rel="noopener noreferrer"
+          >📸 Instagram</a
         >
-          📸 Instagram
-        </a>
         <a
           href="https://www.tiktok.com/@lewiswakedj"
           class="button"
           target="_blank"
           rel="noopener noreferrer"
+          >🎶 TikTok</a
         >
-          🎶 TikTok
-        </a>
       </section>
 
       <hr class="divider" />
@@ -105,28 +104,35 @@
           class="button"
           target="_blank"
           rel="noopener noreferrer"
+          >💳 PayPal</a
         >
-          💳 PayPal
-        </a>
       </section>
     </main>
 
     <!-- Blocked Artist Modal -->
-    <div id="blockedArtistModal" class="modal-overlay">
-      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <!-- X close button -->
-        <button type="button" class="modal-close-btn" onclick="closeBlockedArtistModal()" aria-label="Close">
+    <div id="blockedArtistModal" class="modal-overlay" aria-hidden="true">
+      <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <button
+          type="button"
+          class="modal-close-btn"
+          id="blockedArtistCloseBtn"
+          aria-label="Close"
+        >
           &times;
         </button>
-
         <h3 id="modalTitle" class="modal-title">
           <span id="blockedArtistNameTitle">Artist</span> requests blocked
         </h3>
         <p class="modal-message">
-          Whoops! This artist is blocked due to serious controversy. We don't want their music killing the vibe tonight! Read the BBC article below for details.
+          Whoops! This artist is blocked due to serious controversy. We don't
+          want their music killing the vibe tonight! Read the BBC article below
+          for details.
         </p>
-        
-        <!-- Link is centered -->
         <div class="modal-link-container">
           <a
             id="blockedArtistLink"
@@ -134,18 +140,24 @@
             target="_blank"
             rel="noopener noreferrer"
             class="modal-link"
+            >Read article</a
           >
-            Read article
-          </a>
         </div>
       </div>
     </div>
     <!-- End Blocked Artist Modal -->
 
-    <!-- Social Media Modal (Restored with updated CSS provided) -->
-    <div id="socialModal" class="modal hidden">
+    <!-- Social Media Modal -->
+    <div id="socialModal" class="modal hidden" aria-hidden="true">
       <div class="modal-content">
-        <span class="close-button" onclick="closeSocialModal()">×</span>
+        <button
+          type="button"
+          class="close-button"
+          id="socialCloseBtn"
+          aria-label="Close"
+        >
+          ×
+        </button>
         <h2>Thanks for requesting!</h2>
         <p>Enjoying the music? Follow me on social media to stay up to date!</p>
         <div class="modal-links">
@@ -154,22 +166,20 @@
             class="button"
             target="_blank"
             rel="noopener noreferrer"
+            >📸 Instagram</a
           >
-            📸 Instagram
-          </a>
           <a
             href="https://www.tiktok.com/@lewiswakedj"
             class="button"
             target="_blank"
             rel="noopener noreferrer"
+            >🎶 TikTok</a
           >
-            🎶 TikTok
-          </a>
         </div>
       </div>
     </div>
     <!-- End Social Media Modal -->
-    
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
@@ -186,10 +196,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ——— Spotify Credentials ———
-        const SPOTIFY_ID = "87b9b15a818244ef8604136016427eb8";
-        const SPOTIFY_SECRET = "6787632ded984a939f3fbef54921a3b1";
-
         // ——— DOM Elements ———
         const searchInput = document.getElementById("searchInput");
         const suggestions = document.getElementById("suggestions");
@@ -201,44 +207,52 @@
         const cardArtwork = document.getElementById("cardArtwork");
         const cardTitle = document.getElementById("cardTitle");
         const cardArtist = document.getElementById("cardArtist");
-        
-        // Modal DOM Elements
-        const blockedArtistModal = document.getElementById("blockedArtistModal");
-        const blockedArtistNameTitle = document.getElementById("blockedArtistNameTitle");
-        const blockedArtistLinkAnchor = document.getElementById("blockedArtistLink");
+
+        // Modals
+        const blockedArtistModal =
+          document.getElementById("blockedArtistModal");
+        const blockedArtistNameTitle = document.getElementById(
+          "blockedArtistNameTitle"
+        );
+        const blockedArtistLinkAnchor =
+          document.getElementById("blockedArtistLink");
+        const blockedArtistCloseBtn = document.getElementById(
+          "blockedArtistCloseBtn"
+        );
+
         const socialModal = document.getElementById("socialModal");
+        const socialCloseBtn = document.getElementById("socialCloseBtn");
 
         let debounceTimer;
 
         // ——— Modal Functions ———
-        window.closeBlockedArtistModal = function() {
-          blockedArtistModal.classList.remove("open");
-          blockedArtistModal.setAttribute("aria-hidden", "true");
-          searchInput.disabled = false;
-          searchInput.value = ''; 
-          clearSuggestions();
-        }
-        
-        window.closeSocialModal = function() {
-          socialModal.classList.add("hidden");
-        }
-
-        function showBlockedArtistModal(artist, link) {
-          blockedArtistNameTitle.textContent = artist; 
+        function openBlockedArtistModal(artist, link) {
+          blockedArtistNameTitle.textContent = artist;
           blockedArtistLinkAnchor.href = link;
           blockedArtistModal.classList.add("open");
           blockedArtistModal.setAttribute("aria-hidden", "false");
           searchInput.disabled = true;
         }
+        function closeBlockedArtistModal() {
+          blockedArtistModal.classList.remove("open");
+          blockedArtistModal.setAttribute("aria-hidden", "true");
+          searchInput.disabled = false;
+          searchInput.value = "";
+          clearSuggestions();
+        }
+        function closeSocialModal() {
+          socialModal.classList.add("hidden");
+          socialModal.setAttribute("aria-hidden", "true");
+        }
 
-        // --- New: Backdrop close logic ---
-        blockedArtistModal.addEventListener('click', (e) => {
-            // Check if the click occurred directly on the modal overlay, not its content
-            if (e.target === blockedArtistModal) {
-                closeBlockedArtistModal();
-            }
+        blockedArtistCloseBtn.addEventListener(
+          "click",
+          closeBlockedArtistModal
+        );
+        socialCloseBtn.addEventListener("click", closeSocialModal);
+        blockedArtistModal.addEventListener("click", (e) => {
+          if (e.target === blockedArtistModal) closeBlockedArtistModal();
         });
-
 
         // ——— Utility Functions ———
         function getDeviceId() {
@@ -253,7 +267,6 @@
           }
           return deviceId;
         }
-
         function getRequestData() {
           const deviceId = getDeviceId();
           try {
@@ -268,10 +281,9 @@
             return { timestamps: [], songKeys: [] };
           }
         }
-
         function saveRequestData(timestamp, songKey) {
           const deviceId = getDeviceId();
-          let data = getRequestData();
+          const data = getRequestData();
           data.timestamps.push(timestamp);
           data.songKeys.push(songKey);
           localStorage.setItem(
@@ -279,35 +291,25 @@
             JSON.stringify(data)
           );
         }
-
         function isRateLimited() {
+          const deviceId = getDeviceId();
           const data = getRequestData();
           const fifteenMinutesAgo = Date.now() - 900000;
-          const recentRequests = data.timestamps.filter(
-            (ts) => ts > fifteenMinutesAgo
-          );
-
-          // Update local storage with filtered list to prevent it from growing indefinitely
-          data.timestamps = recentRequests;
+          const recent = data.timestamps.filter((ts) => ts > fifteenMinutesAgo);
+          data.timestamps = recent; // compact
           localStorage.setItem(
-            `requests_data_${getDeviceId()}`,
+            `requests_data_${deviceId}`,
             JSON.stringify(data)
           );
-
-          const limit = 3;
-          return recentRequests.length >= limit;
+          return recent.length >= 3;
         }
-
         function isDuplicateRequest(songKey) {
-          const data = getRequestData();
-          return data.songKeys.includes(songKey);
+          return getRequestData().songKeys.includes(songKey);
         }
-
         function debounce(fn, delay = 300) {
           clearTimeout(debounceTimer);
           debounceTimer = setTimeout(fn, delay);
         }
-
         function clearSuggestions() {
           suggestions.innerHTML = "";
           suggestions.setAttribute("aria-expanded", "false");
@@ -317,32 +319,46 @@
           submitBtn.disabled = false;
         }
 
+        // ——— Search (Apple iTunes API) ———
         searchInput.addEventListener("input", () => {
           debounce(async () => {
             const q = searchInput.value.trim();
             if (q.length < 2) return clearSuggestions();
-            searchInput.disabled = false;
-            
             try {
               const res = await fetch(
                 `https://itunes.apple.com/search?term=${encodeURIComponent(
                   q
                 )}&entity=song&limit=5`
               );
-              const { results } = await res.json();
+              const { results = [] } = await res.json();
               suggestions.innerHTML = "";
               suggestions.setAttribute("aria-expanded", "true");
+
               results.forEach((t) => {
                 const li = document.createElement("li");
                 li.className = "suggestion-item";
                 li.setAttribute("role", "option");
-                li.innerHTML = `
-                  <img src="${t.artworkUrl60}" class="suggestion-thumb" />
-                  <div class="suggestion-text">
-                    <div class="track-title">${t.trackName}</div>
-                    <div class="track-artist">${t.artistName}</div>
-                  </div>
-                `;
+
+                const img = document.createElement("img");
+                img.src = t.artworkUrl60 || "";
+                img.alt = "";
+                img.className = "suggestion-thumb";
+
+                const textWrap = document.createElement("div");
+                textWrap.className = "suggestion-text";
+
+                const title = document.createElement("div");
+                title.className = "track-title";
+                title.textContent = t.trackName || "Unknown title";
+
+                const artist = document.createElement("div");
+                artist.className = "track-artist";
+                artist.textContent = t.artistName || "Unknown artist";
+
+                textWrap.appendChild(title);
+                textWrap.appendChild(artist);
+                li.appendChild(img);
+                li.appendChild(textWrap);
                 li.addEventListener("click", () => selectTrack(t));
                 suggestions.appendChild(li);
               });
@@ -353,129 +369,93 @@
           });
         });
 
+        // ——— Selection ———
         function selectTrack(track) {
-          const artistName = track.artistName.toLowerCase();
-          
+          const artistName = (track.artistName || "").toLowerCase();
           let blockedLink = null;
           let blockedArtistDisplayName = null;
 
-          // --- Blocked Artist Logic ---
-
-          // Dizzee Rascal
+          // Blocked artists (BBC references)
           if (artistName.includes("dizzee rascal")) {
             blockedArtistDisplayName = "Dizzee Rascal";
-            blockedLink = "https://www.bbc.co.uk/news/uk-england-london-61037308";
+            blockedLink =
+              "https://www.bbc.co.uk/news/uk-england-london-61037308";
           }
-          
-          // Kanye West (Ye)
           if (artistName.includes("kanye west") || artistName.includes("ye")) {
             blockedArtistDisplayName = "Kanye West (Ye)";
             blockedLink = "https://www.bbc.co.uk/news/articles/cvge48j5lplo";
           }
-          
-          // P. Diddy (Sean Combs, Puff Daddy, Diddy)
-          if (artistName.includes("p. diddy") || artistName.includes("diddy") || artistName.includes("puff daddy") || artistName.includes("sean combs")) {
+          if (
+            artistName.includes("p. diddy") ||
+            artistName.includes("diddy") ||
+            artistName.includes("puff daddy") ||
+            artistName.includes("sean combs")
+          ) {
             blockedArtistDisplayName = "P. Diddy / Sean Combs";
             blockedLink = "https://www.bbc.co.uk/news/articles/c0qz32wzeego";
           }
-          
-          // R. Kelly
-          if (artistName.includes("r. kelly") || artistName.includes("robert kelly")) {
+          if (
+            artistName.includes("r. kelly") ||
+            artistName.includes("robert kelly")
+          ) {
             blockedArtistDisplayName = "R. Kelly";
             blockedLink = "https://www.bbc.co.uk/news/world-us-canada-61989606";
           }
-
-          // Chris Brown
           if (artistName.includes("chris brown")) {
             blockedArtistDisplayName = "Chris Brown";
             blockedLink = "https://www.bbc.co.uk/news/topics/c5m8r32ll7rt";
           }
-
-          // Marilyn Manson
-          if (artistName.includes("marilyn manson") || artistName.includes("brian warner")) {
+          if (
+            artistName.includes("marilyn manson") ||
+            artistName.includes("brian warner")
+          ) {
             blockedArtistDisplayName = "Marilyn Manson";
-            blockedLink = "https://www.bbc.co.uk/news/entertainment-arts-57685153";
+            blockedLink =
+              "https://www.bbc.co.uk/news/entertainment-arts-57685153";
           }
-          
-          // Lostprophets
-          if (artistName.includes("lostprophets") || artistName.includes("lost prophets") || artistName.includes("lost prophet")) {
+          if (
+            artistName.includes("lostprophets") ||
+            artistName.includes("lost prophets") ||
+            artistName.includes("lost prophet")
+          ) {
             blockedArtistDisplayName = "Lostprophets";
             blockedLink = "https://www.bbc.co.uk/news/uk-wales-25412675";
           }
 
-
-          // If a blocked artist is found, show the modal and stop
           if (blockedLink) {
             clearSuggestions();
             card.classList.add("hidden");
             submitBtn.disabled = true;
-            showBlockedArtistModal(blockedArtistDisplayName, blockedLink);
+            openBlockedArtistModal(blockedArtistDisplayName, blockedLink);
             return;
           }
 
-          // --- Normal Selection Logic ---
-          form.artist.value = track.artistName;
-          form.title.value = track.trackName;
-          form.appleMusicUrl.value = track.trackViewUrl;
-          form.artworkUrl.value = track.artworkUrl100;
+          // Fill form fields
+          form.artist.value = track.artistName || "";
+          form.title.value = track.trackName || "";
+          form.appleMusicUrl.value = track.trackViewUrl || "";
+          form.artworkUrl.value =
+            track.artworkUrl100 || track.artworkUrl60 || "";
 
-          cardArtwork.src = track.artworkUrl100;
-          cardArtwork.alt = `${track.trackName} artwork`;
-          cardTitle.textContent = track.trackName;
-          cardArtist.textContent = track.artistName;
+          cardArtwork.src = track.artworkUrl100 || track.artworkUrl60 || "";
+          cardArtwork.alt = `${track.trackName || "Track"} artwork`;
+          cardTitle.textContent = track.trackName || "";
+          cardArtist.textContent = track.artistName || "";
           clearSuggestions();
 
-          // Genre & Year
-          const genreVal = track.primaryGenreName;
-          const yearVal = new Date(track.releaseDate).getFullYear();
-          form.genre.value = genreVal;
-          form.releaseYear.value = yearVal;
+          // Genre & Year (best-effort from iTunes payload)
+          form.genre.value = track.primaryGenreName || "";
+          form.releaseYear.value = track.releaseDate
+            ? new Date(track.releaseDate).getFullYear()
+            : "";
 
-          // Fetch BPM directly
-          fetchSpotifyBPM(track.trackName, track.artistName)
-            .then((tempo) => {
-              form.bpm.value = Math.round(tempo);
-              showCard();
-            })
-            .catch((err) => {
-              console.warn("BPM fetch failed:", err);
-              form.bpm.value = 0;
-              showCard();
-            });
+          // BPM intentionally not fetched client-side (no Spotify; avoid exposing secrets)
+          form.bpm.value = "";
+
+          showCard();
         }
 
-        async function fetchSpotifyBPM(title, artist) {
-          const creds = btoa(`${SPOTIFY_ID}:${SPOTIFY_SECRET}`);
-          const tokenRes = await fetch(
-            "https://accounts.spotify.com/api/token",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Basic ${creds}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              body: "grant_type=client_credentials",
-            }
-          );
-          if (!tokenRes.ok) throw new Error("Failed to fetch token");
-          const { access_token } = await tokenRes.json();
-
-          const q = encodeURIComponent(`track:${title} artist:${artist}`);
-          const searchRes = await fetch(
-            `https://api.spotify.com/v1/search?q=$${q}&type=track&limit=1`,
-            { headers: { Authorization: `Bearer ${access_token}` } }
-          );
-          const items = (await searchRes.json()).tracks.items;
-          if (!items.length) throw new Error("No track match");
-
-          const featRes = await fetch(
-            `https://api.spotify.com/v1/audio-features/$${items[0].id}`,
-            { headers: { Authorization: `Bearer ${access_token}` } }
-          );
-          const { tempo } = await featRes.json();
-          return tempo;
-        }
-
+        // ——— Submit ———
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
 
@@ -501,56 +481,50 @@
 
           submitBtn.disabled = true;
 
-          const appleMusicUrlVal = form.appleMusicUrl.value;
-          const artworkUrlVal = form.artworkUrl.value;
-          const genreVal = form.genre.value;
-          const releaseYearVal = parseInt(form.releaseYear.value, 10);
-          const bpmVal = parseInt(form.bpm.value, 10);
+          const payload = {
+            artist: artistVal,
+            title: titleVal,
+            appleMusicUrl: form.appleMusicUrl.value,
+            artworkUrl: form.artworkUrl.value,
+            lastRequested: Date.now(),
+            genre: form.genre.value || "",
+            releaseYear: parseInt(form.releaseYear.value, 10) || null,
+            bpm: form.bpm.value ? parseInt(form.bpm.value, 10) : null,
+          };
 
-          const now = Date.now();
           const docRef = db.collection("requests").doc(key);
 
           try {
             await db.runTransaction(async (tx) => {
               const doc = await tx.get(docRef);
-              const data = {
-                artist: artistVal,
-                title: titleVal,
-                appleMusicUrl: appleMusicUrlVal,
-                artworkUrl: artworkUrlVal,
-                lastRequested: now,
-                genre: genreVal,
-                releaseYear: releaseYearVal,
-                bpm: bpmVal,
-              };
               if (doc.exists) {
                 tx.update(docRef, {
-                  ...data,
+                  ...payload,
                   count: firebase.firestore.FieldValue.increment(1),
                 });
               } else {
                 tx.set(docRef, {
-                  ...data,
-                  timestamp: now,
+                  ...payload,
+                  timestamp: Date.now(),
                   fulfilled: false,
                   count: 1,
                 });
               }
             });
 
-            saveRequestData(now, key);
+            saveRequestData(Date.now(), key);
 
-            // Increment and check request counter for social media modal
+            // Social modal after 3 requests per session
             let socialCount = parseInt(
               sessionStorage.getItem("socialCount") || "0",
               10
             );
             socialCount++;
-            sessionStorage.setItem("socialCount", socialCount);
-
+            sessionStorage.setItem("socialCount", String(socialCount));
             if (socialCount >= 3) {
-              socialModal.classList.remove("hidden"); 
-              sessionStorage.setItem("socialCount", "0"); // Reset after showing
+              socialModal.classList.remove("hidden");
+              socialModal.setAttribute("aria-hidden", "false");
+              sessionStorage.setItem("socialCount", "0");
             }
 
             warning.classList.add("hidden");
@@ -571,8 +545,9 @@
         window.addEventListener("load", () => {
           confirmation.classList.add("hidden");
           socialModal.classList.add("hidden");
+          socialModal.setAttribute("aria-hidden", "true");
           warning.classList.add("hidden");
-          blockedArtistModal.setAttribute("aria-hidden", "true"); 
+          blockedArtistModal.setAttribute("aria-hidden", "true");
         });
       })();
     </script>
