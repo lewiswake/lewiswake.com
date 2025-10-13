@@ -4,316 +4,69 @@
     <meta charset="UTF-8" />
     <title>DJ Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      /* --- dj-dashboard.css --- */
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 1rem;
-        font-family: system-ui, sans-serif;
-        background-color: #121212;
-        color: #ffffff;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-
-      .controls {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-      }
-
-      button {
-        background-color: #3e2c6d;
-        color: #fff;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #2d2050;
-      }
-
-      .feed {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-
-      .card {
-        display: flex;
-        align-items: center; /* This has been changed to center the content vertically */
-        gap: 1rem;
-        background-color: #1e1e1e;
-        padding: 1rem;
-        border-radius: 12px;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        position: relative; /* Needed for positioning the badge */
-      }
-
-      .card-thumb {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 8px;
-      }
-
-      .card-content {
-        flex-grow: 1;
-      }
-
-      .card-title {
-        font-weight: 600;
-        font-size: 1rem;
-      }
-
-      .card-artist {
-        font-size: 0.875rem;
-        color: #ccc;
-      }
-
-      .card-metadata {
-        font-size: 0.875rem;
-        color: #ccc;
-      }
-
-      .card-time {
-        font-size: 0.75rem;
-        color: #888;
-      }
-
-      .checkbox {
-        width: 32px;
-        height: 32px;
-        margin-top: 0.25rem;
-        transform: scale(1.3);
-      }
-
-      /* Animations */
-      @keyframes fadeInSlide {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .card.new {
-        animation: fadeInSlide 0.4s ease-out;
-      }
-
-      /* This is the new animation to fade and slide up */
-      @keyframes fadeOutAndSlideUp {
-        from {
-          opacity: 1;
-          transform: translateY(0);
-          height: auto;
-          margin-bottom: 1rem;
-        }
-        to {
-          opacity: 0;
-          transform: translateY(-100%);
-          height: 0;
-          margin-bottom: 0;
-          padding: 0;
-          overflow: hidden;
-        }
-      }
-
-      .card.slide-out {
-        animation: fadeOutAndSlideUp 0.5s ease-in-out forwards;
-      }
-
-      .card.fulfilled {
-        opacity: 0.5;
-      }
-
-      /* --- New CSS for the dashboard filters and badge --- */
-      .controls button.active {
-        background-color: #5d458c;
-        border: 1px solid #7c62a8;
-      }
-
-      .badge {
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        width: 24px;
-        height: 24px;
-        background-color: #e53e3e;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        font-weight: bold;
-        z-index: 10;
-        border: 2px solid #1e1e1e;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-      }
-
-      /* --- Custom Checkbox Styling --- */
-      .checkbox-container {
-        position: relative;
-        cursor: pointer;
-        user-select: none;
-        margin-top: 0.25rem;
-      }
-
-      .checkbox-container input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-      }
-
-      .checkmark {
-        height: 3em;
-        width: 3em;
-        background-color: transparent;
-        border-radius: 50%;
-        border: 2px solid #ccc; /* Light grey border for unchecked state */
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .checkmark::after {
-        content: "";
-        height: 0;
-        width: 0;
-        background-color: transparent;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-      }
-
-      /* Style when checked */
-      .checkbox-container input:checked ~ .checkmark {
-        border: 2px solid #3b82f6; /* Blue border for checked state */
-      }
-
-      .checkbox-container input:checked ~ .checkmark::after {
-        height: 2em; /* This is the filled blue circle */
-        width: 2em;
-        background-color: #3b82f6;
-      }
-
-      /* --- New Apple Music Link and Delete Link Styling --- */
-      .card-actions {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
-      }
-
-      .apple-music-link,
-      .delete-link {
-        text-decoration: none;
-        cursor: pointer;
-      }
-
-      .apple-music-link {
-        color: #3b82f6;
-      }
-
-      .delete-link {
-        color: #e53e3e;
-      }
-
-      .apple-music-link:hover,
-      .delete-link:hover {
-        text-decoration: underline;
-      }
-
-      .bottom-controls {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 2rem;
-      }
-
-      .clear-all-btn {
-        background-color: #e53e3e;
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        font-weight: bold;
-      }
-
-      .clear-all-btn:hover {
-        background-color: #c53030;
-      }
-
-      /* Media query for mobile and tablet devices */
-      @media (max-width: 768px) {
-        select {
-          background-color: #fff;
-          color: #222;
-          border: 1px solid #ccc;
-          padding: 0.5rem;
-          border-radius: 8px;
-          font-size: 1rem;
-          appearance: auto;
-          -webkit-appearance: auto;
-          -moz-appearance: auto;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="dj-dashboard.css" />
   </head>
   <body>
-    <h1>Live Song Requests</h1>
-    <div class="controls">
-      <select id="statusFilter">
-        <option value="all">All</option>
-        <option value="unplayed" selected>Unplayed</option>
-        <option value="played">Played</option>
-      </select>
-      <select id="sortOrder">
-        <option value="mostRequested">Most Requested</option>
-        <option value="latestAdded">Latest Added</option>
-        <option value="earliestAdded">Earliest Added</option>
-        <option value="lastRequested" selected>Most Recently Requested</option>
-      </select>
-      <select id="decadeFilter">
-        <option value="all">All Decades</option>
-      </select>
-      <select id="genreFilter">
-        <option value="all">All Genres</option>
-      </select>
-    </div>
-    <div id="feed" class="feed"></div>
-    <div class="bottom-controls">
-      <button id="exportCsvBtn">Download CSV</button>
-      <button id="clearAllBtn" class="clear-all-btn">Clear All</button>
-    </div>
+    <header>
+      <h1>Live Song Requests</h1>
+      <div class="controls" role="region" aria-label="Filters and sorting">
+        <label>
+          <span class="sr-only">Status</span>
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="unplayed" selected>Unplayed</option>
+            <option value="played">Played</option>
+          </select>
+        </label>
+        <label>
+          <span class="sr-only">Sort order</span>
+          <select id="sortOrder">
+            <option value="mostRequested">Most Requested</option>
+            <option value="latestAdded">Latest Added</option>
+            <option value="earliestAdded">Earliest Added</option>
+            <option value="lastRequested" selected>
+              Most Recently Requested
+            </option>
+          </select>
+        </label>
+        <label>
+          <span class="sr-only">Decade filter</span>
+          <select id="decadeFilter">
+            <option value="all">All Decades</option>
+          </select>
+        </label>
+        <label>
+          <span class="sr-only">Genre filter</span>
+          <select id="genreFilter">
+            <option value="all">All Genres</option>
+          </select>
+        </label>
+      </div>
+    </header>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <main>
+      <div id="feed" class="feed" role="list" aria-live="polite"></div>
+    </main>
+
+    <footer class="bottom-controls">
+      <button id="exportCsvBtn" type="button">Download CSV</button>
+      <button id="clearAllBtn" class="clear-all-btn" type="button">
+        Clear All
+      </button>
+    </footer>
+
+    <!-- Firebase v8 (kept for compatibility) -->
+    <script
+      src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"
+      defer
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"
+      defer
+    ></script>
+
     <script>
+      // --- CONFIG --- //
       const firebaseConfig = {
         apiKey: "AIzaSyBLZp3f5WAWkAJDpBidh-C2mib2nhnLys4",
         authDomain: "song-request-a8a68.firebaseapp.com",
@@ -323,250 +76,414 @@
         appId: "1:522633732679:web:564894980a2e0484828762",
       };
 
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-      const feed = document.getElementById("feed");
-      const clearAllBtn = document.getElementById("clearAllBtn");
-      const exportCsvBtn = document.getElementById("exportCsvBtn");
-      const statusFilter = document.getElementById("statusFilter");
-      const sortOrder = document.getElementById("sortOrder");
-      const decadeFilter = document.getElementById("decadeFilter");
-      const genreFilter = document.getElementById("genreFilter");
-      let requestsMap = {};
-
-      function formatTimeAgo(ts) {
-        const diff = Math.floor((Date.now() - ts) / 1000);
-        if (diff < 60) return diff + "s ago";
-        if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-        if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-        return Math.floor(diff / 86400) + "d ago";
-      }
-
-      function populateDecadeFilter() {
-        const allRequests = Object.values(requestsMap);
-        const uniqueDecades = [
-          ...new Set(
-            allRequests.map((req) => {
-              const year = req.releaseYear;
-              if (year) {
-                const decadeStart = Math.floor(year / 10) * 10;
-                return `${decadeStart}s`;
-              }
-              return null;
-            })
-          ),
-        ]
-          .filter(Boolean)
-          .sort();
-
-        decadeFilter.innerHTML = '<option value="all">All Decades</option>';
-        uniqueDecades.forEach((decade) => {
-          const option = document.createElement("option");
-          option.value = decade;
-          option.textContent = decade;
-          decadeFilter.appendChild(option);
-        });
-      }
-
-      function populateGenreFilter() {
-        const allRequests = Object.values(requestsMap);
-        const uniqueGenres = [...new Set(allRequests.map((req) => req.genre))]
-          .filter(Boolean)
-          .sort();
-
-        genreFilter.innerHTML = '<option value="all">All Genres</option>';
-        uniqueGenres.forEach((genre) => {
-          const option = document.createElement("option");
-          option.value = genre;
-          option.textContent = genre;
-          genreFilter.appendChild(option);
-        });
-      }
-
-      function createCard(req) {
-        const badgeHtml =
-          req.count > 1 ? `<div class="badge">${req.count}</div>` : "";
-        const card = document.createElement("div");
-        card.className = "card" + (req.fulfilled ? " fulfilled" : "");
-        card.setAttribute("data-id", req.key);
-        card.innerHTML = `
-        ${badgeHtml}
-        <img src="${req.artworkUrl}" class="card-thumb" alt="Artwork" />
-        <div class="card-content">
-          <div class="card-title">${req.title}</div>
-          <div class="card-artist">${req.artist}</div>
-          <div class="card-metadata">${req.genre} | ${req.releaseYear}</div>
-          <div class="card-time">${formatTimeAgo(req.timestamp)}</div>
-          <div class="card-actions">
-            <a href="${
-              req.appleMusicUrl
-            }" target="_blank" class="apple-music-link">Listen on Apple Music</a>
-            <span class="delete-link">Delete</span>
-          </div>
-        </div>
-        <label class="checkbox-container">
-          <input type="checkbox" class="checkbox" ${
-            req.fulfilled ? "checked" : ""
-          } />
-          <span class="checkmark"></span>
-        </label>
-      `;
-        const checkbox = card.querySelector(".checkbox");
-        checkbox.addEventListener("change", (e) => {
-          // Update the database. The onSnapshot listener will handle the UI updates.
-          db.collection("requests")
-            .doc(req.key)
-            .update({ fulfilled: e.target.checked });
-        });
-
-        const deleteLink = card.querySelector(".delete-link");
-        deleteLink.addEventListener("click", () => {
-          if (
-            confirm(
-              `Are you sure you want to delete the request for "${req.title}" by "${req.artist}"?`
-            )
-          ) {
-            db.collection("requests").doc(req.key).delete();
-          }
-        });
-
-        return card;
-      }
-
-      function renderFeed() {
-        let allRequests = Object.values(requestsMap);
-        let filteredRequests = allRequests;
-        const currentStatus = statusFilter.value;
-        const currentSort = sortOrder.value;
-        const selectedDecade = decadeFilter.value;
-        const selectedGenre = genreFilter.value;
-
-        // Filter by status
-        if (currentStatus === "unplayed") {
-          filteredRequests = filteredRequests.filter((req) => !req.fulfilled);
-        } else if (currentStatus === "played") {
-          filteredRequests = filteredRequests.filter((req) => req.fulfilled);
-        }
-
-        // Filter by decade
-        if (selectedDecade !== "all") {
-          filteredRequests = filteredRequests.filter((req) => {
-            const year = req.releaseYear;
-            if (year) {
-              const decadeStart = Math.floor(year / 10) * 10;
-              return `${decadeStart}s` === selectedDecade;
-            }
-            return false;
-          });
-        }
-
-        // Filter by genre
-        if (selectedGenre !== "all") {
-          filteredRequests = filteredRequests.filter(
-            (req) => req.genre === selectedGenre
-          );
-        }
-
-        // Sort the filtered requests
-        filteredRequests.sort((a, b) => {
-          if (currentSort === "mostRequested") {
-            return b.count - a.count;
-          } else if (currentSort === "latestAdded") {
-            return b.timestamp - a.timestamp;
-          } else if (currentSort === "earliestAdded") {
-            return a.timestamp - b.timestamp;
-          } else if (currentSort === "lastRequested") {
-            return b.lastRequested - a.lastRequested;
-          }
-          // Default sort
-          return b.timestamp - a.timestamp;
-        });
-
-        // Clear the feed and re-render all cards
-        feed.innerHTML = "";
-        filteredRequests.forEach((req) => {
-          const card = createCard(req);
-          feed.appendChild(card);
-        });
-      }
-
-      // Function to escape commas and quotes for CSV
-      function escapeCsv(text) {
-        if (!text) return "";
-        text = String(text);
-        if (text.includes(",") || text.includes('"')) {
-          return `"${text.replace(/"/g, '""')}"`;
-        }
-        return text;
-      }
-
-      function exportRequests() {
-        const allRequests = Object.values(requestsMap);
-        if (allRequests.length === 0) {
+      // Defer script execution until Firebase scripts are loaded
+      window.addEventListener("DOMContentLoaded", () => {
+        // Guard: ensure Firebase is available
+        if (!window.firebase || !firebase.firestore) {
+          console.error("Firebase failed to load.");
           return;
         }
 
-        // Sort the entire list of requests alphabetically by artist name
-        allRequests.sort((a, b) => a.artist.localeCompare(b.artist));
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        const header = ["Title", "Artist", "Timestamp", "Count", "Fulfilled"];
-        const csvRows = allRequests.map((req) => {
-          const row = [
-            escapeCsv(req.title),
-            escapeCsv(req.artist),
-            req.timestamp,
-            req.count,
-            req.fulfilled,
+        // --- ELEMENT REFS --- //
+        const feed = document.getElementById("feed");
+        const clearAllBtn = document.getElementById("clearAllBtn");
+        const exportCsvBtn = document.getElementById("exportCsvBtn");
+        const statusFilter = document.getElementById("statusFilter");
+        const sortOrder = document.getElementById("sortOrder");
+        const decadeFilter = document.getElementById("decadeFilter");
+        const genreFilter = document.getElementById("genreFilter");
+
+        // --- STATE --- //
+        /** @type {Record<string, any>} */
+        const requestsMap = Object.create(null);
+        let renderQueued = false;
+
+        // --- UTILITIES --- //
+        const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+        function msToTimeAgo(ts) {
+          const now = Date.now();
+          const diff = clamp(
+            Math.floor((now - Number(ts)) / 1000),
+            0,
+            Number.MAX_SAFE_INTEGER
+          );
+          if (diff < 60) return diff + "s ago";
+          if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+          if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+          return Math.floor(diff / 86400) + "d ago";
+        }
+
+        function decadeLabel(year) {
+          if (!year) return null;
+          const start = Math.floor(Number(year) / 10) * 10;
+          return `${start}s`;
+        }
+
+        function safeUrl(url) {
+          try {
+            const u = new URL(url);
+            return u.protocol === "http:" || u.protocol === "https:"
+              ? u.href
+              : "#";
+          } catch {
+            return "#";
+          }
+        }
+
+        function setChildren(el, children) {
+          el.innerHTML = "";
+          for (const child of children) el.appendChild(child);
+        }
+
+        function option(value, label, selected) {
+          const o = document.createElement("option");
+          o.value = value;
+          o.textContent = label;
+          if (selected) o.selected = true;
+          return o;
+        }
+
+        // --- FILTER POPULATION --- //
+        function populateDecadeFilter() {
+          const prior = decadeFilter.value;
+          const unique = new Set();
+          Object.values(requestsMap).forEach((req) => {
+            const lbl = decadeLabel(req.releaseYear);
+            if (lbl) unique.add(lbl);
+          });
+          const sorted = [...unique].sort();
+          setChildren(decadeFilter, [
+            option("all", "All Decades", prior === "all"),
+          ]);
+          for (const d of sorted)
+            decadeFilter.appendChild(option(d, d, d === prior));
+        }
+
+        function populateGenreFilter() {
+          const prior = genreFilter.value;
+          const unique = new Set();
+          Object.values(requestsMap).forEach((req) => {
+            if (req.genre) unique.add(req.genre);
+          });
+          const sorted = [...unique].sort((a, b) =>
+            String(a).localeCompare(String(b))
+          );
+          setChildren(genreFilter, [
+            option("all", "All Genres", prior === "all"),
+          ]);
+          for (const g of sorted)
+            genreFilter.appendChild(option(g, g, g === prior));
+        }
+
+        // --- CARD CREATION (no innerHTML w/ user data) --- //
+        function createCard(req) {
+          const card = document.createElement("article");
+          card.className = "card" + (req.fulfilled ? " fulfilled" : "");
+          card.dataset.id = req.key;
+          card.setAttribute("role", "listitem");
+
+          // Badge
+          if (Number(req.count) > 1) {
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            badge.textContent = String(req.count);
+            card.appendChild(badge);
+          }
+
+          // Thumbnail
+          const img = document.createElement("img");
+          img.className = "card-thumb";
+          img.alt = "Artwork";
+          img.decoding = "async";
+          img.loading = "lazy";
+          img.src = req.artworkUrl || "";
+          img.onerror = () => {
+            img.src = "";
+            img.classList.add("thumb-missing");
+          };
+          card.appendChild(img);
+
+          // Content container
+          const content = document.createElement("div");
+          content.className = "card-content";
+
+          const title = document.createElement("div");
+          title.className = "card-title";
+          title.textContent = req.title || "Unknown title";
+
+          const artist = document.createElement("div");
+          artist.className = "card-artist";
+          artist.textContent = req.artist || "Unknown artist";
+
+          const meta = document.createElement("div");
+          meta.className = "card-metadata";
+          const parts = [];
+          if (req.genre) parts.push(req.genre);
+          if (req.releaseYear) parts.push(String(req.releaseYear));
+          meta.textContent = parts.join(" | ");
+
+          const time = document.createElement("div");
+          time.className = "card-time";
+          time.dataset.ts = String(req.timestamp || 0);
+          time.textContent = msToTimeAgo(req.timestamp || Date.now());
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          const link = document.createElement("a");
+          link.className = "apple-music-link";
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.href = safeUrl(req.appleMusicUrl || "#");
+          link.textContent = "Listen on Apple Music";
+
+          const del = document.createElement("button");
+          del.type = "button";
+          del.className = "delete-link";
+          del.textContent = "Delete";
+          del.setAttribute("data-action", "delete");
+
+          actions.appendChild(link);
+          actions.appendChild(del);
+
+          content.appendChild(title);
+          content.appendChild(artist);
+          content.appendChild(meta);
+          content.appendChild(time);
+          content.appendChild(actions);
+
+          // Checkbox container
+          const label = document.createElement("label");
+          label.className = "checkbox-container";
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "checkbox";
+          checkbox.checked = !!req.fulfilled;
+          checkbox.setAttribute("data-action", "toggle");
+          const checkmark = document.createElement("span");
+          checkmark.className = "checkmark";
+          label.appendChild(checkbox);
+          label.appendChild(checkmark);
+
+          card.appendChild(content);
+          card.appendChild(label);
+
+          return card;
+        }
+
+        // --- RENDER --- //
+        function getFilteredSorted() {
+          const status = statusFilter.value;
+          const sort = sortOrder.value;
+          const decade = decadeFilter.value;
+          const genre = genreFilter.value;
+
+          let arr = Object.values(requestsMap);
+
+          // status
+          if (status === "unplayed") arr = arr.filter((r) => !r.fulfilled);
+          if (status === "played") arr = arr.filter((r) => r.fulfilled);
+
+          // decade
+          if (decade !== "all") {
+            arr = arr.filter((r) => decadeLabel(r.releaseYear) === decade);
+          }
+
+          // genre
+          if (genre !== "all") {
+            arr = arr.filter((r) => r.genre === genre);
+          }
+
+          // sorting
+          arr.sort((a, b) => {
+            switch (sort) {
+              case "mostRequested":
+                return Number(b.count || 0) - Number(a.count || 0);
+              case "latestAdded":
+                return Number(b.timestamp || 0) - Number(a.timestamp || 0);
+              case "earliestAdded":
+                return Number(a.timestamp || 0) - Number(b.timestamp || 0);
+              case "lastRequested":
+                return (
+                  Number(b.lastRequested || 0) - Number(a.lastRequested || 0)
+                );
+              default:
+                return Number(b.timestamp || 0) - Number(a.timestamp || 0);
+            }
+          });
+
+          return arr;
+        }
+
+        function renderFeed() {
+          renderQueued = false;
+          const items = getFilteredSorted();
+          feed.innerHTML = "";
+          const frag = document.createDocumentFragment();
+          for (const req of items) frag.appendChild(createCard(req));
+          feed.appendChild(frag);
+        }
+
+        function scheduleRender() {
+          if (renderQueued) return;
+          renderQueued = true;
+          requestAnimationFrame(renderFeed);
+        }
+
+        // Update "x ago" timestamps every minute
+        setInterval(() => {
+          const nodes = feed.querySelectorAll(".card-time");
+          nodes.forEach((n) => {
+            const ts = Number(n.dataset.ts || 0);
+            n.textContent = msToTimeAgo(ts);
+          });
+        }, 60_000);
+
+        // --- CSV EXPORT --- //
+        function escapeCsv(text) {
+          if (text === null || text === undefined) return "";
+          const s = String(text);
+          return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+        }
+
+        function exportRequests() {
+          const all = Object.values(requestsMap);
+          if (!all.length) return;
+
+          // sort by artist
+          all.sort((a, b) =>
+            String(a.artist || "").localeCompare(String(b.artist || ""))
+          );
+
+          const header = [
+            "Title",
+            "Artist",
+            "Genre",
+            "ReleaseYear",
+            "Count",
+            "Fulfilled",
+            "FirstAddedISO",
+            "LastRequestedISO",
+            "AppleMusicUrl",
           ];
-          return row.join(",");
-        });
+          const rows = all.map((r) =>
+            [
+              escapeCsv(r.title),
+              escapeCsv(r.artist),
+              escapeCsv(r.genre || ""),
+              escapeCsv(r.releaseYear || ""),
+              escapeCsv(r.count || 0),
+              escapeCsv(!!r.fulfilled),
+              escapeCsv(
+                r.timestamp ? new Date(Number(r.timestamp)).toISOString() : ""
+              ),
+              escapeCsv(
+                r.lastRequested
+                  ? new Date(Number(r.lastRequested)).toISOString()
+                  : ""
+              ),
+              escapeCsv(r.appleMusicUrl || ""),
+            ].join(",")
+          );
 
-        const csvString = [header.join(","), ...csvRows].join("\n");
-        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
-        const today = new Date().toISOString().slice(0, 10);
-        const filename = `song-requests-${today}.csv`;
-
-        const link = document.createElement("a");
-        if (link.download !== undefined) {
-          // Check for download attribute support
+          const csv = [header.join(","), ...rows].join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const today = new Date().toISOString().slice(0, 10);
+          const filename = `song-requests-${today}.csv`;
+          const link = document.createElement("a");
           const url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", filename);
-          link.style.visibility = "hidden";
+          link.href = url;
+          link.download = filename;
           document.body.appendChild(link);
           link.click();
-          document.body.removeChild(link);
+          link.remove();
+          URL.revokeObjectURL(url);
         }
-      }
 
-      statusFilter.addEventListener("change", () => renderFeed());
-      sortOrder.addEventListener("change", () => renderFeed());
-      decadeFilter.addEventListener("change", () => renderFeed());
-      genreFilter.addEventListener("change", () => renderFeed());
-      exportCsvBtn.addEventListener("click", exportRequests);
+        // --- EVENT HANDLERS --- //
+        statusFilter.addEventListener("change", scheduleRender);
+        sortOrder.addEventListener("change", scheduleRender);
+        decadeFilter.addEventListener("change", scheduleRender);
+        genreFilter.addEventListener("change", scheduleRender);
+        exportCsvBtn.addEventListener("click", exportRequests);
 
-      clearAllBtn.addEventListener("click", async () => {
-        if (!confirm("Clear all song requests?")) return;
-        const snapshot = await db.collection("requests").get();
-        const batch = db.batch();
-        snapshot.docs.forEach((doc) => batch.delete(doc.ref));
-        await batch.commit();
-      });
-
-      db.collection("requests").onSnapshot((snapshot) => {
-        // Update the requestsMap with all changes
-        snapshot.docChanges().forEach((change) => {
-          const doc = change.doc;
-          if (change.type === "removed") {
-            delete requestsMap[doc.id];
-          } else {
-            requestsMap[doc.id] = { ...doc.data(), key: doc.id };
+        clearAllBtn.addEventListener("click", async () => {
+          if (!confirm("Clear all song requests?")) return;
+          try {
+            const snapshot = await db.collection("requests").get();
+            const batch = db.batch();
+            snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+            await batch.commit();
+          } catch (err) {
+            console.error("Failed to clear requests", err);
+            alert("Failed to clear requests. Check console for details.");
           }
         });
 
-        populateDecadeFilter();
-        populateGenreFilter();
-        renderFeed();
+        // Event delegation for checkbox toggles and delete buttons
+        feed.addEventListener("change", (e) => {
+          const target = e.target;
+          if (!(target instanceof HTMLInputElement)) return;
+          if (target.dataset.action !== "toggle") return;
+          const card = target.closest(".card");
+          if (!card) return;
+          const id = card.dataset.id;
+          db.collection("requests")
+            .doc(id)
+            .update({ fulfilled: target.checked })
+            .catch((err) => {
+              console.error("Update failed", err);
+              // revert UI on failure
+              target.checked = !target.checked;
+            });
+        });
+
+        feed.addEventListener("click", (e) => {
+          const target = e.target;
+          if (!(target instanceof HTMLElement)) return;
+          if (target.dataset.action !== "delete") return;
+          const card = target.closest(".card");
+          if (!card) return;
+          const id = card.dataset.id;
+          const req = requestsMap[id];
+          const title = req?.title || "this request";
+          const artist = req?.artist ? ` by "${req.artist}"` : "";
+          if (
+            confirm(
+              `Are you sure you want to delete the request for "${title}"${artist}?`
+            )
+          ) {
+            db.collection("requests")
+              .doc(id)
+              .delete()
+              .catch((err) => {
+                console.error("Delete failed", err);
+                alert("Failed to delete.");
+              });
+          }
+        });
+
+        // --- FIRESTORE LIVE SYNC --- //
+        db.collection("requests").onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const { doc, type } = change;
+            if (type === "removed") {
+              delete requestsMap[doc.id];
+            } else {
+              requestsMap[doc.id] = { ...doc.data(), key: doc.id };
+            }
+          });
+          populateDecadeFilter();
+          populateGenreFilter();
+          scheduleRender();
+        });
+
+        // Initial render (empty state)
+        scheduleRender();
       });
     </script>
   </body>
