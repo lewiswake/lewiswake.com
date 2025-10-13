@@ -4,12 +4,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Song Request</title>
+    <title>Request a song</title>
     <link rel="stylesheet" href="song-request-form.css" />
+    <!-- Favicon / App Icons -->
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
+
+    <!-- Explicit PNG (helps Firefox) -->
+    <link
+      rel="icon"
+      href="favicon/favicon-96x96.png"
+      type="image/png"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      href="favicon/favicon-16x16.png"
+      type="image/png"
+      sizes="16x16"
+    />
+    <link
+      rel="icon"
+      href="favicon/favicon-32x32.png"
+      type="image/png"
+      sizes="32x32"
+    />
+
+    <!-- Apple touch icon (iOS home screen) -->
+    <link
+      rel="apple-touch-icon"
+      href="favicon/apple-touch-icon.png"
+      sizes="180x180"
+    />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="favicon/site.webmanifest" />
   </head>
   <body>
     <main class="wrapper">
-      <h1 class="title">🎵 Request a Song</h1>
+      <h1 class="title">🎵 Request a song</h1>
 
       <form
         id="requestForm"
@@ -80,32 +112,153 @@
       <hr class="divider" />
       <section class="tip-footer">
         <h2>🎧 Follow the DJ</h2>
-        <a
-          href="https://www.instagram.com/lewiswakedj"
-          class="button"
-          target="_blank"
-          rel="noopener noreferrer"
-          >📸 Instagram</a
-        >
-        <a
-          href="https://www.tiktok.com/@lewiswakedj"
-          class="button"
-          target="_blank"
-          rel="noopener noreferrer"
-          >🎶 TikTok</a
-        >
+        <div class="social-links" role="group" aria-label="Follow the DJ">
+          <!-- Instagram -->
+          <a
+            class="social-btn"
+            href="https://www.instagram.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/instagram-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- TikTok -->
+          <a
+            class="social-btn"
+            href="https://www.tiktok.com/@lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+            title="TikTok"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/tiktok-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- YouTube -->
+          <a
+            class="social-btn"
+            href="https://www.youtube.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            title="YouTube"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/youtube-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- SoundCloud -->
+          <a
+            class="social-btn"
+            href="https://soundcloud.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SoundCloud"
+            title="SoundCloud"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/soundcloud-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- Patreon -->
+          <a
+            class="social-btn"
+            href="https://patreon.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Patreon"
+            title="Patreon"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/patreon-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+        </div>
       </section>
 
       <hr class="divider" />
       <section class="tip-footer">
         <h2>🍻 Buy the DJ a drink</h2>
-        <a
-          href="https://www.paypal.me/lewiswake"
-          class="button"
-          target="_blank"
-          rel="noopener noreferrer"
-          >💳 PayPal</a
-        >
+
+        <div class="pay-grid" role="group" aria-label="Buy the DJ a drink">
+          <!-- Apple Pay -->
+          <a
+            class="pay-btn pay-btn--wallet"
+            href="https://buy.stripe.com/9B6cN59VI2No2BPacA4wM00"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Apple Pay"
+            title="Apple Pay"
+          >
+            <img
+              class="pay-icon"
+              src="assets/icons/apple-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span class="pay-text">Apple Pay</span>
+          </a>
+
+          <!-- Google Pay -->
+          <a
+            class="pay-btn pay-btn--wallet"
+            href="https://buy.stripe.com/9B6cN59VI2No2BPacA4wM00"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Google Pay"
+            title="Google Pay"
+          >
+            <img
+              class="pay-icon"
+              src="assets/icons/google-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span class="pay-text">Google Pay</span>
+          </a>
+
+          <!-- PayPal -->
+          <a
+            class="pay-btn pay-btn--paypal"
+            href="https://www.paypal.me/lewiswake"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="PayPal"
+            title="PayPal"
+          >
+            <img
+              class="pay-icon"
+              src="assets/icons/paypal-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span class="pay-text">PayPal</span>
+          </a>
+        </div>
       </section>
     </main>
 
@@ -158,23 +311,98 @@
         >
           ×
         </button>
-        <h2>Thanks for requesting!</h2>
+        <h2>Thanks for all your requests!</h2>
         <p>Enjoying the music? Follow me on social media to stay up to date!</p>
-        <div class="modal-links">
+
+        <div
+          class="modal-links social-links"
+          role="group"
+          aria-label="Follow the DJ"
+        >
+          <!-- Instagram -->
           <a
+            class="social-btn"
             href="https://www.instagram.com/lewiswakedj"
-            class="button"
             target="_blank"
             rel="noopener noreferrer"
-            >📸 Instagram</a
+            aria-label="Instagram"
+            title="Instagram"
           >
+            <img
+              class="social-icon-img"
+              src="assets/icons/instagram-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- TikTok -->
           <a
+            class="social-btn"
             href="https://www.tiktok.com/@lewiswakedj"
-            class="button"
             target="_blank"
             rel="noopener noreferrer"
-            >🎶 TikTok</a
+            aria-label="TikTok"
+            title="TikTok"
           >
+            <img
+              class="social-icon-img"
+              src="assets/icons/tiktok-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- YouTube -->
+          <a
+            class="social-btn"
+            href="https://www.youtube.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            title="YouTube"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/youtube-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- SoundCloud -->
+          <a
+            class="social-btn"
+            href="https://soundcloud.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SoundCloud"
+            title="SoundCloud"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/soundcloud-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
+
+          <!-- Patreon -->
+          <a
+            class="social-btn"
+            href="https://patreon.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Patreon"
+            title="Patreon"
+          >
+            <img
+              class="social-icon-img"
+              src="assets/icons/patreon-brands-solid-full.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
         </div>
       </div>
     </div>
