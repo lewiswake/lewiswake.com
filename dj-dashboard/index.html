@@ -228,6 +228,15 @@
             return o;
           }
 
+          // NEW UTILITY FUNCTION: Formats a timestamp into a clear date string
+          function dateLabel(ts) {
+            if (!ts) return null;
+            const date = new Date(Number(ts));
+            // Format as "October 22, 2025" or similar.
+            const options = { year: "numeric", month: "long", day: "numeric" };
+            return date.toLocaleDateString(undefined, options);
+          }
+
           // --- FILTER POPULATION --- //
           function populateDecadeFilter() {
             const prior = decadeFilter.value;
@@ -381,7 +390,22 @@
             const items = getFilteredSorted();
             feed.innerHTML = "";
             const frag = document.createDocumentFragment();
-            for (const req of items) frag.appendChild(createCard(req));
+            for (const req of items) {
+              // Get the date string for the current request
+              const currentDate = dateLabel(req.timestamp);
+
+              // If the date is different from the last one, insert a new heading
+              if (currentDate !== lastDate) {
+                const heading = document.createElement("h2");
+                heading.className = "date-heading";
+                heading.textContent = currentDate;
+                frag.appendChild(heading);
+                lastDate = currentDate;
+              }
+
+              // Add the song request card
+              frag.appendChild(createCard(req));
+            }
             feed.appendChild(frag);
           }
           function scheduleRender() {
