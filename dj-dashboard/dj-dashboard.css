@@ -138,6 +138,15 @@ select:focus-visible,
   margin: 0 auto;
 }
 
+/* Style for the new date headings */
+.date-heading {
+  /* Add margin to separate from the previous date group */
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
 .card {
   display: flex;
   align-items: center;
