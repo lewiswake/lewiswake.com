@@ -1,15 +1,13 @@
-<!-- song-request-form.html (CLEANED: removed Spotify + secrets, safer DOM, no inline handlers) -->
+<!-- song-request-form.html (FIXED) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Request a song</title>
-    <link rel="stylesheet" href="song-request-form.css" />
+
     <!-- Favicon / App Icons -->
     <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
-
-    <!-- Explicit PNG (helps Firefox) -->
     <link
       rel="icon"
       href="favicon/favicon-96x96.png"
@@ -28,19 +26,611 @@
       type="image/png"
       sizes="32x32"
     />
-
-    <!-- Apple touch icon (iOS home screen) -->
     <link
       rel="apple-touch-icon"
       href="favicon/apple-touch-icon.png"
       sizes="180x180"
     />
-
-    <!-- PWA manifest -->
     <link rel="manifest" href="favicon/site.webmanifest" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===============================
+       Song Request — Stylesheet (fixed)
+       - Safer resets
+       - Color variables respected in light/dark
+       - Modal visibility rules unified
+       - Suggestion list layering fixed
+       =============================== */
+
+      :root {
+        /* Colors (light) */
+        --bg: #f4f4f4;
+        --fg: #222;
+        --card-bg: #fff;
+        --primary: #3e2c6d;
+        --primary-hover: #2d2050;
+        --success: #0f766e;
+        --error: #e53e3e;
+        --border: #d9d9d9;
+        --muted: #666;
+        --shadow: rgba(0, 0, 0, 0.15);
+
+        /* Greeting tokens */
+        --greet-size: 1.875rem;
+        --greet-weight: 700;
+        --greet-bg: transparent;
+        --greet-fg: var(--fg);
+
+        /* Typography & radii */
+        --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        --radius: 10px;
+        --radius-sm: 8px;
+
+        /* Spacing & sizing */
+        --spacing: 1rem;
+        --spacing-sm: 0.75rem;
+        --font-size-base: 18px;
+
+        /* Focus outline */
+        --focus: 2px solid #2563eb;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --fg: #fff;
+          --card-bg: #1e1e1e;
+          --border: #333;
+          --shadow: rgba(0, 0, 0, 0.5);
+          --greet-bg: transparent;
+          --greet-fg: var(--fg);
+        }
+      }
+
+      /* --- Safer base reset --- */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        padding: var(--spacing);
+        font-family: var(--font);
+        font-size: var(--font-size-base);
+        line-height: 1.5;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      a {
+        color: inherit;
+      }
+
+      .wrapper {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .title {
+        margin: 0 0 1.25rem;
+        font-weight: 600;
+      }
+
+      /* Utilities */
+      .hidden {
+        display: none !important;
+      }
+      .visually-hidden {
+        position: absolute !important;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Greeting */
+      .greeting-bar {
+        display: none; /* shown via JS */
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0 0 0.75rem 0;
+        background: var(--greet-bg);
+        color: var(--greet-fg);
+      }
+      .greeting-text {
+        font-weight: var(--greet-weight);
+        font-size: var(--greet-size);
+        line-height: 1.2;
+        margin: 0;
+      }
+      .greeting-edit-btn {
+        margin-left: auto;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+      }
+      .greeting-edit-btn:hover,
+      .greeting-edit-btn:focus-visible {
+        outline: var(--focus);
+        outline-offset: 2px;
+      }
+      .greeting-input {
+        display: none;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--greet-fg);
+        font-weight: var(--greet-weight);
+        font-size: var(--greet-size);
+        line-height: 1.2;
+        padding: 0;
+        margin: 0;
+        min-width: 6ch;
+      }
+      .greeting-input:focus-visible {
+        outline: none;
+        border-bottom-color: currentColor;
+      }
+      .greeting-bar.editing .greeting-text {
+        display: none;
+      }
+      .greeting-bar.editing .greeting-input {
+        display: inline-block;
+      }
+
+      /* Form */
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+      }
+
+      .input,
+      .button {
+        width: 100%;
+        font-size: 1.125rem;
+        padding: var(--spacing);
+        border-radius: var(--radius);
+        font-family: var(--font);
+      }
+      .input {
+        border: 1px solid var(--border);
+        background: var(--card-bg); /* FIX: respect theme */
+        color: var(--fg); /* FIX: respect theme */
+      }
+      .input:focus {
+        outline: var(--focus);
+        outline-offset: 2px;
+      }
+
+      .button {
+        display: inline-block;
+        text-align: center;
+        background: var(--primary);
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 150ms ease, transform 150ms ease;
+        text-decoration: none;
+        border: 0;
+        font-weight: 600;
+      }
+      .button:not(:disabled):hover {
+        background: var(--primary-hover);
+      }
+      .button:active {
+        transform: translateY(1px);
+      }
+      .button:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      .confirmation,
+      .warning-message {
+        margin-top: var(--spacing);
+        text-align: center;
+        font-weight: 600;
+      }
+      .confirmation {
+        color: var(--success);
+      }
+      .warning-message {
+        color: var(--error);
+      }
+
+      /* Suggestions (typeahead) */
+      .suggestions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 6px var(--shadow);
+        max-height: 320px;
+        overflow-y: auto;
+        position: relative;
+        z-index: 5; /* sits above page content, below modals */
+        border: 1px solid var(--border);
+      }
+      .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+      }
+      .suggestion-item:last-child {
+        border-bottom: 0;
+      }
+      .suggestion-item:focus {
+        outline: var(--focus);
+        outline-offset: -2px;
+      }
+      .suggestion-thumb,
+      .card-thumb {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+        background: #eee;
+      }
+      .suggestion-text .track-title,
+      .card-title {
+        font-weight: 600;
+      }
+      .suggestion-text .track-artist,
+      .card-artist {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      /* Selected song card */
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: calc(var(--spacing) * 1.5);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border);
+      }
+      .card-heading {
+        font-weight: 600;
+        margin: -0.25rem 0 0.5rem;
+      }
+      .card-body {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+      }
+
+      /* Sections */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: var(--spacing) 0;
+      }
+      .tip-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing);
+      }
+      .tip-footer h2 {
+        margin: 0;
+        font-weight: 600;
+      }
+      .tip-footer .button {
+        width: auto;
+        padding: var(--spacing-sm) var(--spacing);
+        font-size: 1rem;
+      }
+
+      /* Modals */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal.hidden {
+        display: none !important;
+      }
+
+      .modal-content {
+        background-color: var(--card-bg);
+        color: var(--fg);
+        padding: calc(var(--spacing) * 2);
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px var(--shadow);
+        max-width: 420px;
+        width: 92%;
+        text-align: center;
+        position: relative;
+        animation: fadeIn 200ms ease-out;
+        border: 1px solid var(--border);
+      }
+
+      /* Blocked Artist Modal: force light for BBC link contrast */
+      #blockedArtistModal .modal-content {
+        background: #fff;
+        color: #222;
+      }
+      #blockedArtistModal .modal-title {
+        color: #ff4136;
+      }
+      #blockedArtistModal .modal-message {
+        color: #222;
+      }
+
+      .close-button,
+      .modal-close-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.75rem;
+        background: transparent;
+        border: 0;
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        color: #aaa;
+        transition: color 150ms ease, opacity 150ms ease;
+      }
+      .close-button:hover,
+      .modal-close-btn:hover {
+        color: var(--fg);
+        opacity: 1;
+      }
+      .close-button:focus-visible,
+      .modal-close-btn:focus-visible {
+        outline: var(--focus);
+      }
+
+      .modal-content h2 {
+        margin-top: 0;
+      }
+      .modal-links {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+        margin-top: 1.25rem;
+      }
+      .modal-links .button {
+        width: auto;
+        font-size: 1rem;
+        padding: var(--spacing-sm) var(--spacing);
+      }
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+      .modal-link-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .modal-link {
+        display: inline-block;
+        padding: var(--spacing-sm) var(--spacing);
+        background-color: var(--primary);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 150ms ease;
+      }
+      .modal-link:hover {
+        background-color: var(--primary-hover);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
+      /* Social buttons */
+      .social-links {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .social-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 150ms ease, transform 150ms ease;
+        outline: 0;
+      }
+      .social-btn:hover {
+        background: var(--primary-hover);
+      }
+      .social-btn:active {
+        transform: translateY(1px);
+      }
+      .social-btn:focus-visible {
+        outline: var(--focus);
+        outline-offset: 2px;
+      }
+      .social-icon-img {
+        width: 24px;
+        height: 24px;
+        display: block;
+        filter: brightness(0) invert(1);
+        image-rendering: crisp-edges;
+      }
+
+      /* Make the modal’s social row actually row-ish on small screens too */
+      .modal-links.social-links {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      @media (max-width: 380px) {
+        .modal-links.social-links {
+          flex-wrap: wrap;
+        }
+      }
+
+      /* (If using CSS masks instead of <img>, keep helpers) */
+      .icon-instagram {
+        -webkit-mask-image: url("assets/icons/instagram-brands-solid-full.svg");
+        mask-image: url("assets/icons/instagram-brands-solid-full.svg");
+      }
+      .icon-tiktok {
+        -webkit-mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
+        mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
+      }
+      .icon-youtube {
+        -webkit-mask-image: url("assets/icons/youtube-brands-solid-full.svg");
+        mask-image: url("assets/icons/youtube-brands-solid-full.svg");
+      }
+      .icon-soundcloud {
+        -webkit-mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
+        mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
+      }
+      .icon-patreon {
+        -webkit-mask-image: url("assets/icons/patreon-brands-solid-full.svg");
+        mask-image: url("assets/icons/patreon-brands-solid-full.svg");
+      }
+
+      /* Payment buttons */
+      .pay-grid {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .pay-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
+        background: var(--primary);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 150ms ease, transform 150ms ease;
+        outline: 0;
+      }
+      .pay-btn:hover {
+        background: var(--primary-hover);
+      }
+      .pay-btn:active {
+        transform: translateY(1px);
+      }
+      .pay-btn:focus-visible {
+        outline: var(--focus);
+        outline-offset: 2px;
+      }
+      .pay-icon {
+        width: 22px;
+        height: 22px;
+        display: block;
+        filter: brightness(0) invert(1);
+        image-rendering: crisp-edges;
+      }
+    </style>
   </head>
+
   <body>
     <main class="wrapper">
+      <!-- Greeting above title -->
+      <div
+        id="greetingBar"
+        class="greeting-bar"
+        role="status"
+        aria-live="polite"
+      >
+        <h2 id="greetingText" class="greeting-text" aria-hidden="true"></h2>
+        <label for="requesterName" class="visually-hidden">Your name</label>
+        <input
+          type="text"
+          id="requesterName"
+          class="greeting-input"
+          placeholder="Type your name…"
+          inputmode="text"
+          autocomplete="name"
+          maxlength="60"
+          aria-label="Your name"
+        />
+        <button
+          id="greetingEditBtn"
+          class="greeting-edit-btn"
+          type="button"
+          aria-label="Change your name"
+        >
+          ✏️
+        </button>
+      </div>
+
       <h1 class="title">🎵 Request a song</h1>
 
       <form
@@ -49,6 +639,7 @@
         aria-describedby="confirmation"
         novalidate
       >
+        <!-- Search -->
         <label for="searchInput" class="visually-hidden">🔍 Search song</label>
         <input
           type="search"
@@ -69,7 +660,7 @@
           aria-label="Song suggestions"
         ></ul>
 
-        <!-- Hidden fields populated on select -->
+        <!-- Hidden fields -->
         <input type="hidden" id="artist" name="artist" />
         <input type="hidden" id="title" name="title" />
         <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
@@ -113,7 +704,6 @@
       <section class="tip-footer">
         <h2>🎧 Follow the DJ</h2>
         <div class="social-links" role="group" aria-label="Follow the DJ">
-          <!-- Instagram -->
           <a
             class="social-btn"
             href="https://www.instagram.com/lewiswakedj"
@@ -121,16 +711,12 @@
             rel="noopener noreferrer"
             aria-label="Instagram"
             title="Instagram"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/instagram-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- TikTok -->
+          /></a>
           <a
             class="social-btn"
             href="https://www.tiktok.com/@lewiswakedj"
@@ -138,16 +724,12 @@
             rel="noopener noreferrer"
             aria-label="TikTok"
             title="TikTok"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/tiktok-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- YouTube -->
+          /></a>
           <a
             class="social-btn"
             href="https://www.youtube.com/lewiswakedj"
@@ -155,16 +737,12 @@
             rel="noopener noreferrer"
             aria-label="YouTube"
             title="YouTube"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/youtube-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- SoundCloud -->
+          /></a>
           <a
             class="social-btn"
             href="https://soundcloud.com/lewiswakedj"
@@ -172,16 +750,12 @@
             rel="noopener noreferrer"
             aria-label="SoundCloud"
             title="SoundCloud"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/soundcloud-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- Patreon -->
+          /></a>
           <a
             class="social-btn"
             href="https://patreon.com/lewiswakedj"
@@ -189,23 +763,19 @@
             rel="noopener noreferrer"
             aria-label="Patreon"
             title="Patreon"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/patreon-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
+          /></a>
         </div>
       </section>
 
       <hr class="divider" />
       <section class="tip-footer">
         <h2>🍻 Buy the DJ a drink</h2>
-
         <div class="pay-grid" role="group" aria-label="Buy the DJ a drink">
-          <!-- Apple Pay -->
           <a
             class="pay-btn pay-btn--wallet"
             href="https://buy.stripe.com/9B6cN59VI2No2BPacA4wM00"
@@ -219,11 +789,8 @@
               src="assets/icons/apple-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-            <span class="pay-text">Apple Pay</span>
+            /><span class="pay-text">Apple Pay</span>
           </a>
-
-          <!-- Google Pay -->
           <a
             class="pay-btn pay-btn--wallet"
             href="https://buy.stripe.com/9B6cN59VI2No2BPacA4wM00"
@@ -237,11 +804,8 @@
               src="assets/icons/google-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-            <span class="pay-text">Google Pay</span>
+            /><span class="pay-text">Google Pay</span>
           </a>
-
-          <!-- PayPal -->
           <a
             class="pay-btn pay-btn--paypal"
             href="https://www.paypal.me/lewiswake"
@@ -255,14 +819,13 @@
               src="assets/icons/paypal-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-            <span class="pay-text">PayPal</span>
+            /><span class="pay-text">PayPal</span>
           </a>
         </div>
       </section>
     </main>
 
-    <!-- Blocked Artist Modal -->
+    <!-- Blocked Artist Modal (overlay pattern) -->
     <div id="blockedArtistModal" class="modal-overlay" aria-hidden="true">
       <div
         class="modal-content"
@@ -298,9 +861,8 @@
         </div>
       </div>
     </div>
-    <!-- End Blocked Artist Modal -->
 
-    <!-- Social Media Modal -->
+    <!-- Social Media Modal (panel pattern) -->
     <div id="socialModal" class="modal hidden" aria-hidden="true">
       <div class="modal-content">
         <button
@@ -313,13 +875,11 @@
         </button>
         <h2>Thanks for all your requests!</h2>
         <p>Enjoying the music? Follow me on social media to stay up to date!</p>
-
         <div
           class="modal-links social-links"
           role="group"
           aria-label="Follow the DJ"
         >
-          <!-- Instagram -->
           <a
             class="social-btn"
             href="https://www.instagram.com/lewiswakedj"
@@ -327,16 +887,12 @@
             rel="noopener noreferrer"
             aria-label="Instagram"
             title="Instagram"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/instagram-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- TikTok -->
+          /></a>
           <a
             class="social-btn"
             href="https://www.tiktok.com/@lewiswakedj"
@@ -344,16 +900,12 @@
             rel="noopener noreferrer"
             aria-label="TikTok"
             title="TikTok"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/tiktok-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- YouTube -->
+          /></a>
           <a
             class="social-btn"
             href="https://www.youtube.com/lewiswakedj"
@@ -361,16 +913,12 @@
             rel="noopener noreferrer"
             aria-label="YouTube"
             title="YouTube"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/youtube-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- SoundCloud -->
+          /></a>
           <a
             class="social-btn"
             href="https://soundcloud.com/lewiswakedj"
@@ -378,16 +926,12 @@
             rel="noopener noreferrer"
             aria-label="SoundCloud"
             title="SoundCloud"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/soundcloud-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
-
-          <!-- Patreon -->
+          /></a>
           <a
             class="social-btn"
             href="https://patreon.com/lewiswakedj"
@@ -395,21 +939,20 @@
             rel="noopener noreferrer"
             aria-label="Patreon"
             title="Patreon"
-          >
-            <img
+            ><img
               class="social-icon-img"
               src="assets/icons/patreon-brands-solid-full.svg"
               alt=""
               aria-hidden="true"
-            />
-          </a>
+          /></a>
         </div>
       </div>
     </div>
-    <!-- End Social Media Modal -->
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script>
       (function () {
         // ——— Firebase Configuration ———
@@ -436,7 +979,62 @@
         const cardTitle = document.getElementById("cardTitle");
         const cardArtist = document.getElementById("cardArtist");
 
-        // Modals
+        // Greeting elements
+        const greetingBar = document.getElementById("greetingBar");
+        const greetingText = document.getElementById("greetingText");
+        const greetingEditBtn = document.getElementById("greetingEditBtn");
+        const requesterNameInput = document.getElementById("requesterName");
+
+        // ——— Local name persistence ———
+        const LS_NAME_KEY = "dj_requester_name";
+        function getSavedName() {
+          try {
+            return (localStorage.getItem(LS_NAME_KEY) || "").trim();
+          } catch {
+            return "";
+          }
+        }
+        function setSavedName(name) {
+          try {
+            const clean = (name || "").trim().slice(0, 60);
+            if (clean) localStorage.setItem(LS_NAME_KEY, clean);
+            else localStorage.removeItem(LS_NAME_KEY);
+          } catch {}
+        }
+        function setGreeting(name) {
+          const clean = (name || "").trim();
+          greetingBar.style.display = "flex";
+          if (clean) {
+            greetingText.textContent = `Hey, ${clean}.`;
+            greetingText.setAttribute("aria-hidden", "false");
+            greetingBar.classList.remove("editing");
+          } else {
+            greetingText.textContent = "";
+            greetingText.setAttribute("aria-hidden", "true");
+            greetingBar.classList.add("editing");
+          }
+        }
+
+        const initialName = getSavedName();
+        requesterNameInput.value = initialName;
+        setGreeting(initialName);
+
+        greetingEditBtn.addEventListener("click", () => {
+          greetingBar.classList.add("editing");
+          requesterNameInput.focus();
+          requesterNameInput.select();
+        });
+
+        requesterNameInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") requesterNameInput.blur();
+        });
+        requesterNameInput.addEventListener("blur", () => {
+          const name = requesterNameInput.value.trim().slice(0, 60);
+          setSavedName(name);
+          setGreeting(name);
+        });
+
+        // ——— Modals ———
         const blockedArtistModal =
           document.getElementById("blockedArtistModal");
         const blockedArtistNameTitle = document.getElementById(
@@ -451,13 +1049,10 @@
         const socialModal = document.getElementById("socialModal");
         const socialCloseBtn = document.getElementById("socialCloseBtn");
 
-        let debounceTimer;
-
-        // ——— Modal Functions ———
         function openBlockedArtistModal(artist, link) {
           blockedArtistNameTitle.textContent = artist;
           blockedArtistLinkAnchor.href = link;
-          blockedArtistModal.classList.add("open");
+          blockedArtistModal.classList.add("open"); // uses .modal-overlay.open { display:flex }
           blockedArtistModal.setAttribute("aria-hidden", "false");
           searchInput.disabled = true;
         }
@@ -469,7 +1064,7 @@
           clearSuggestions();
         }
         function closeSocialModal() {
-          socialModal.classList.add("hidden");
+          socialModal.classList.add("hidden"); // uses .modal.hidden { display:none }
           socialModal.setAttribute("aria-hidden", "true");
         }
 
@@ -482,7 +1077,12 @@
           if (e.target === blockedArtistModal) closeBlockedArtistModal();
         });
 
-        // ——— Utility Functions ———
+        // ——— Utils ———
+        let debounceTimer;
+        function debounce(fn, delay = 300) {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(fn, delay);
+        }
         function getDeviceId() {
           let deviceId = localStorage.getItem("deviceId");
           if (!deviceId) {
@@ -504,8 +1104,7 @@
                 songKeys: [],
               }
             );
-          } catch (e) {
-            console.error("Failed to parse request data from localStorage:", e);
+          } catch {
             return { timestamps: [], songKeys: [] };
           }
         }
@@ -524,7 +1123,7 @@
           const data = getRequestData();
           const fifteenMinutesAgo = Date.now() - 900000;
           const recent = data.timestamps.filter((ts) => ts > fifteenMinutesAgo);
-          data.timestamps = recent; // compact
+          data.timestamps = recent;
           localStorage.setItem(
             `requests_data_${deviceId}`,
             JSON.stringify(data)
@@ -533,10 +1132,6 @@
         }
         function isDuplicateRequest(songKey) {
           return getRequestData().songKeys.includes(songKey);
-        }
-        function debounce(fn, delay = 300) {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(fn, delay);
         }
         function clearSuggestions() {
           suggestions.innerHTML = "";
@@ -561,7 +1156,6 @@
               const { results = [] } = await res.json();
               suggestions.innerHTML = "";
               suggestions.setAttribute("aria-expanded", "true");
-
               results.forEach((t) => {
                 const li = document.createElement("li");
                 li.className = "suggestion-item";
@@ -587,6 +1181,7 @@
                 textWrap.appendChild(artist);
                 li.appendChild(img);
                 li.appendChild(textWrap);
+
                 li.addEventListener("click", () => selectTrack(t));
                 suggestions.appendChild(li);
               });
@@ -671,14 +1266,12 @@
           cardArtist.textContent = track.artistName || "";
           clearSuggestions();
 
-          // Genre & Year (best-effort from iTunes payload)
+          // Genre & Year
           form.genre.value = track.primaryGenreName || "";
           form.releaseYear.value = track.releaseDate
             ? new Date(track.releaseDate).getFullYear()
             : "";
-
-          // BPM intentionally not fetched client-side (no Spotify; avoid exposing secrets)
-          form.bpm.value = "";
+          form.bpm.value = ""; // intentionally not fetched client-side
 
           showCard();
         }
@@ -695,13 +1288,21 @@
             return;
           }
 
+          // Today's date in YYYY-MM-DD (UTC)
+          const d = new Date();
+          const today = `${d.getUTCFullYear()}-${String(
+            d.getUTCMonth() + 1
+          ).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+
           const artistVal = form.artist.value;
           const titleVal = form.title.value;
-          const key = `${artistVal.toLowerCase()}||${titleVal.toLowerCase()}`;
+
+          // Unique key per day
+          const key = `${artistVal.toLowerCase()}||${titleVal.toLowerCase()}||${today}`;
 
           if (isDuplicateRequest(key)) {
             warning.textContent =
-              "You've already requested this song! Anything else?";
+              "You've already requested this song today! Anything else?";
             warning.classList.remove("hidden");
             submitBtn.disabled = false;
             return;
@@ -709,7 +1310,14 @@
 
           submitBtn.disabled = true;
 
-          const payload = {
+          // Persist name locally & include if present
+          let requesterName = (requesterNameInput.value || "").trim();
+          if (requesterName.length > 60)
+            requesterName = requesterName.slice(0, 60);
+          setSavedName(requesterName);
+          setGreeting(requesterName);
+
+          const basePayload = {
             artist: artistVal,
             title: titleVal,
             appleMusicUrl: form.appleMusicUrl.value,
@@ -718,7 +1326,11 @@
             genre: form.genre.value || "",
             releaseYear: parseInt(form.releaseYear.value, 10) || null,
             bpm: form.bpm.value ? parseInt(form.bpm.value, 10) : null,
+            requestDate: today,
           };
+          const payload = requesterName
+            ? { ...basePayload, requesterName }
+            : basePayload;
 
           const docRef = db.collection("requests").doc(key);
 
@@ -726,10 +1338,12 @@
             await db.runTransaction(async (tx) => {
               const doc = await tx.get(docRef);
               if (doc.exists) {
-                tx.update(docRef, {
-                  ...payload,
+                const updateData = {
+                  lastRequested: Date.now(),
                   count: firebase.firestore.FieldValue.increment(1),
-                });
+                };
+                if (requesterName) updateData.requesterName = requesterName;
+                tx.update(docRef, updateData);
               } else {
                 tx.set(docRef, {
                   ...payload,
@@ -758,7 +1372,9 @@
             warning.classList.add("hidden");
             confirmation.classList.remove("hidden");
             setTimeout(() => confirmation.classList.add("hidden"), 5000);
+
             form.reset();
+            requesterNameInput.value = getSavedName();
             card.classList.add("hidden");
             submitBtn.disabled = true;
           } catch (e) {
@@ -769,7 +1385,7 @@
           }
         });
 
-        // hide confirmation and modals on load
+        // Hide confirmation and modals on load
         window.addEventListener("load", () => {
           confirmation.classList.add("hidden");
           socialModal.classList.add("hidden");
