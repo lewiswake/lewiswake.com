@@ -1,0 +1,498 @@
+:root {
+  --bg: #121212;
+  --elev-1: #1e1e1e;
+  --text: #ffffff;
+  --muted: #cfcfcf;
+  --muted-2: #9a9a9a;
+  --primary: #3b82f6;
+  --primary-600: #2563eb;
+  --accent: #3e2c6d;
+  --accent-700: #2d2050;
+  --danger: #e53e3e;
+  --danger-600: #c53030;
+  --badge-border: var(--elev-1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --transition-fast: 150ms ease;
+  --transition-med: 300ms ease;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  padding: var(--space-4);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0 0 var(--space-4);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+select,
+button {
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+}
+select {
+  background: #fff;
+  color: #222;
+  border: 1px solid #ccc;
+  padding: var(--space-2) var(--space-4);
+  appearance: auto;
+}
+button {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+button:hover {
+  background: var(--accent-700);
+}
+button:active {
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+#backButton {
+  background: var(--elev-1);
+  border: 1px solid var(--accent);
+  flex-shrink: 0;
+}
+#backButton:hover {
+  background: var(--accent-700);
+}
+button:focus-visible,
+select:focus-visible,
+.apple-music-link:focus-visible,
+.delete-link:focus-visible,
+.date-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.date-link {
+  display: block;
+  background: var(--elev-1);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+  box-shadow: var(--shadow-1);
+}
+.date-link:hover {
+  background: var(--accent-700);
+  transform: translateY(-2px);
+}
+.date-link small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin-top: var(--space-1);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--elev-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  position: relative;
+  transition: transform var(--transition-med), opacity var(--transition-med);
+}
+.card:hover {
+  transform: translateY(-1px);
+}
+.card-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: #2a2a2a;
+}
+.thumb-missing {
+  filter: grayscale(1) brightness(0.7);
+}
+.card-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+.card-artist,
+.card-metadata {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.card-time {
+  font-size: 0.75rem;
+  color: var(--muted-2);
+}
+.requester-tab {
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: 0.25rem 0.5rem;
+  background: #fff;
+  color: #000;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.checkbox-container {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox-container input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.checkmark {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: grid;
+  place-items: center;
+  transition: border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+.checkbox-container input:checked ~ .checkmark {
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+.checkmark::after {
+  content: "";
+  display: block;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+  transform: scale(0.85);
+}
+.checkbox-container input:checked ~ .checkmark::after {
+  background: var(--primary);
+}
+
+.controls button.active {
+  background-color: #5d458c;
+  border: 1px solid #7c62a8;
+}
+.badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 24px;
+  height: 24px;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 1;
+  border: 2px solid var(--badge-border);
+  box-shadow: var(--shadow-1);
+}
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: 0.875rem;
+  margin-top: var(--space-2);
+}
+.apple-music-link {
+  color: var(--primary);
+  text-decoration: none;
+}
+.delete-link {
+  color: var(--danger);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.apple-music-link:hover,
+.delete-link:hover {
+  text-decoration: underline;
+}
+
+.bottom-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.clear-all-btn {
+  background: var(--danger);
+  color: #fff;
+  border: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+.clear-all-btn:hover {
+  background: var(--danger-600);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--space-3);
+  }
+  .card-thumb {
+    width: 64px;
+    height: 64px;
+  }
+  .card-actions {
+    font-size: 0.75rem;
+  }
+  h1 {
+    font-size: 1.25rem;
+  }
+  .auth-card {
+    padding: 2rem 1rem;
+  }
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.view-home .controls,
+.view-home .bottom-controls,
+.view-home #backButton {
+  display: none;
+}
+.view-home #pageTitle {
+  text-align: left;
+}
+.view-date .controls,
+.view-date .bottom-controls,
+.view-date #backButton {
+  display: flex;
+}
+.view-date #pageTitle {
+  text-align: center;
+}
+/* Ensure hidden always hides overlays */
+.auth-card-wrapper[hidden] {
+  display: none !important;
+}
+
+/* --- NEW AUTH STYLES --- */
+.auth-card-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  padding: var(--space-4);
+}
+.auth-card {
+  background: var(--elev-1);
+  padding: 3rem 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.auth-title {
+  font-size: 1.75rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.auth-form input {
+  display: block;
+  width: 100%;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--muted-2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+}
+.auth-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  margin-bottom: var(--space-3);
+  text-align: center;
+}
+.auth-primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+}
+.auth-primary:hover {
+  background: var(--primary-600);
+}
+.auth-secondary {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--muted-2);
+}
+.auth-secondary:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+.auth-error-message {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  background-color: var(--danger-600);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+/* --- NEW DIALOG STYLES (Replacing alert/confirm) --- */
+.custom-dialog-wrapper {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--space-4);
+  backdrop-filter: blur(4px);
+}
+.custom-dialog {
+  background: var(--elev-1);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+}
+.custom-dialog h3 {
+  color: var(--primary);
+  margin-top: 0;
+}
+.dialog-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: 1.5rem;
+}
+.dialog-actions button {
+  flex: 1;
+  margin: 0;
+}
+
+/* =========================
+   Overlay visibility fixes
+   (append to end of screen.css)
+   ========================== */
+
+/* Make the HTML [hidden] attribute win even if earlier rules set display */
+[hidden] {
+  display: none !important;
+}
+
+/* Auth modal: ensure it truly hides when toggled via JS */
+#authContainer[hidden] {
+  display: none !important;
+}
+
+/* If your auth markup uses this wrapper class, hide it too when [hidden] is present */
+.auth-card-wrapper[hidden] {
+  display: none !important;
+}
+
+/* Custom dialog: same guarantee */
+#customDialog[hidden] {
+  display: none !important;
+}
+
+/* Optional hardening: prevent stray pointer events when an overlay should be hidden */
+#authContainer[hidden],
+#customDialog[hidden] {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Optional quality-of-life: when visible, overlays sit above the app */
+#authContainer:not([hidden]),
+#customDialog:not([hidden]) {
+  z-index: 9999; /* above typical app chrome */
+}
