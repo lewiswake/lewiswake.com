@@ -764,23 +764,38 @@
                 }
             } catch (error) {
                 let errorMessage = "An unknown error occurred.";
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = 'Invalid email or password.';
-                        break;
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'This email is already in use.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password should be at least 6 characters.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'The email address is not valid.';
-                        break;
-                    default:
-                        errorMessage = `Authentication failed: ${error.message}`;
+                
+                // Enhanced error parsing for better user feedback
+                if (error.code) {
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'No user found with this email.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password.';
+                            break;
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'This email is already in use. Try signing in.';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password should be at least 6 characters.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'The email address is not valid.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = 'Network error. Please check your internet connection.';
+                            break;
+                        case 'auth/operation-not-allowed':
+                            errorMessage = 'Email/Password sign-in is disabled for this project.';
+                            break;
+                        default:
+                            errorMessage = `Authentication failed: ${error.message}`;
+                    }
+                } else {
+                    errorMessage = error.message || "An unknown network error occurred.";
                 }
+
                 showAuthError(errorMessage);
                 console.error("Auth error:", error);
             }
