@@ -262,7 +262,7 @@
         background-color: color-mix(in srgb, var(--primary) 20%, transparent);
       }
       .checkmark::after {
-        content: \"\";
+        content: "";
         display: block;
         height: 18px;
         width: 18px;
@@ -355,6 +355,9 @@
         h1 {
           font-size: 1.25rem;
         }
+        .auth-card {
+            padding: 2rem 1rem;
+        }
       }
 
       .topbar {
@@ -379,24 +382,119 @@
       .view-date #pageTitle {
         text-align: center;
       }
-    </style>
 
-    <!-- Firebase v8 -->
-    <script
-      src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"
-      defer
-    ></script>
-    <script
-      src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"
-      defer
-    ></script>
-    <script
-      src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"
-      defer
-    ></script>
+      /* --- NEW AUTH STYLES --- */
+      .auth-card-wrapper {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        padding: var(--space-4);
+      }
+      .auth-card {
+        background: var(--elev-1);
+        padding: 3rem 2rem;
+        border-radius: var(--radius-md);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+      .auth-title {
+        font-size: 1.75rem;
+        margin-top: 0;
+        margin-bottom: 2rem;
+        color: var(--primary);
+      }
+      .auth-form input {
+        display: block;
+        width: 100%;
+        padding: var(--space-3);
+        margin-bottom: var(--space-4);
+        border: 1px solid var(--muted-2);
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 1rem;
+      }
+      .auth-btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        transition: var(--transition-fast);
+        margin-bottom: var(--space-3);
+        text-align: center;
+      }
+      .auth-primary {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+      }
+      .auth-primary:hover {
+        background: var(--primary-600);
+      }
+      .auth-secondary {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--muted-2);
+      }
+      .auth-secondary:hover {
+        color: var(--text);
+        border-color: var(--text);
+      }
+      .auth-error-message {
+        padding: var(--space-3);
+        margin-bottom: var(--space-4);
+        background-color: var(--danger-600);
+        color: var(--text);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        text-align: left;
+      }
+
+      /* --- NEW DIALOG STYLES (Replacing alert/confirm) --- */
+      .custom-dialog-wrapper {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none; /* <-- Set to display: none by default in CSS for safety */
+        align-items: center;
+        justify-content: center;
+        z-index: 2000; /* Higher than auth container */
+        padding: var(--space-4);
+        backdrop-filter: blur(4px);
+      }
+      .custom-dialog {
+        background: var(--elev-1);
+        padding: 2rem;
+        border-radius: var(--radius-md);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+        width: 100%;
+        max-width: 350px;
+        text-align: center;
+      }
+      .custom-dialog h3 {
+          color: var(--primary);
+          margin-top: 0;
+      }
+      .dialog-actions {
+          display: flex;
+          gap: var(--space-3);
+          margin-top: 1.5rem;
+      }
+      .dialog-actions button {
+          flex: 1;
+          margin: 0; /* Override auth-btn margin */
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Main Dashboard Application -->
     <div id="app" class="view-home" hidden>
       <header>
         <div class="topbar">
@@ -460,25 +558,108 @@
       </footer>
     </div>
 
-    <script>
-      // --- CONFIG --- //
-      const firebaseConfig = {
-        apiKey: "AIzaSyBLZp3f5WAWkAJDpBidh-C2mib2nhnLys4",
-        authDomain: "song-request-a8a68.firebaseapp.com",
-        projectId: "song-request-a8a68",
-        storageBucket: "song-request-a8a68.appspot.com",
-        messagingSenderId: "522633732679",
-        appId: "1:522633732679:web:564894980a2e0484828762",
-      };
+    <!-- Integrated Login/Sign Up Interface -->
+    <div id="authContainer" class="auth-card-wrapper" hidden>
+        <div class="auth-card">
+            <h2 id="authTitle" class="auth-title">DJ Dashboard Login</h2>
+            <div id="authError" class="auth-error-message" hidden></div>
+
+            <form id="authForm" class="auth-form">
+                <input type="email" id="emailInput" placeholder="Email" required autocomplete="email" />
+                <input type="password" id="passwordInput" placeholder="Password" required autocomplete="current-password" />
+                <button id="authPrimaryBtn" type="submit" class="auth-btn auth-primary">Sign In</button>
+                <button id="toggleAuthBtn" type="button" class="auth-btn auth-secondary">Need an account? Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Dialog/Modal for Alerts and Confirms (Replacing alert/confirm) -->
+    <!-- The 'hidden' attribute is removed here as we control visibility via CSS/JS display property now -->
+    <div id="customDialog" class="custom-dialog-wrapper">
+        <div class="custom-dialog">
+            <h3 id="dialogTitle"></h3>
+            <p id="dialogMessage"></p>
+            <div id="dialogActions" class="dialog-actions">
+                <!-- Buttons are handled in JS to ensure clean listeners -->
+                <button id="dialogConfirm" type="button" class="auth-btn auth-primary">Yes</button>
+                <button id="dialogCancel" type="button" class="auth-btn auth-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase v11 Modular Imports -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import { getFirestore, collection, doc, updateDoc, deleteDoc, onSnapshot, FieldValue, setDoc, writeBatch, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // Helper to wrap the modular FieldValue
+      const serverTimestamp = () => FieldValue.serverTimestamp();
+
+      // --- Custom Dialog Implementation (Replaces alert() and confirm()) ---
+      const customDialog = document.getElementById('customDialog');
+      const dialogTitle = document.getElementById('dialogTitle');
+      const dialogMessage = document.getElementById('dialogMessage');
+      const dialogConfirm = document.getElementById('dialogConfirm');
+      const dialogCancel = document.getElementById('dialogCancel');
+      const dialogActions = document.getElementById('dialogActions');
+
+      function showDialog({ title, message, isConfirm = false }) {
+          console.log(`[DIALOG] Showing ${isConfirm ? 'Confirm' : 'Alert'} dialog: ${title} - ${message}`); // Debugging log
+          return new Promise(resolve => {
+              dialogTitle.textContent = title;
+              dialogMessage.textContent = message;
+              
+              // Only show 'Cancel' button for confirmations
+              dialogActions.style.display = isConfirm ? 'flex' : 'block';
+              dialogCancel.hidden = !isConfirm;
+
+              // Clone buttons to ensure we only have one-time listeners
+              const newConfirm = dialogConfirm.cloneNode(true);
+              dialogConfirm.parentNode.replaceChild(newConfirm, dialogConfirm);
+              const newCancel = dialogCancel.cloneNode(true);
+              dialogCancel.parentNode.replaceChild(newCancel, dialogCancel);
+
+              if (isConfirm) {
+                  newConfirm.textContent = "Yes";
+                  newConfirm.addEventListener('click', () => {
+                      customDialog.style.display = 'none'; // Hide dialog
+                      resolve(true);
+                  }, { once: true });
+                  newCancel.addEventListener('click', () => {
+                      customDialog.style.display = 'none'; // Hide dialog
+                      resolve(false);
+                  }, { once: true });
+              } else {
+                  // For alerts, the 'Yes' button acts as an 'OK' button
+                  newConfirm.textContent = "OK";
+                  newConfirm.addEventListener('click', () => {
+                      customDialog.style.display = 'none'; // Hide dialog
+                      resolve(true);
+                  }, { once: true });
+              }
+              customDialog.style.display = 'flex'; // Show dialog
+          });
+      }
+      window.customAlert = (message) => showDialog({ title: "Notification", message, isConfirm: false });
+      window.customConfirm = (message) => showDialog({ title: "Confirm Action", message, isConfirm: true });
+
 
       window.addEventListener("DOMContentLoaded", () => {
-        if (!window.firebase) {
-          console.error("Firebase failed to load.");
-          return;
+        
+        // --- CONFIG & INITIALIZATION (using global variables) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+        if (Object.keys(firebaseConfig).length === 0) {
+            console.error("Firebase config is missing. Cannot initialize app.");
+            document.getElementById("app").innerHTML = `<p style="text-align:center;color:var(--danger);">Configuration error. Please check your Firebase setup.</p>`;
+            return;
         }
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         // --- ELEMENT REFS ---
         const appElement = document.getElementById("app");
@@ -493,6 +674,15 @@
         const decadeFilter = document.getElementById("decadeFilter");
         const genreFilter = document.getElementById("genreFilter");
         const signOutBtn = document.getElementById("signOutBtn");
+        // New Auth Refs
+        const authContainer = document.getElementById("authContainer");
+        const authTitle = document.getElementById("authTitle");
+        const authError = document.getElementById("authError");
+        const authForm = document.getElementById("authForm");
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const authPrimaryBtn = document.getElementById("authPrimaryBtn");
+        const toggleAuthBtn = document.getElementById("toggleAuthBtn");
 
         // --- STATE ---
         let currentView = "home";
@@ -501,32 +691,110 @@
         let renderQueued = false;
         let dateGroups = {};
         let unsubscribeRequests = null;
+        let isSigningUp = false; // Auth state toggle
 
-        // --- AUTH GUARD ---
-        auth
-          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-          .catch(() => {});
-        auth.onAuthStateChanged((user) => {
-          if (!user) {
-            // Not signed in -> send to login
-            window.location.replace("login.html");
-            return;
-          }
-          // Signed in -> show app + subscribe
-          appElement.hidden = false;
-          userBadge.textContent = user.email || "Signed in";
-          subscribeRequests();
-          scheduleRender();
+        // --- AUTH LOGIC ---
+        function showAuthError(message) {
+            authError.textContent = message;
+            authError.hidden = false;
+        }
+        function hideAuthError() {
+            authError.hidden = true;
+        }
+
+        // 1. Handle Initial Canvas Auth (for background user tracking)
+        if (typeof __initial_auth_token !== 'undefined') {
+            signInWithCustomToken(auth, __initial_auth_token)
+                .catch(async (e) => {
+                    console.warn("Initial custom token auth failed. Falling back to anonymous sign-in.", e);
+                    await signInAnonymously(auth);
+                });
+        } else {
+            signInAnonymously(auth)
+                .catch(e => console.error("Anonymous sign-in failed.", e));
+        }
+
+        // 2. Auth State Change Listener (Decides which view to show)
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Not signed in -> show login form
+                appElement.hidden = true;
+                authContainer.hidden = false;
+                userBadge.textContent = "Guest";
+                if (unsubscribeRequests) {
+                    unsubscribeRequests();
+                    unsubscribeRequests = null;
+                }
+                return;
+            }
+            // Signed in -> show app + subscribe
+            authContainer.hidden = true;
+            appElement.hidden = false;
+            userBadge.textContent = user.email || user.uid || "Signed in";
+            subscribeRequests();
+            scheduleRender();
         });
 
+        // 3. Login/Signup Toggle
+        toggleAuthBtn.addEventListener("click", () => {
+            isSigningUp = !isSigningUp;
+            authTitle.textContent = isSigningUp ? "DJ Dashboard Sign Up" : "DJ Dashboard Login";
+            authPrimaryBtn.textContent = isSigningUp ? "Sign Up" : "Sign In";
+            toggleAuthBtn.textContent = isSigningUp ? "Already have an account? Sign In" : "Need an account? Sign Up";
+            hideAuthError();
+        });
+
+        // 4. Login/Signup Submit
+        authForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            hideAuthError();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                showAuthError("Please enter both email and password.");
+                return;
+            }
+
+            try {
+                if (isSigningUp) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                let errorMessage = "An unknown error occurred.";
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        errorMessage = 'Invalid email or password.';
+                        break;
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'This email is already in use.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password should be at least 6 characters.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'The email address is not valid.';
+                        break;
+                    default:
+                        errorMessage = `Authentication failed: ${error.message}`;
+                }
+                showAuthError(errorMessage);
+                console.error("Auth error:", error);
+            }
+        });
+
+        // 5. Sign Out
         signOutBtn?.addEventListener("click", async () => {
-          try {
-            await auth.signOut();
-            window.location.replace("login.html");
-          } catch (e) {
-            console.error(e);
-          }
+            try {
+                await signOut(auth);
+            } catch (e) {
+                console.error(e);
+            }
         });
+
 
         // --- UTILITIES ---
         const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
@@ -864,7 +1132,7 @@
         function exportRequests() {
           const all = getFilteredSortedRequests();
           if (!all.length) {
-            alert("No requests to export for this view.");
+            customAlert("No requests to export for this view.");
             return;
           }
           all.sort((a, b) =>
@@ -938,38 +1206,39 @@
             confirmMessage = `Clear *all* ${itemsToClear.length} song requests from *all dates*? This cannot be undone.`;
           }
           if (itemsToClear.length === 0) {
-            alert("No requests to clear.");
+            customAlert("No requests to clear.");
             return;
           }
-          if (!confirm(confirmMessage)) return;
+          
+          if (!await customConfirm(confirmMessage)) return;
+
           try {
             let docsToDelete = [];
+            const requestsCol = collection(db, "requests");
             if (selectedDate) {
               itemsToClear.forEach((item) =>
-                docsToDelete.push(db.collection("requests").doc(item.key))
+                docsToDelete.push(doc(requestsCol, item.key))
               );
             } else {
-              const snapshot = await db.collection("requests").get();
-              snapshot.docs.forEach((doc) => docsToDelete.push(doc.ref));
+              const snapshot = await getDocs(query(requestsCol));
+              snapshot.docs.forEach((d) => docsToDelete.push(d.ref));
             }
+            
             if (docsToDelete.length === 0) return;
-            let batch = db.batch();
-            docsToDelete.forEach((ref, index) => {
-              batch.delete(ref);
-              if (
-                (index + 1) % 500 === 0 ||
-                index === docsToDelete.length - 1
-              ) {
-                batch
-                  .commit()
-                  .catch((err) => console.error("Batch delete failed", err));
-                if (index !== docsToDelete.length - 1) batch = db.batch();
-              }
-            });
+            
+            // Batch delete logic (max 500 ops per batch)
+            const batchSize = 499;
+            for (let i = 0; i < docsToDelete.length; i += batchSize) {
+                const batch = writeBatch(db);
+                const currentBatchDocs = docsToDelete.slice(i, i + batchSize);
+                currentBatchDocs.forEach((ref) => batch.delete(ref));
+                await batch.commit();
+            }
+
             if (selectedDate) navigateHome();
           } catch (err) {
             console.error("Failed to clear requests", err);
-            alert("Failed to clear requests. Check console for details.");
+            customAlert("Failed to clear requests. Check console for details.");
           }
         });
 
@@ -982,23 +1251,20 @@
           const id = card?.dataset.id;
           if (!id) return;
           const fulfilled = !!target.checked;
-          if (requestsMap[id]) requestsMap[id].fulfilled = fulfilled; // optimistic
+          
+          // Optimistic update
+          if (requestsMap[id]) requestsMap[id].fulfilled = fulfilled; 
           scheduleRender();
-          db.collection("requests")
-            .doc(id)
-            .update({
+
+          const docRef = doc(db, "requests", id);
+          updateDoc(docRef, {
               fulfilled,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedAt: serverTimestamp(),
             })
             .catch((err) => {
-              return db
-                .collection("requests")
-                .doc(id)
-                .set(
-                  {
-                    fulfilled,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                  },
+              // Fallback for document not existing (shouldn't happen on update)
+              return setDoc(docRef, 
+                  { fulfilled, updatedAt: serverTimestamp() },
                   { merge: true }
                 )
                 .catch((err2) => {
@@ -1009,7 +1275,7 @@
                   if (requestsMap[id]) requestsMap[id].fulfilled = !fulfilled;
                   target.checked = !fulfilled;
                   scheduleRender();
-                  alert(
+                  customAlert(
                     (err2 && err2.message) ||
                       "Failed to update status. Please try again."
                   );
@@ -1017,19 +1283,19 @@
             });
         });
 
-        feed.addEventListener("click", (e) => {
+        feed.addEventListener("click", async (e) => {
           const delBtn = e.target.closest && e.target.closest(".delete-link");
           if (!delBtn) return;
           const card = delBtn.closest(".card");
           const id = card?.dataset.id;
           if (!id) return;
-          if (!confirm("Delete this request? This cannot be undone.")) return;
-          db.collection("requests")
-            .doc(id)
-            .delete()
+          
+          if (!await customConfirm("Delete this request? This cannot be undone.")) return;
+          
+          deleteDoc(doc(db, "requests", id))
             .catch((err) => {
               console.error("Failed to delete request", err);
-              alert("Failed to delete. Please try again.");
+              customAlert("Failed to delete. Please try again.");
             });
         });
 
@@ -1039,17 +1305,22 @@
             unsubscribeRequests();
             unsubscribeRequests = null;
           }
-          unsubscribeRequests = db.collection("requests").onSnapshot(
+          
+          const q = query(collection(db, "requests"));
+
+          unsubscribeRequests = onSnapshot(q,
             (snapshot) => {
               let filtersNeedUpdate = false;
               snapshot.docChanges().forEach(({ doc, type }) => {
                 const oldData = requestsMap[doc.id];
+                const newData = { ...doc.data(), key: doc.id };
+
                 if (type === "removed") {
                   delete requestsMap[doc.id];
                 } else {
-                  requestsMap[doc.id] = { ...doc.data(), key: doc.id };
+                  requestsMap[doc.id] = newData;
                 }
-                const newData = requestsMap[doc.id];
+                
                 if (
                   type === "added" ||
                   oldData?.genre !== newData?.genre ||
@@ -1058,6 +1329,7 @@
                   filtersNeedUpdate = true;
                 }
               });
+              
               if (filtersNeedUpdate) {
                 populateDecadeFilter();
                 populateGenreFilter();
