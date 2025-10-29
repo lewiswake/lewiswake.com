@@ -22,15 +22,9 @@ import {
   serverTimestamp as fbServerTimestamp,
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-/* ================================
-   6am Gig-Date Helpers (Europe/London)
-   - Anything from 00:00–05:59 local time is treated as the *previous* day's gig date.
-   - Used by getISODate() so your grouping & date views are gig-aware.
-   ================================ */
-const GIG_CUTOFF_HOUR = 6; // 06:00 cutoff boundary
+const GIG_CUTOFF_HOUR = 6;
 const GIG_TIMEZONE = "Europe/London";
 
-/** Extract local (tz) parts from a UTC-ms timestamp */
 function _tzPartsFromUTC(utcMs, tz = GIG_TIMEZONE) {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: tz,
@@ -50,17 +44,14 @@ function _tzPartsFromUTC(utcMs, tz = GIG_TIMEZONE) {
   };
 }
 
-/** Convert UTC-ms to a gig date YYYY-MM-DD using the 6am cutoff in Europe/London */
 function normalizeGigDate(
   utcMs,
   cutoffHour = GIG_CUTOFF_HOUR,
   tz = GIG_TIMEZONE
 ) {
   const { year, month, day, hour } = _tzPartsFromUTC(utcMs, tz);
-  // Start from the local calendar date at midnight
   const baseUTC = Date.UTC(year, month - 1, day);
   const d = new Date(baseUTC);
-  // Roll back if before cutoff
   if (hour < cutoffHour) d.setUTCDate(d.getUTCDate() - 1);
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
@@ -68,36 +59,27 @@ function normalizeGigDate(
   return `${y}-${m}-${dd}`;
 }
 
-// --- Custom Dialog Implementation (Replaces alert() and confirm()) ---
 const customDialog = document.getElementById("customDialog");
 const dialogTitle = document.getElementById("dialogTitle");
 const dialogMessage = document.getElementById("dialogMessage");
-let dialogConfirm = document.getElementById("dialogConfirm"); // made 'let'
-let dialogCancel = document.getElementById("dialogCancel"); // made 'let'
+let dialogConfirm = document.getElementById("dialogConfirm");
+let dialogCancel = document.getElementById("dialogCancel");
 const dialogActions = document.getElementById("dialogActions");
 
 function showDialog({ title, message, isConfirm = false }) {
-  console.log(
-    `[DIALOG] Showing ${
-      isConfirm ? "Confirm" : "Alert"
-    } dialog: ${title} - ${message}`
-  );
   return new Promise((resolve) => {
     dialogTitle.textContent = title;
     dialogMessage.textContent = message;
-
-    // Only show 'Cancel' for confirmations
     dialogActions.style.display = isConfirm ? "flex" : "block";
     dialogCancel.hidden = !isConfirm;
 
-    // Clone buttons to remove old listeners, then REBIND references
     const newConfirm = dialogConfirm.cloneNode(true);
     dialogConfirm.parentNode.replaceChild(newConfirm, dialogConfirm);
-    dialogConfirm = newConfirm; // <-- rebind
+    dialogConfirm = newConfirm;
 
     const newCancel = dialogCancel.cloneNode(true);
     dialogCancel.parentNode.replaceChild(newCancel, dialogCancel);
-    dialogCancel = newCancel; // <-- rebind
+    dialogCancel = newCancel;
 
     if (isConfirm) {
       dialogConfirm.textContent = "Yes";
@@ -138,7 +120,6 @@ window.customConfirm = (message) =>
   showDialog({ title: "Confirm Action", message, isConfirm: true });
 
 window.addEventListener("DOMContentLoaded", () => {
-  // --- CONFIG & INITIALIZATION (using global variables) ---
   const appId = typeof __app_id !== "undefined" ? __app_id : "default-app-id";
   const firebaseConfig = JSON.parse(
     typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
@@ -156,10 +137,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // --- ELEMENT REFS ---
+  const appShell = document.getElementById("appShell");
   const appElement = document.getElementById("app");
   const userBadge = document.getElementById("userBadge");
-  const pageTitle = document.getElementById("pageTitle");
+  const viewTitle = document.getElementById("viewTitle");
   const backButton = document.getElementById("backButton");
   const feed = document.getElementById("feed");
   const clearAllBtn = document.getElementById("clearAllBtn");
@@ -169,7 +150,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const decadeFilter = document.getElementById("decadeFilter");
   const genreFilter = document.getElementById("genreFilter");
   const signOutBtn = document.getElementById("signOutBtn");
-  // New Auth Refs
+  const menuToggle = document.getElementById("menuToggle");
+  const navDrawer = document.getElementById("navDrawer");
+  const navOverlay = document.getElementById("navOverlay");
+
   const authContainer = document.getElementById("authContainer");
   const authTitle = document.getElementById("authTitle");
   const authError = document.getElementById("authError");
@@ -179,16 +163,19 @@ window.addEventListener("DOMContentLoaded", () => {
   const authPrimaryBtn = document.getElementById("authPrimaryBtn");
   const toggleAuthBtn = document.getElementById("toggleAuthBtn");
 
-  // --- STATE ---
   let currentView = "home";
   let selectedDate = null;
   const requestsMap = Object.create(null);
   let renderQueued = false;
   let dateGroups = {};
   let unsubscribeRequests = null;
-  let isSigningUp = false; // Auth state toggle
+  let isSigningUp = false;
 
-  // --- AUTH UI HELPERS (double-lock show/hide) ---
+  const desktopQuery = window.matchMedia("(min-width: 1024px)");
+  let isDesktop = desktopQuery.matches;
+  let mobileNavOpen = false;
+  let lastFocusedBeforeNav = null;
+
   function showAuthUI() {
     appElement.hidden = true;
     appElement.style.display = "none";
@@ -196,6 +183,7 @@ window.addEventListener("DOMContentLoaded", () => {
     authContainer.style.display = "flex";
     userBadge.textContent = "Guest";
   }
+
   function hideAuthUI(user) {
     authContainer.hidden = true;
     authContainer.style.display = "none";
@@ -204,19 +192,17 @@ window.addEventListener("DOMContentLoaded", () => {
     userBadge.textContent = (user && (user.email || user.uid)) || "Signed in";
   }
 
-  // --- AUTH FEEDBACK ---
   function showAuthError(message) {
     authError.textContent = message;
     authError.hidden = false;
   }
+
   function hideAuthError() {
     authError.hidden = true;
   }
 
-  // 2. Auth State Change Listener (Decides which view to show)
   onAuthStateChanged(auth, (user) => {
     if (!user) {
-      // No user -> show login
       if (unsubscribeRequests) {
         unsubscribeRequests();
         unsubscribeRequests = null;
@@ -225,13 +211,11 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Signed in -> hide login & show app
     hideAuthUI(user);
     subscribeRequests();
     scheduleRender();
-  }); // <-- IMPORTANT: close the auth state listener here
+  });
 
-  // 3. Login/Signup Toggle
   toggleAuthBtn.addEventListener("click", () => {
     isSigningUp = !isSigningUp;
     authTitle.textContent = isSigningUp
@@ -244,7 +228,6 @@ window.addEventListener("DOMContentLoaded", () => {
     hideAuthError();
   });
 
-  // 4. Login/Signup Submit
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     hideAuthError();
@@ -263,7 +246,6 @@ window.addEventListener("DOMContentLoaded", () => {
         await signInWithEmailAndPassword(auth, email, password);
       }
 
-      // Immediately hide overlay on success (UX polish + safety net)
       hideAuthUI(auth.currentUser);
     } catch (error) {
       let errorMessage = "An unknown error occurred.";
@@ -305,54 +287,519 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 5. Sign Out
   signOutBtn?.addEventListener("click", async () => {
     try {
       await signOut(auth);
-      showAuthUI(); // ensure overlay returns after sign out
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error("Sign-out failed", err);
+      customAlert("Sign-out failed. Please try again.");
     }
   });
 
-  // --- UTILITIES ---
-  const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
-  function msToTimeAgo(ts) {
-    const now = Date.now();
-    const diff = clamp(
-      Math.floor((now - Number(ts)) / 1000),
-      0,
-      Number.MAX_SAFE_INTEGER
+  function recomputeDateGroups() {
+    const groups = {};
+    Object.values(requestsMap).forEach((req) => {
+      const ts = Number(req.timestamp);
+      if (!Number.isFinite(ts)) return;
+      const isoDate = getISODate(ts);
+      if (!isoDate) return;
+      if (!groups[isoDate]) {
+        groups[isoDate] = { count: 0, timestamp: ts };
+      } else if (ts < groups[isoDate].timestamp) {
+        groups[isoDate].timestamp = ts;
+      }
+      groups[isoDate].count++;
+    });
+    dateGroups = groups;
+    return Object.keys(groups).sort().reverse();
+  }
+
+  function getRequestWeight(req) {
+    const raw = Number(req?.count);
+    if (!Number.isFinite(raw) || raw <= 0) return 1;
+    return raw;
+  }
+
+  function getArtworkUrl(req) {
+    if (!req || typeof req !== "object") return "";
+    return (
+      req.artworkUrl ||
+      req.artwork_url ||
+      req.artwork ||
+      req.albumArtUrl ||
+      req.coverArtUrl ||
+      req.imageUrl ||
+      req.coverUrl ||
+      ""
     );
-    if (diff < 60) return diff + "s ago";
-    if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-    if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-    return Math.floor(diff / 86400) + "d ago";
   }
-  function decadeLabel(year) {
-    if (!year) return null;
-    const start = Math.floor(Number(year) / 10) * 10;
-    return `${start}s`;
+
+  function toCssUrl(value) {
+    if (!value) return "";
+    return `url("${String(value).replace(/"/g, '\\"')}")`;
   }
-  function safeUrl(url) {
-    try {
-      const u = new URL(url);
-      return u.protocol === "http:" || u.protocol === "https:" ? u.href : "#";
-    } catch {
-      return "#";
+
+  const numberFormatter = new Intl.NumberFormat();
+
+  function formatNumber(value) {
+    const num = Number(value || 0);
+    if (!Number.isFinite(num)) return "0";
+    return numberFormatter.format(num);
+  }
+
+  function getTopSongs(limit = 10) {
+    const map = new Map();
+    let totalRequests = 0;
+    Object.values(requestsMap).forEach((req) => {
+      const title = (req?.title || "").trim();
+      if (!title) return;
+      const artist = (req?.artist || "").trim();
+      const key = `${title.toLowerCase()}\u0000${artist.toLowerCase()}`;
+      const weight = getRequestWeight(req);
+      totalRequests += weight;
+      let entry = map.get(key);
+      if (!entry) {
+        entry = {
+          label: title,
+          sublabel: artist || null,
+          count: 0,
+          artworkUrl: "",
+        };
+        map.set(key, entry);
+      }
+      entry.count += weight;
+      if (artist && !entry.sublabel) entry.sublabel = artist;
+      const artUrl = getArtworkUrl(req);
+      if (!entry.artworkUrl && artUrl) entry.artworkUrl = artUrl;
+      if (
+        title &&
+        entry.label &&
+        entry.label === entry.label.toLowerCase() &&
+        title !== title.toLowerCase()
+      ) {
+        entry.label = title;
+      }
+    });
+    const items = [...map.values()]
+      .sort(
+        (a, b) =>
+          b.count - a.count ||
+          a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
+      )
+      .slice(0, limit);
+    return {
+      items,
+      totalRequests,
+      totalUnique: map.size,
+      maxCount: items[0]?.count || 0,
+    };
+  }
+
+  function getTopArtists(limit = 10) {
+    const map = new Map();
+    let totalRequests = 0;
+    Object.values(requestsMap).forEach((req) => {
+      const artist = (req?.artist || "").trim();
+      if (!artist) return;
+      const key = artist.toLowerCase();
+      const weight = getRequestWeight(req);
+      totalRequests += weight;
+      let entry = map.get(key);
+      if (!entry) {
+        entry = {
+          label: artist,
+          count: 0,
+        };
+        map.set(key, entry);
+      }
+      entry.count += weight;
+      if (
+        artist &&
+        entry.label &&
+        entry.label === entry.label.toLowerCase() &&
+        artist !== artist.toLowerCase()
+      ) {
+        entry.label = artist;
+      }
+    });
+    const items = [...map.values()]
+      .sort(
+        (a, b) =>
+          b.count - a.count ||
+          a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
+      )
+      .slice(0, limit);
+    return {
+      items,
+      totalRequests,
+      totalUnique: map.size,
+      maxCount: items[0]?.count || 0,
+    };
+  }
+
+  function getTopGenres(limit = 10) {
+    const map = new Map();
+    let totalRequests = 0;
+    Object.values(requestsMap).forEach((req) => {
+      const genre = (req?.genre || "").trim();
+      if (!genre) return;
+      const key = genre.toLowerCase();
+      const weight = getRequestWeight(req);
+      totalRequests += weight;
+      let entry = map.get(key);
+      if (!entry) {
+        entry = {
+          label: genre,
+          count: 0,
+        };
+        map.set(key, entry);
+      }
+      entry.count += weight;
+      if (
+        genre &&
+        entry.label &&
+        entry.label === entry.label.toLowerCase() &&
+        genre !== genre.toLowerCase()
+      ) {
+        entry.label = genre;
+      }
+    });
+    const items = [...map.values()]
+      .sort(
+        (a, b) =>
+          b.count - a.count ||
+          a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
+      )
+      .slice(0, limit);
+    return {
+      items,
+      totalRequests,
+      totalUnique: map.size,
+      maxCount: items[0]?.count || 0,
+    };
+  }
+
+  const METRIC_VIEWS = {
+    "metrics-songs": {
+      title: "Most Requested Songs",
+      description:
+        "Top ten songs that have been requested across all events and dates.",
+      getData: getTopSongs,
+      summary: ({ totalRequests, totalUnique }) =>
+        `Aggregated from ${formatNumber(
+          totalRequests
+        )} total requests across ${formatNumber(totalUnique)} unique songs.`,
+    },
+    "metrics-artists": {
+      title: "Top Requested Artists",
+      description:
+        "Artists ranked by the total number of requests across the full history.",
+      getData: getTopArtists,
+      summary: ({ totalRequests, totalUnique }) =>
+        `Aggregated from ${formatNumber(
+          totalRequests
+        )} total requests across ${formatNumber(totalUnique)} unique artists.`,
+    },
+    "metrics-genres": {
+      title: "Top Requested Genres",
+      description:
+        "Most popular genres based on cumulative request counts in the database.",
+      getData: getTopGenres,
+      summary: ({ totalRequests, totalUnique }) =>
+        `Aggregated from ${formatNumber(
+          totalRequests
+        )} total requests across ${formatNumber(totalUnique)} genres.`,
+    },
+  };
+
+  function getNavLinks() {
+    if (!navDrawer) return [];
+    return Array.from(navDrawer.querySelectorAll(".nav-link"));
+  }
+
+  function focusableNavElements() {
+    if (!navDrawer) return [];
+    const selectors =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return Array.from(navDrawer.querySelectorAll(selectors)).filter((el) => {
+      return (
+        el.offsetParent !== null ||
+        window.getComputedStyle(el).position === "fixed"
+      );
+    });
+  }
+
+  function focusFirstNavItem() {
+    const items = getNavLinks();
+    if (items.length) {
+      items[0].focus();
+      return;
+    }
+    const focusables = focusableNavElements();
+    if (focusables.length) focusables[0].focus();
+  }
+
+  function handleNavKeydown(event) {
+    if (!navDrawer) return;
+    if (mobileNavOpen && event.key === "Tab") {
+      const focusables = focusableNavElements();
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+    if (event.key === "Escape" && mobileNavOpen) {
+      event.preventDefault();
+      closeMobileNav();
+      return;
+    }
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const links = getNavLinks();
+    if (!links.length) return;
+    const current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement.closest(".nav-link")
+        : null;
+    const currentIndex = current ? links.indexOf(current) : -1;
+    let nextIndex = currentIndex;
+    if (event.key === "ArrowDown") {
+      nextIndex = currentIndex < links.length - 1 ? currentIndex + 1 : 0;
+    } else if (event.key === "ArrowUp") {
+      nextIndex = currentIndex > 0 ? currentIndex - 1 : links.length - 1;
+    }
+    if (nextIndex >= 0 && links[nextIndex]) {
+      event.preventDefault();
+      links[nextIndex].focus();
     }
   }
-  function setChildren(el, children) {
-    el.innerHTML = "";
-    for (const child of children) el.appendChild(child);
+
+  function openMobileNav() {
+    if (!navDrawer || isDesktop || mobileNavOpen) return;
+    mobileNavOpen = true;
+    lastFocusedBeforeNav =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    navDrawer.setAttribute("aria-hidden", "false");
+    navDrawer.setAttribute("role", "dialog");
+    navDrawer.setAttribute("aria-modal", "true");
+    navDrawer.setAttribute("tabindex", "-1");
+    navDrawer.setAttribute("aria-labelledby", "navDrawerTitle");
+
+    if (navOverlay) {
+      navOverlay.hidden = false;
+      requestAnimationFrame(() => navOverlay.classList.add("active"));
+    }
+    document.body.classList.add("drawer-open");
+    if (appShell) appShell.classList.add("nav-mobile-open");
+
+    requestAnimationFrame(() => {
+      navDrawer.focus();
+      focusFirstNavItem();
+    });
+
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
   }
-  function option(value, label, selected) {
-    const o = document.createElement("option");
-    o.value = value;
-    o.textContent = label;
-    if (selected) o.selected = true;
-    return o;
+
+  function closeMobileNav({ restoreFocus = true } = {}) {
+    if (!navDrawer || !mobileNavOpen) return;
+    mobileNavOpen = false;
+
+    navDrawer.setAttribute("aria-hidden", "true");
+    navDrawer.setAttribute("role", "navigation");
+    navDrawer.removeAttribute("aria-modal");
+    navDrawer.removeAttribute("tabindex");
+
+    if (navOverlay) {
+      navOverlay.classList.remove("active");
+      navOverlay.hidden = true;
+    }
+    document.body.classList.remove("drawer-open");
+    if (appShell) appShell.classList.remove("nav-mobile-open");
+
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+
+    if (restoreFocus && lastFocusedBeforeNav instanceof HTMLElement) {
+      lastFocusedBeforeNav.focus();
+    }
+    lastFocusedBeforeNav = null;
   }
+
+  function applyNavMode() {
+    isDesktop = desktopQuery.matches;
+    if (isDesktop) {
+      closeMobileNav({ restoreFocus: false });
+      if (navDrawer) {
+        navDrawer.setAttribute("aria-hidden", "false");
+        navDrawer.setAttribute("role", "navigation");
+        navDrawer.removeAttribute("aria-modal");
+        navDrawer.removeAttribute("tabindex");
+        navDrawer.setAttribute("aria-labelledby", "navDrawerTitle");
+      }
+      if (navOverlay) {
+        navOverlay.hidden = true;
+        navOverlay.classList.remove("active");
+      }
+      if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+    } else {
+      if (!mobileNavOpen && navDrawer) {
+        navDrawer.setAttribute("aria-hidden", "true");
+        navDrawer.setAttribute("role", "navigation");
+        navDrawer.removeAttribute("aria-modal");
+        navDrawer.removeAttribute("tabindex");
+      }
+      if (menuToggle) {
+        menuToggle.setAttribute(
+          "aria-expanded",
+          mobileNavOpen ? "true" : "false"
+        );
+      }
+    }
+    updateNavActiveState();
+  }
+
+  if (typeof desktopQuery.addEventListener === "function") {
+    desktopQuery.addEventListener("change", applyNavMode);
+  } else if (typeof desktopQuery.addListener === "function") {
+    desktopQuery.addListener(applyNavMode);
+  }
+
+  applyNavMode();
+
+  function escapeForSelector(value) {
+    if (!value) return "";
+    return typeof CSS !== "undefined" && CSS.escape
+      ? CSS.escape(value)
+      : String(value).replace(/([^\w-])/g, "\\$1");
+  }
+
+  function updateNavActiveState() {
+    const links = getNavLinks();
+    links.forEach((link) => link.classList.remove("is-active"));
+    if (!navDrawer) return;
+
+    if (currentView === "home") {
+      const homeLink = navDrawer.querySelector("[data-nav-home]");
+      if (homeLink) homeLink.classList.add("is-active");
+      return;
+    }
+
+    if (currentView === "date" && selectedDate) {
+      const selector = `.nav-link[data-date="${escapeForSelector(
+        selectedDate
+      )}"]`;
+      const dateLink = navDrawer.querySelector(selector);
+      if (dateLink) {
+        dateLink.classList.add("is-active");
+        return;
+      }
+    }
+
+    if (METRIC_VIEWS[currentView]) {
+      const selector = `.nav-link[data-metrics-view="${escapeForSelector(
+        currentView
+      )}"]`;
+      const metricLink = navDrawer.querySelector(selector);
+      if (metricLink) {
+        metricLink.classList.add("is-active");
+        return;
+      }
+    }
+  }
+
+  if (navDrawer) {
+    navDrawer.addEventListener("keydown", handleNavKeydown);
+  }
+
+  if (menuToggle) {
+    menuToggle.addEventListener("click", () => {
+      if (isDesktop) return;
+      if (mobileNavOpen) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+  }
+
+  if (navDrawer) {
+    navDrawer.addEventListener("click", (event) => {
+      const link =
+        event.target instanceof Element ? event.target.closest("a") : null;
+      if (!link || !navDrawer.contains(link)) return;
+      const metricsView = link.dataset.metricsView;
+      const date = link.dataset.date;
+      const isHome = Object.prototype.hasOwnProperty.call(
+        link.dataset,
+        "navHome"
+      );
+      let handled = false;
+
+      if (metricsView) {
+        event.preventDefault();
+        navigateToMetrics(metricsView);
+        handled = true;
+      } else if (date) {
+        event.preventDefault();
+        navigateToDate(date);
+        handled = true;
+      } else if (isHome) {
+        event.preventDefault();
+        navigateHome();
+        handled = true;
+      }
+
+      if (handled && !isDesktop) {
+        closeMobileNav({ restoreFocus: false });
+      }
+    });
+  }
+
+  if (navOverlay) {
+    navOverlay.addEventListener("click", () => closeMobileNav());
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && mobileNavOpen) {
+      closeMobileNav();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!mobileNavOpen) return;
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    if (navDrawer?.contains(target)) return;
+    if (menuToggle && menuToggle.contains(target)) return;
+    closeMobileNav({ restoreFocus: false });
+  });
+
+  function navigateHome() {
+    selectedDate = null;
+    currentView = "home";
+    scheduleRender();
+  }
+
+  function navigateToDate(isoDate) {
+    selectedDate = isoDate;
+    currentView = "date";
+    scheduleRender();
+  }
+
+  function escapeHtml(str) {
+    return String(str || "").replace(
+      /[&<>"]+/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+    );
+  }
+
   function formatFullDate(ts, options = {}) {
     if (!ts) return null;
     const date = new Date(Number(ts));
@@ -362,31 +809,18 @@ window.addEventListener("DOMContentLoaded", () => {
       month: "long",
       day: "numeric",
     };
-    return date.toLocaleDateString(undefined, {
+    const formatted = date.toLocaleDateString(undefined, {
       ...defaultOptions,
       ...options,
     });
+    return formatted.replace(/,\s*/g, " ").replace(/\s+/g, " ").trim();
   }
 
-  // *** UPDATED: returns GIG DATE (YYYY-MM-DD) with 6am cutoff in Europe/London ***
   function getISODate(ts) {
     if (!ts && ts !== 0) return null;
-    return normalizeGigDate(Number(ts)); // uses helpers defined above
+    return normalizeGigDate(Number(ts));
   }
 
-  // --- NAVIGATION ---
-  function navigateToDate(isoDate) {
-    selectedDate = isoDate;
-    currentView = "date";
-    scheduleRender();
-  }
-  function navigateHome() {
-    selectedDate = null;
-    currentView = "home";
-    scheduleRender();
-  }
-
-  // --- FILTERS ---
   function populateDecadeFilter() {
     const prior = decadeFilter.value;
     const unique = new Set();
@@ -398,6 +832,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setChildren(decadeFilter, [option("all", "All Decades", prior === "all")]);
     for (const d of sorted) decadeFilter.appendChild(option(d, d, d === prior));
   }
+
   function populateGenreFilter() {
     const prior = genreFilter.value;
     const unique = new Set();
@@ -411,7 +846,34 @@ window.addEventListener("DOMContentLoaded", () => {
     for (const g of sorted) genreFilter.appendChild(option(g, g, g === prior));
   }
 
-  // --- CARD CREATION ---
+  function option(value, label, selected) {
+    const o = document.createElement("option");
+    o.value = value;
+    o.textContent = label;
+    if (selected) o.selected = true;
+    return o;
+  }
+
+  function decadeLabel(year) {
+    if (!year) return null;
+    const start = Math.floor(Number(year) / 10) * 10;
+    return `${start}s`;
+  }
+
+  function setChildren(el, children) {
+    el.innerHTML = "";
+    for (const child of children) el.appendChild(child);
+  }
+
+  function safeUrl(url) {
+    try {
+      const u = new URL(url);
+      return u.protocol === "http:" || u.protocol === "https:" ? u.href : "#";
+    } catch {
+      return "#";
+    }
+  }
+
   function createCard(req) {
     const card = document.createElement("article");
     card.className = "card" + (req.fulfilled ? " fulfilled" : "");
@@ -456,21 +918,10 @@ window.addEventListener("DOMContentLoaded", () => {
     time.dataset.ts = String(req.timestamp || 0);
     time.textContent = msToTimeAgo(req.timestamp || Date.now());
 
-    // requester tab
-    const requesterName =
-      req.requesterName ||
-      req.requestedBy ||
-      req.userName ||
-      req.user ||
-      req.name ||
-      "";
-    if (requesterName) {
-      const requesterEl = document.createElement("div");
-      requesterEl.className = "requester-tab";
-      requesterEl.setAttribute("aria-label", "Requested by");
-      requesterEl.textContent = String(requesterName);
-      content.appendChild(requesterEl);
-    }
+    content.appendChild(title);
+    content.appendChild(artist);
+    content.appendChild(meta);
+    content.appendChild(time);
 
     const actions = document.createElement("div");
     actions.className = "card-actions";
@@ -484,14 +935,13 @@ window.addEventListener("DOMContentLoaded", () => {
     del.type = "button";
     del.className = "delete-link";
     del.textContent = "Delete";
-    del.setAttribute("data-action", "delete");
+    del.setAttribute(
+      "aria-label",
+      `Delete request ${escapeHtml(req.title || "")}`
+    );
     actions.appendChild(link);
     actions.appendChild(del);
 
-    content.appendChild(title);
-    content.appendChild(artist);
-    content.appendChild(meta);
-    content.appendChild(time);
     content.appendChild(actions);
 
     const label = document.createElement("label");
@@ -511,7 +961,20 @@ window.addEventListener("DOMContentLoaded", () => {
     return card;
   }
 
-  // --- RENDER ---
+  function msToTimeAgo(timestamp) {
+    if (!timestamp) return "now";
+    const delta = Date.now() - Number(timestamp);
+    if (!isFinite(delta)) return "now";
+    const sec = Math.floor(delta / 1000);
+    if (sec < 60) return `${sec}s ago`;
+    const min = Math.floor(sec / 60);
+    if (min < 60) return `${min}m ago`;
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return `${hr}h ago`;
+    const day = Math.floor(hr / 24);
+    return `${day}d ago`;
+  }
+
   function getFilteredSortedRequests() {
     const status = statusFilter.value;
     const sort = sortOrder.value;
@@ -519,7 +982,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const genre = genreFilter.value;
 
     let arr = Object.values(requestsMap);
-    // *** UPDATED: filter by gig-aware date ***
     if (selectedDate)
       arr = arr.filter((r) => getISODate(r.timestamp) === selectedDate);
     if (status === "unplayed") arr = arr.filter((r) => !r.fulfilled);
@@ -548,21 +1010,14 @@ window.addEventListener("DOMContentLoaded", () => {
   function renderDateView() {
     const items = getFilteredSortedRequests();
 
-    // *** UPDATED: title is based on the selected gig date (not raw timestamp) ***
     if (selectedDate) {
       const [y, m, d] = selectedDate.split("-").map(Number);
-      pageTitle.textContent = new Date(
-        Date.UTC(y, m - 1, d)
-      ).toLocaleDateString(undefined, {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+      const displayDate = formatFullDate(Date.UTC(y, m - 1, d));
+      viewTitle.textContent = displayDate;
     } else if (items.length > 0) {
-      pageTitle.textContent = formatFullDate(items[0].timestamp);
+      viewTitle.textContent = formatFullDate(items[0].timestamp);
     } else {
-      pageTitle.textContent = "Requests";
+      viewTitle.textContent = "Requests";
     }
 
     feed.className = "feed";
@@ -576,41 +1031,138 @@ window.addEventListener("DOMContentLoaded", () => {
     feed.appendChild(frag);
   }
 
-  function renderHomeView() {
-    pageTitle.textContent = "Live Song Requests";
+  function renderMetricsView(viewKey) {
+    const config = METRIC_VIEWS[viewKey];
+    if (!config) return;
+    viewTitle.textContent = config.title;
+    feed.className = "feed metrics";
+    feed.innerHTML = "";
+
+    const data = config.getData?.(10) || {
+      items: [],
+      totalRequests: 0,
+      totalUnique: 0,
+    };
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    if (config.description) {
+      const desc = document.createElement("p");
+      desc.className = "metrics-description";
+      desc.textContent = config.description;
+      feed.appendChild(desc);
+    }
+
+    if (typeof config.summary === "function") {
+      const summaryText = config.summary(data);
+      if (summaryText) {
+        const summary = document.createElement("p");
+        summary.className = "metrics-description metrics-summary";
+        summary.textContent = summaryText;
+        feed.appendChild(summary);
+      }
+    }
+
+    if (!items.length) {
+      const empty = document.createElement("p");
+      empty.style.textAlign = "center";
+      empty.style.color = "var(--muted)";
+      empty.textContent = "Not enough request data yet.";
+      feed.appendChild(empty);
+      return;
+    }
+
+    const maxCount = items[0]?.count || 1;
+    const list = document.createElement("ol");
+    list.className = "metrics-list";
+
+    items.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "metrics-item";
+
+      const rank = document.createElement("span");
+      rank.className = "metrics-rank";
+      rank.textContent = String(index + 1);
+
+      let thumb = null;
+      if (viewKey === "metrics-songs") {
+        thumb = document.createElement("div");
+        thumb.className = "metrics-thumb";
+        if (item.artworkUrl) {
+          thumb.style.backgroundImage = toCssUrl(item.artworkUrl);
+        } else {
+          thumb.classList.add("missing");
+          thumb.textContent = item.label
+            ? item.label.charAt(0).toUpperCase()
+            : "?";
+        }
+      }
+
+      const info = document.createElement("div");
+      info.className = "metrics-info";
+
+      const label = document.createElement("span");
+      label.className = "metrics-label";
+      label.textContent = item.label;
+      info.appendChild(label);
+
+      if (item.sublabel) {
+        const sub = document.createElement("span");
+        sub.className = "metrics-sublabel";
+        sub.textContent = item.sublabel;
+        info.appendChild(sub);
+      }
+
+      const count = document.createElement("span");
+      count.className = "metrics-count";
+      const suffix = item.count === 1 ? "request" : "requests";
+      count.textContent = `${formatNumber(item.count)} ${suffix}`;
+      info.appendChild(count);
+
+      const bar = document.createElement("div");
+      bar.className = "metrics-bar";
+      const fill = document.createElement("span");
+      fill.className = "metrics-bar-fill";
+      const percent = Math.max(8, Math.round((item.count / maxCount) * 100));
+      fill.style.width = `${Math.min(percent, 100)}%`;
+      bar.appendChild(fill);
+      info.appendChild(bar);
+
+      if (thumb) {
+        li.append(rank, thumb, info);
+      } else {
+        li.append(rank, info);
+      }
+      list.appendChild(li);
+    });
+
+    feed.appendChild(list);
+  }
+
+  function renderHomeView(sortedDates) {
+    viewTitle.textContent = "All dates";
     feed.className = "feed date-list";
     feed.innerHTML = "";
 
-    dateGroups = {};
-    Object.values(requestsMap).forEach((req) => {
-      // *** UPDATED: group by gig-aware ISO date ***
-      const isoDate = getISODate(req.timestamp);
-      if (!isoDate) return;
-      if (!dateGroups[isoDate]) {
-        dateGroups[isoDate] = { count: 0, timestamp: req.timestamp };
-      }
-      dateGroups[isoDate].count++;
-    });
-
-    const sortedDates = Object.keys(dateGroups).sort().reverse();
-    if (sortedDates.length === 0) {
+    const dates = sortedDates ?? Object.keys(dateGroups).sort().reverse();
+    if (!dates.length) {
       feed.innerHTML = `<p style="text-align: center; color: var(--muted);">No song requests yet.</p>`;
       return;
     }
 
     const frag = document.createDocumentFragment();
-    for (const isoDate of sortedDates) {
+    for (const isoDate of dates) {
       const dateInfo = dateGroups[isoDate];
+      if (!dateInfo) continue;
       const link = document.createElement("a");
       link.className = "date-link new";
       link.href = "#";
       link.dataset.date = isoDate;
       const countText =
-        dateInfo.count === 1 ? "1 request" : `${dateInfo.count} requests`;
-      // Title can still show a nice long date based on the *first* timestamp; that's fine for home
-      link.innerHTML = `${formatFullDate(
-        dateInfo.timestamp
-      )}<small>${countText}</small>`;
+        dateInfo.count === 1
+          ? "1 request"
+          : `${formatNumber(dateInfo.count)} requests`;
+      const displayDate = formatFullDate(dateInfo.timestamp) || isoDate;
+      link.innerHTML = `${escapeHtml(displayDate)}<small>${countText}</small>`;
       link.addEventListener("click", (e) => {
         e.preventDefault();
         navigateToDate(isoDate);
@@ -622,10 +1174,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function render() {
     renderQueued = false;
-    document.getElementById("app").className = "view-" + currentView;
-    if (currentView === "home") renderHomeView();
-    else renderDateView();
+    appElement.className = "view-" + currentView;
+    const sortedDates = recomputeDateGroups();
+    if (currentView === "home") {
+      renderHomeView(sortedDates);
+    } else if (currentView === "date") {
+      renderDateView();
+    } else if (METRIC_VIEWS[currentView]) {
+      renderMetricsView(currentView);
+    } else {
+      renderHomeView(sortedDates);
+    }
+    updateNavActiveState();
   }
+
   function scheduleRender() {
     if (renderQueued) return;
     renderQueued = true;
@@ -642,12 +1204,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }, 60_000);
 
-  // CSV export helpers
   function escapeCsv(v) {
     const s = String(v ?? "");
-    if (/[,\n"]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    if (/[,"\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
     return s;
   }
+
   function exportRequests() {
     const all = getFilteredSortedRequests();
     if (!all.length) {
@@ -699,7 +1261,6 @@ window.addEventListener("DOMContentLoaded", () => {
     URL.revokeObjectURL(url);
   }
 
-  // --- EVENTS ---
   backButton.addEventListener("click", navigateHome);
   statusFilter.addEventListener("change", scheduleRender);
   sortOrder.addEventListener("change", scheduleRender);
@@ -742,7 +1303,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       if (docsToDelete.length === 0) return;
 
-      // Batch delete logic (max 500 ops per batch)
       const batchSize = 499;
       for (let i = 0; i < docsToDelete.length; i += batchSize) {
         const batch = writeBatch(db);
@@ -758,7 +1318,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Toggle + Delete
   feed.addEventListener("change", (e) => {
     const target = e.target;
     if (!(target instanceof HTMLInputElement)) return;
@@ -768,7 +1327,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!id) return;
     const fulfilled = !!target.checked;
 
-    // Optimistic update
     if (requestsMap[id]) requestsMap[id].fulfilled = fulfilled;
     scheduleRender();
 
@@ -777,7 +1335,6 @@ window.addEventListener("DOMContentLoaded", () => {
       fulfilled,
       updatedAt: fbServerTimestamp(),
     }).catch((err) => {
-      // Fallback for document not existing (shouldn't happen on update)
       return setDoc(
         docRef,
         { fulfilled, updatedAt: fbServerTimestamp() },
@@ -810,7 +1367,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- LIVE SYNC ---
   function subscribeRequests() {
     if (unsubscribeRequests) {
       unsubscribeRequests();
@@ -851,4 +1407,16 @@ window.addEventListener("DOMContentLoaded", () => {
       (err) => console.error("Live sync error:", err)
     );
   }
+
+  function navigateToMetrics(viewKey) {
+    if (!METRIC_VIEWS[viewKey]) return;
+    selectedDate = null;
+    currentView = viewKey;
+    scheduleRender();
+  }
+
+  populateDecadeFilter();
+  populateGenreFilter();
+
+  scheduleRender();
 });
