@@ -35,107 +35,190 @@
   </head>
 
   <body>
-    <!-- Main Dashboard Application -->
-    <div id="app" class="view-home" hidden>
-      <header>
-        <div class="topbar">
-          <button id="backButton" type="button" aria-label="Back to dates">
-            &larr; Back
-          </button>
-          <h1 id="pageTitle">RequestCue</h1>
-          <span
-            id="userBadge"
-            style="color: var(--muted); font-size: 0.875rem"
-          ></span>
-          <button id="signOutBtn" type="button" aria-label="Sign out">
-            Sign out
-          </button>
+    <div class="app-shell" id="appShell">
+      <nav
+        id="navDrawer"
+        class="nav-drawer"
+        aria-hidden="true"
+        aria-label="Main navigation"
+      >
+        <div class="nav-drawer-top">
+          <h2 class="nav-drawer-title" id="navDrawerTitle">Navigation</h2>
         </div>
 
-        <div class="controls" role="region" aria-label="Filters and sorting">
-          <label>
-            <span class="sr-only">Status</span>
-            <select id="statusFilter">
-              <option value="all">All</option>
-              <option value="unplayed" selected>Unplayed</option>
-              <option value="played">Played</option>
-            </select>
-          </label>
-          <label>
-            <span class="sr-only">Sort order</span>
-            <select id="sortOrder">
-              <option value="mostRequested">Most Requested</option>
-              <option value="latestAdded">Latest Added</option>
-              <option value="earliestAdded">Earliest Added</option>
-              <option value="lastRequested" selected>
-                Most Recently Requested
-              </option>
-            </select>
-          </label>
-          <label>
-            <span class="sr-only">Decade filter</span>
-            <select id="decadeFilter">
-              <option value="all">All Decades</option>
-            </select>
-          </label>
-          <label>
-            <span class="sr-only">Genre filter</span>
-            <select id="genreFilter">
-              <option value="all">All Genres</option>
-            </select>
-          </label>
-        </div>
-      </header>
+        <div class="nav-drawer-content" role="presentation">
+          <ul class="nav-drawer-menu" aria-labelledby="navDrawerTitle">
+            <li>
+              <a href="#" data-nav-home class="nav-link">
+                <span class="nav-item-icon" aria-hidden="true">🏠</span>
+                <span class="nav-item-label">All dates</span>
+              </a>
+            </li>
+          </ul>
 
-      <main>
-        <div id="feed" class="feed" role="list" aria-live="polite"></div>
+          <div class="nav-drawer-section">
+            <h3 class="nav-drawer-heading">Metrics</h3>
+            <ul class="nav-drawer-metrics">
+              <li>
+                <a href="#" data-metrics-view="metrics-songs" class="nav-link">
+                  <span class="nav-item-icon" aria-hidden="true">🎧</span>
+                  <span class="nav-item-label">Most requested songs</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  data-metrics-view="metrics-artists"
+                  class="nav-link"
+                >
+                  <span class="nav-item-icon" aria-hidden="true">🎤</span>
+                  <span class="nav-item-label">Top requested artists</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" data-metrics-view="metrics-genres" class="nav-link">
+                  <span class="nav-item-icon" aria-hidden="true">🎵</span>
+                  <span class="nav-item-label">Top requested genres</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div id="navOverlay" class="nav-overlay" hidden></div>
+
+      <main id="mainContent" class="app-content">
+        <!-- Main Dashboard Application -->
+        <div id="app" class="view-home" hidden>
+          <header class="app-header">
+            <div class="topbar">
+              <div class="topbar-inner">
+                <div class="topbar-left">
+                  <button
+                    id="menuToggle"
+                    class="hamburger-button"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-controls="navDrawer"
+                    aria-expanded="false"
+                  >
+                    <span class="hamburger-icon" aria-hidden="true">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                  </button>
+                  <h1 class="site-title">RequestCue</h1>
+                </div>
+                <div class="topbar-right">
+                  <span
+                    id="userBadge"
+                    style="color: var(--muted); font-size: 0.875rem"
+                  ></span>
+                  <button id="signOutBtn" type="button" aria-label="Sign out">
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="view-heading">
+              <button id="backButton" type="button" aria-label="Back to dates">
+                &larr; Back
+              </button>
+              <h2 id="viewTitle" class="view-title">Requests</h2>
+            </div>
+
+            <div
+              class="controls"
+              role="region"
+              aria-label="Filters and sorting"
+            >
+              <label>
+                <span class="sr-only">Status</span>
+                <select id="statusFilter">
+                  <option value="all">All</option>
+                  <option value="unplayed" selected>Unplayed</option>
+                  <option value="played">Played</option>
+                </select>
+              </label>
+              <label>
+                <span class="sr-only">Sort order</span>
+                <select id="sortOrder">
+                  <option value="mostRequested">Most Requested</option>
+                  <option value="latestAdded">Latest Added</option>
+                  <option value="earliestAdded">Earliest Added</option>
+                  <option value="lastRequested" selected>
+                    Most Recently Requested
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span class="sr-only">Decade filter</span>
+                <select id="decadeFilter">
+                  <option value="all">All Decades</option>
+                </select>
+              </label>
+              <label>
+                <span class="sr-only">Genre filter</span>
+                <select id="genreFilter">
+                  <option value="all">All Genres</option>
+                </select>
+              </label>
+            </div>
+          </header>
+
+          <section class="app-main">
+            <div id="feed" class="feed" role="list" aria-live="polite"></div>
+          </section>
+
+          <footer class="bottom-controls">
+            <button id="exportCsvBtn" type="button">Download CSV</button>
+            <button id="clearAllBtn" class="clear-all-btn" type="button">
+              Clear All
+            </button>
+          </footer>
+        </div>
+
+        <!-- Integrated Login/Sign Up Interface -->
+        <div id="authContainer" class="auth-card-wrapper" hidden>
+          <div class="auth-card">
+            <h2 id="authTitle" class="auth-title">DJ Dashboard Login</h2>
+            <div id="authError" class="auth-error-message" hidden></div>
+
+            <form id="authForm" class="auth-form">
+              <input
+                type="email"
+                id="emailInput"
+                placeholder="Email"
+                required
+                autocomplete="email"
+              />
+              <input
+                type="password"
+                id="passwordInput"
+                placeholder="Password"
+                required
+                autocomplete="current-password"
+              />
+              <button
+                id="authPrimaryBtn"
+                type="submit"
+                class="auth-btn auth-primary"
+              >
+                Sign In
+              </button>
+              <button
+                id="toggleAuthBtn"
+                type="button"
+                class="auth-btn auth-secondary"
+              >
+                Need an account? Sign Up
+              </button>
+            </form>
+          </div>
+        </div>
       </main>
-
-      <footer class="bottom-controls">
-        <button id="exportCsvBtn" type="button">Download CSV</button>
-        <button id="clearAllBtn" class="clear-all-btn" type="button">
-          Clear All
-        </button>
-      </footer>
-    </div>
-
-    <!-- Integrated Login/Sign Up Interface -->
-    <div id="authContainer" class="auth-card-wrapper" hidden>
-      <div class="auth-card">
-        <h2 id="authTitle" class="auth-title">DJ Dashboard Login</h2>
-        <div id="authError" class="auth-error-message" hidden></div>
-
-        <form id="authForm" class="auth-form">
-          <input
-            type="email"
-            id="emailInput"
-            placeholder="Email"
-            required
-            autocomplete="email"
-          />
-          <input
-            type="password"
-            id="passwordInput"
-            placeholder="Password"
-            required
-            autocomplete="current-password"
-          />
-          <button
-            id="authPrimaryBtn"
-            type="submit"
-            class="auth-btn auth-primary"
-          >
-            Sign In
-          </button>
-          <button
-            id="toggleAuthBtn"
-            type="button"
-            class="auth-btn auth-secondary"
-          >
-            Need an account? Sign Up
-          </button>
-        </form>
-      </div>
     </div>
 
     <!-- Custom Dialog/Modal for Alerts and Confirms (Replacing alert/confirm) -->
