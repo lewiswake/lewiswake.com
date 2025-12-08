@@ -119,6 +119,7 @@
       .wrapper {
         max-width: 520px;
         margin: 0 auto;
+        padding-bottom: 2rem;
       }
 
       .title {
@@ -274,13 +275,15 @@
         border-top: 1px solid var(--border);
         margin: var(--spacing) 0;
       }
-      .tip-footer {
+      .tip-footer,
+      .about-section {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing);
       }
-      .tip-footer h2 {
+      .tip-footer h2,
+      .about-section h2 {
         margin: 0;
         font-weight: 600;
       }
@@ -288,6 +291,19 @@
         width: auto;
         padding: var(--spacing-sm) var(--spacing);
         font-size: 1rem;
+      }
+
+      /* About Section Specifics */
+      .about-text {
+        margin: 0;
+        color: var(--fg);
+        line-height: 1.6;
+      }
+      .about-img {
+        width: 100%;
+        border-radius: var(--radius);
+        aspect-ratio: 3/2;
+        object-fit: cover;
       }
 
       /* Modals */
@@ -601,6 +617,7 @@
       <hr class="divider" />
       <section class="tip-footer">
         <h2>🍻 Buy the DJ a drink</h2>
+        <p>It's thirsty work cooking this hard.</p>
         <div class="pay-grid" role="group" aria-label="Buy the DJ a drink">
           <a
             class="pay-btn pay-btn--wallet"
@@ -649,6 +666,22 @@
           </a>
         </div>
       </section>
+
+      <hr class="divider" />
+      <section class="about-section">
+        <h2>👋 About the DJ</h2>
+        <p class="about-text">
+          <strong>Lewis Wake</strong><br />
+          I've been DJing in clubs since 2011. I've DJ'd all over the UK, at a
+          bunch of festivals, and with some pretty cool people. I love to play
+          songs that people didn't know they needed to hear until I drop them.
+        </p>
+        <img
+          src="assets/images/lewis-wake-dj-520x347.jpg"
+          alt="Lewis Wake DJing"
+          class="about-img"
+        />
+      </section>
     </main>
 
     <div id="socialModal" class="modal hidden" aria-hidden="true">
@@ -662,7 +695,7 @@
           ×
         </button>
         <h2>Thanks for all your requests!</h2>
-        <p>Enjoying the music? Follow me on social media to stay up to date!</p>
+        <p>Enjoying the music? Follow to stay up to date!</p>
         <div
           class="modal-links social-links"
           role="group"
