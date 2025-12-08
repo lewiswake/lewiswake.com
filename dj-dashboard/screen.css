@@ -477,23 +477,6 @@ select:focus-visible,
   font-size: 0.75rem;
   color: var(--muted-2);
 }
-.requester-tab {
-  display: inline-block;
-  margin-top: var(--space-2);
-  padding: 0.25rem 0.5rem;
-  background: #fff;
-  color: #000;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .checkbox-container {
   position: relative;
   cursor: pointer;
