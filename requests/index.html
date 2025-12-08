@@ -1,4 +1,3 @@
-<!-- song-request-form.html (FIXED) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Request a song</title>
 
-    <!-- Favicon / App Icons -->
     <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
     <link
       rel="icon"
@@ -33,7 +31,6 @@
     />
     <link rel="manifest" href="favicon/site.webmanifest" />
 
-    <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -41,11 +38,9 @@
 
     <style>
       /* ===============================
-       Song Request — Stylesheet (fixed)
+       Song Request — Stylesheet
        - Safer resets
        - Color variables respected in light/dark
-       - Modal visibility rules unified
-       - Suggestion list layering fixed
        =============================== */
 
       :root {
@@ -60,12 +55,6 @@
         --border: #d9d9d9;
         --muted: #666;
         --shadow: rgba(0, 0, 0, 0.15);
-
-        /* Greeting tokens */
-        --greet-size: 1.875rem;
-        --greet-weight: 700;
-        --greet-bg: transparent;
-        --greet-fg: var(--fg);
 
         /* Typography & radii */
         --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
@@ -90,8 +79,6 @@
           --card-bg: #1e1e1e;
           --border: #333;
           --shadow: rgba(0, 0, 0, 0.5);
-          --greet-bg: transparent;
-          --greet-fg: var(--fg);
         }
       }
 
@@ -155,59 +142,6 @@
         border: 0;
       }
 
-      /* Greeting */
-      .greeting-bar {
-        display: none; /* shown via JS */
-        align-items: center;
-        gap: 0.5rem;
-        margin: 0 0 0.75rem 0;
-        background: var(--greet-bg);
-        color: var(--greet-fg);
-      }
-      .greeting-text {
-        font-weight: var(--greet-weight);
-        font-size: var(--greet-size);
-        line-height: 1.2;
-        margin: 0;
-      }
-      .greeting-edit-btn {
-        margin-left: auto;
-        background: transparent;
-        border: 0;
-        cursor: pointer;
-        line-height: 1;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.375rem;
-      }
-      .greeting-edit-btn:hover,
-      .greeting-edit-btn:focus-visible {
-        outline: var(--focus);
-        outline-offset: 2px;
-      }
-      .greeting-input {
-        display: none;
-        background: transparent;
-        border: none;
-        border-bottom: 2px solid transparent;
-        color: var(--greet-fg);
-        font-weight: var(--greet-weight);
-        font-size: var(--greet-size);
-        line-height: 1.2;
-        padding: 0;
-        margin: 0;
-        min-width: 6ch;
-      }
-      .greeting-input:focus-visible {
-        outline: none;
-        border-bottom-color: currentColor;
-      }
-      .greeting-bar.editing .greeting-text {
-        display: none;
-      }
-      .greeting-bar.editing .greeting-input {
-        display: inline-block;
-      }
-
       /* Form */
       .form {
         display: flex;
@@ -225,8 +159,8 @@
       }
       .input {
         border: 1px solid var(--border);
-        background: var(--card-bg); /* FIX: respect theme */
-        color: var(--fg); /* FIX: respect theme */
+        background: var(--card-bg);
+        color: var(--fg);
       }
       .input:focus {
         outline: var(--focus);
@@ -279,7 +213,7 @@
         max-height: 320px;
         overflow-y: auto;
         position: relative;
-        z-index: 5; /* sits above page content, below modals */
+        z-index: 5;
         border: 1px solid var(--border);
       }
       .suggestion-item {
@@ -357,20 +291,6 @@
       }
 
       /* Modals */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 1000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(4px);
-      }
-      .modal-overlay.open {
-        display: flex;
-      }
-
       .modal {
         position: fixed;
         inset: 0;
@@ -378,6 +298,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
       }
       .modal.hidden {
         display: none !important;
@@ -397,20 +319,7 @@
         border: 1px solid var(--border);
       }
 
-      /* Blocked Artist Modal: force light for BBC link contrast */
-      #blockedArtistModal .modal-content {
-        background: #fff;
-        color: #222;
-      }
-      #blockedArtistModal .modal-title {
-        color: #ff4136;
-      }
-      #blockedArtistModal .modal-message {
-        color: #222;
-      }
-
-      .close-button,
-      .modal-close-btn {
+      .close-button {
         position: absolute;
         top: 0.5rem;
         right: 0.75rem;
@@ -422,13 +331,11 @@
         color: #aaa;
         transition: color 150ms ease, opacity 150ms ease;
       }
-      .close-button:hover,
-      .modal-close-btn:hover {
+      .close-button:hover {
         color: var(--fg);
         opacity: 1;
       }
-      .close-button:focus-visible,
-      .modal-close-btn:focus-visible {
+      .close-button:focus-visible {
         outline: var(--focus);
       }
 
@@ -440,34 +347,6 @@
         flex-direction: column;
         gap: var(--spacing);
         margin-top: 1.25rem;
-      }
-      .modal-links .button {
-        width: auto;
-        font-size: 1rem;
-        padding: var(--spacing-sm) var(--spacing);
-      }
-      .modal-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-      }
-      .modal-link-container {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-      }
-      .modal-link {
-        display: inline-block;
-        padding: var(--spacing-sm) var(--spacing);
-        background-color: var(--primary);
-        color: #fff;
-        border-radius: var(--radius-sm);
-        text-decoration: none;
-        font-weight: 600;
-        transition: background-color 150ms ease;
-      }
-      .modal-link:hover {
-        background-color: var(--primary-hover);
       }
 
       @keyframes fadeIn {
@@ -538,28 +417,6 @@
         }
       }
 
-      /* (If using CSS masks instead of <img>, keep helpers) */
-      .icon-instagram {
-        -webkit-mask-image: url("assets/icons/instagram-brands-solid-full.svg");
-        mask-image: url("assets/icons/instagram-brands-solid-full.svg");
-      }
-      .icon-tiktok {
-        -webkit-mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
-        mask-image: url("assets/icons/tiktok-brands-solid-full.svg");
-      }
-      .icon-youtube {
-        -webkit-mask-image: url("assets/icons/youtube-brands-solid-full.svg");
-        mask-image: url("assets/icons/youtube-brands-solid-full.svg");
-      }
-      .icon-soundcloud {
-        -webkit-mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
-        mask-image: url("assets/icons/soundcloud-brands-solid-full.svg");
-      }
-      .icon-patreon {
-        -webkit-mask-image: url("assets/icons/patreon-brands-solid-full.svg");
-        mask-image: url("assets/icons/patreon-brands-solid-full.svg");
-      }
-
       /* Payment buttons */
       .pay-grid {
         display: flex;
@@ -602,35 +459,6 @@
 
   <body>
     <main class="wrapper">
-      <!-- Greeting above title -->
-      <div
-        id="greetingBar"
-        class="greeting-bar"
-        role="status"
-        aria-live="polite"
-      >
-        <h2 id="greetingText" class="greeting-text" aria-hidden="true"></h2>
-        <label for="requesterName" class="visually-hidden">Your name</label>
-        <input
-          type="text"
-          id="requesterName"
-          class="greeting-input"
-          placeholder="Type your name…"
-          inputmode="text"
-          autocomplete="name"
-          maxlength="60"
-          aria-label="Your name"
-        />
-        <button
-          id="greetingEditBtn"
-          class="greeting-edit-btn"
-          type="button"
-          aria-label="Change your name"
-        >
-          ✏️
-        </button>
-      </div>
-
       <h1 class="title">🎵 Request a song</h1>
 
       <form
@@ -639,7 +467,6 @@
         aria-describedby="confirmation"
         novalidate
       >
-        <!-- Search -->
         <label for="searchInput" class="visually-hidden">🔍 Search song</label>
         <input
           type="search"
@@ -660,7 +487,6 @@
           aria-label="Song suggestions"
         ></ul>
 
-        <!-- Hidden fields -->
         <input type="hidden" id="artist" name="artist" />
         <input type="hidden" id="title" name="title" />
         <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
@@ -825,44 +651,6 @@
       </section>
     </main>
 
-    <!-- Blocked Artist Modal (overlay pattern) -->
-    <div id="blockedArtistModal" class="modal-overlay" aria-hidden="true">
-      <div
-        class="modal-content"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modalTitle"
-      >
-        <button
-          type="button"
-          class="modal-close-btn"
-          id="blockedArtistCloseBtn"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <h3 id="modalTitle" class="modal-title">
-          <span id="blockedArtistNameTitle">Artist</span> requests blocked
-        </h3>
-        <p class="modal-message">
-          Whoops! This artist is blocked due to serious controversy. We don't
-          want their music killing the vibe tonight! Read the BBC article below
-          for details.
-        </p>
-        <div class="modal-link-container">
-          <a
-            id="blockedArtistLink"
-            href=""
-            target="_blank"
-            rel="noopener noreferrer"
-            class="modal-link"
-            >Read article</a
-          >
-        </div>
-      </div>
-    </div>
-
-    <!-- Social Media Modal (panel pattern) -->
     <div id="socialModal" class="modal hidden" aria-hidden="true">
       <div class="modal-content">
         <button
@@ -949,7 +737,6 @@
       </div>
     </div>
 
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -979,103 +766,16 @@
         const cardTitle = document.getElementById("cardTitle");
         const cardArtist = document.getElementById("cardArtist");
 
-        // Greeting elements
-        const greetingBar = document.getElementById("greetingBar");
-        const greetingText = document.getElementById("greetingText");
-        const greetingEditBtn = document.getElementById("greetingEditBtn");
-        const requesterNameInput = document.getElementById("requesterName");
-
-        // ——— Local name persistence ———
-        const LS_NAME_KEY = "dj_requester_name";
-        function getSavedName() {
-          try {
-            return (localStorage.getItem(LS_NAME_KEY) || "").trim();
-          } catch {
-            return "";
-          }
-        }
-        function setSavedName(name) {
-          try {
-            const clean = (name || "").trim().slice(0, 60);
-            if (clean) localStorage.setItem(LS_NAME_KEY, clean);
-            else localStorage.removeItem(LS_NAME_KEY);
-          } catch {}
-        }
-        function setGreeting(name) {
-          const clean = (name || "").trim();
-          greetingBar.style.display = "flex";
-          if (clean) {
-            greetingText.textContent = `Hey, ${clean}.`;
-            greetingText.setAttribute("aria-hidden", "false");
-            greetingBar.classList.remove("editing");
-          } else {
-            greetingText.textContent = "";
-            greetingText.setAttribute("aria-hidden", "true");
-            greetingBar.classList.add("editing");
-          }
-        }
-
-        const initialName = getSavedName();
-        requesterNameInput.value = initialName;
-        setGreeting(initialName);
-
-        greetingEditBtn.addEventListener("click", () => {
-          greetingBar.classList.add("editing");
-          requesterNameInput.focus();
-          requesterNameInput.select();
-        });
-
-        requesterNameInput.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") requesterNameInput.blur();
-        });
-        requesterNameInput.addEventListener("blur", () => {
-          const name = requesterNameInput.value.trim().slice(0, 60);
-          setSavedName(name);
-          setGreeting(name);
-        });
-
-        // ——— Modals ———
-        const blockedArtistModal =
-          document.getElementById("blockedArtistModal");
-        const blockedArtistNameTitle = document.getElementById(
-          "blockedArtistNameTitle"
-        );
-        const blockedArtistLinkAnchor =
-          document.getElementById("blockedArtistLink");
-        const blockedArtistCloseBtn = document.getElementById(
-          "blockedArtistCloseBtn"
-        );
-
+        // --- Social Modal ---
         const socialModal = document.getElementById("socialModal");
         const socialCloseBtn = document.getElementById("socialCloseBtn");
 
-        function openBlockedArtistModal(artist, link) {
-          blockedArtistNameTitle.textContent = artist;
-          blockedArtistLinkAnchor.href = link;
-          blockedArtistModal.classList.add("open"); // uses .modal-overlay.open { display:flex }
-          blockedArtistModal.setAttribute("aria-hidden", "false");
-          searchInput.disabled = true;
-        }
-        function closeBlockedArtistModal() {
-          blockedArtistModal.classList.remove("open");
-          blockedArtistModal.setAttribute("aria-hidden", "true");
-          searchInput.disabled = false;
-          searchInput.value = "";
-          clearSuggestions();
-        }
         function closeSocialModal() {
-          socialModal.classList.add("hidden"); // uses .modal.hidden { display:none }
+          socialModal.classList.add("hidden");
           socialModal.setAttribute("aria-hidden", "true");
         }
 
-        blockedArtistCloseBtn.addEventListener(
-          "click",
-          closeBlockedArtistModal
-        );
         socialCloseBtn.addEventListener("click", closeSocialModal);
-        blockedArtistModal.addEventListener("click", (e) => {
-          if (e.target === blockedArtistModal) closeBlockedArtistModal();
-        });
 
         // ——— Utils ———
         let debounceTimer;
@@ -1194,65 +894,6 @@
 
         // ——— Selection ———
         function selectTrack(track) {
-          const artistName = (track.artistName || "").toLowerCase();
-          let blockedLink = null;
-          let blockedArtistDisplayName = null;
-
-          // Blocked artists (BBC references)
-          if (artistName.includes("dizzee rascal")) {
-            blockedArtistDisplayName = "Dizzee Rascal";
-            blockedLink =
-              "https://www.bbc.co.uk/news/uk-england-london-61037308";
-          }
-          if (artistName.includes("kanye west") || artistName.includes("ye")) {
-            blockedArtistDisplayName = "Kanye West (Ye)";
-            blockedLink = "https://www.bbc.co.uk/news/articles/cvge48j5lplo";
-          }
-          if (
-            artistName.includes("p. diddy") ||
-            artistName.includes("diddy") ||
-            artistName.includes("puff daddy") ||
-            artistName.includes("sean combs")
-          ) {
-            blockedArtistDisplayName = "P. Diddy / Sean Combs";
-            blockedLink = "https://www.bbc.co.uk/news/articles/c0qz32wzeego";
-          }
-          if (
-            artistName.includes("r. kelly") ||
-            artistName.includes("robert kelly")
-          ) {
-            blockedArtistDisplayName = "R. Kelly";
-            blockedLink = "https://www.bbc.co.uk/news/world-us-canada-61989606";
-          }
-          if (artistName.includes("chris brown")) {
-            blockedArtistDisplayName = "Chris Brown";
-            blockedLink = "https://www.bbc.co.uk/news/topics/c5m8r32ll7rt";
-          }
-          if (
-            artistName.includes("marilyn manson") ||
-            artistName.includes("brian warner")
-          ) {
-            blockedArtistDisplayName = "Marilyn Manson";
-            blockedLink =
-              "https://www.bbc.co.uk/news/entertainment-arts-57685153";
-          }
-          if (
-            artistName.includes("lostprophets") ||
-            artistName.includes("lost prophets") ||
-            artistName.includes("lost prophet")
-          ) {
-            blockedArtistDisplayName = "Lostprophets";
-            blockedLink = "https://www.bbc.co.uk/news/uk-wales-25412675";
-          }
-
-          if (blockedLink) {
-            clearSuggestions();
-            card.classList.add("hidden");
-            submitBtn.disabled = true;
-            openBlockedArtistModal(blockedArtistDisplayName, blockedLink);
-            return;
-          }
-
           // Fill form fields
           form.artist.value = track.artistName || "";
           form.title.value = track.trackName || "";
@@ -1310,13 +951,6 @@
 
           submitBtn.disabled = true;
 
-          // Persist name locally & include if present
-          let requesterName = (requesterNameInput.value || "").trim();
-          if (requesterName.length > 60)
-            requesterName = requesterName.slice(0, 60);
-          setSavedName(requesterName);
-          setGreeting(requesterName);
-
           const basePayload = {
             artist: artistVal,
             title: titleVal,
@@ -1328,9 +962,7 @@
             bpm: form.bpm.value ? parseInt(form.bpm.value, 10) : null,
             requestDate: today,
           };
-          const payload = requesterName
-            ? { ...basePayload, requesterName }
-            : basePayload;
+          const payload = basePayload;
 
           const docRef = db.collection("requests").doc(key);
 
@@ -1342,7 +974,6 @@
                   lastRequested: Date.now(),
                   count: firebase.firestore.FieldValue.increment(1),
                 };
-                if (requesterName) updateData.requesterName = requesterName;
                 tx.update(docRef, updateData);
               } else {
                 tx.set(docRef, {
@@ -1374,7 +1005,6 @@
             setTimeout(() => confirmation.classList.add("hidden"), 5000);
 
             form.reset();
-            requesterNameInput.value = getSavedName();
             card.classList.add("hidden");
             submitBtn.disabled = true;
           } catch (e) {
@@ -1391,7 +1021,6 @@
           socialModal.classList.add("hidden");
           socialModal.setAttribute("aria-hidden", "true");
           warning.classList.add("hidden");
-          blockedArtistModal.setAttribute("aria-hidden", "true");
         });
       })();
     </script>
