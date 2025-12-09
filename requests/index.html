@@ -470,6 +470,35 @@
         filter: brightness(0) invert(1);
         image-rendering: crisp-edges;
       }
+
+      /* Footer */
+      .app-footer {
+        margin-top: 3rem; /* Space from the content above */
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .app-footer p {
+        margin: 0;
+      }
+
+      .footer-link {
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--primary);
+        transition: color 150ms ease;
+      }
+
+      .footer-link:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+      }
+
+      .footer-sep {
+        margin: 0 0.35rem;
+        opacity: 0.5;
+      }
     </style>
   </head>
 
@@ -682,6 +711,13 @@
           class="about-img"
         />
       </section>
+      <footer class="app-footer">
+        <p>
+          &copy; <span id="currentYear"></span
+          ><span class="footer-sep">&verbar;</span>Built with
+          <a href="#" class="footer-link">RequestCue</a>
+        </p>
+      </footer>
     </main>
 
     <div id="socialModal" class="modal hidden" aria-hidden="true">
@@ -1056,6 +1092,10 @@
           warning.classList.add("hidden");
         });
       })();
+
+      // Sets the current year automatically
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
     </script>
   </body>
 </html>
