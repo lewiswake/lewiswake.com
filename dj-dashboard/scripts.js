@@ -347,7 +347,7 @@ window.addEventListener("DOMContentLoaded", () => {
     return numberFormatter.format(num);
   }
 
-  function getTopSongs(limit = 10) {
+  function getTopSongs(limit = 100) {
     const map = new Map();
     let totalRequests = 0;
     Object.values(requestsMap).forEach((req) => {
@@ -395,7 +395,7 @@ window.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function getTopArtists(limit = 10) {
+  function getTopArtists(limit = 100) {
     const map = new Map();
     let totalRequests = 0;
     Object.values(requestsMap).forEach((req) => {
@@ -437,7 +437,7 @@ window.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function getTopGenres(limit = 10) {
+  function getTopGenres(limit = 100) {
     const map = new Map();
     let totalRequests = 0;
     Object.values(requestsMap).forEach((req) => {
@@ -483,7 +483,7 @@ window.addEventListener("DOMContentLoaded", () => {
     "metrics-songs": {
       title: "Most Requested Songs",
       description:
-        "Top ten songs that have been requested across all events and dates.",
+        "Top requested songs across all events and dates (up to 100).",
       getData: getTopSongs,
       summary: ({ totalRequests, totalUnique }) =>
         `Aggregated from ${formatNumber(
@@ -493,7 +493,7 @@ window.addEventListener("DOMContentLoaded", () => {
     "metrics-artists": {
       title: "Top Requested Artists",
       description:
-        "Artists ranked by the total number of requests across the full history.",
+        "Artists ranked by total requests across the full history (up to 100).",
       getData: getTopArtists,
       summary: ({ totalRequests, totalUnique }) =>
         `Aggregated from ${formatNumber(
@@ -503,7 +503,7 @@ window.addEventListener("DOMContentLoaded", () => {
     "metrics-genres": {
       title: "Top Requested Genres",
       description:
-        "Most popular genres based on cumulative request counts in the database.",
+        "Most popular genres based on cumulative request counts (up to 100).",
       getData: getTopGenres,
       summary: ({ totalRequests, totalUnique }) =>
         `Aggregated from ${formatNumber(
@@ -1038,7 +1038,7 @@ window.addEventListener("DOMContentLoaded", () => {
     feed.className = "feed metrics";
     feed.innerHTML = "";
 
-    const data = config.getData?.(10) || {
+    const data = config.getData?.(100) || {
       items: [],
       totalRequests: 0,
       totalUnique: 0,
