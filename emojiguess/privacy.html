@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EmojiGuess 🤔 | Privacy Policy</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- CSS VARIABLES & BRAND IDENTITY --- */
+      :root {
+        /* Gradient Colors */
+        --gradient-start: #753a92;
+        --gradient-end: #470c65;
+
+        --surface-white: #ffffff;
+        --text-black: #000000;
+        --text-on-purple: #ffffff;
+        --card-radius: 30px;
+        --button-radius: 20px;
+        --card-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      /* --- GLOBAL RESET & TYPOGRAPHY --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Nunito", sans-serif;
+        background: linear-gradient(
+          180deg,
+          var(--gradient-start) 0%,
+          var(--gradient-end) 100%
+        );
+        background-attachment: fixed;
+        color: var(--text-black); /* Text inside the card will be black */
+        line-height: 1.6;
+        min-height: 100vh;
+        padding-bottom: 50px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-weight: 400;
+        font-size: 1.05rem;
+        opacity: 0.85;
+        margin-bottom: 1.5rem;
+      }
+
+      strong {
+        font-weight: 700;
+        color: var(--gradient-end);
+      }
+
+      a {
+        color: var(--gradient-end);
+        font-weight: 700;
+        text-decoration: underline;
+      }
+
+      a:hover {
+        color: var(--gradient-start);
+      }
+
+      /* --- UTILITIES --- */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* --- NAVIGATION --- */
+      nav {
+        padding: 30px 0;
+        text-align: center;
+      }
+      .nav-logo {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--text-on-purple);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* --- HEADER SECTION --- */
+      header {
+        text-align: center;
+        color: var(--text-on-purple);
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+      }
+
+      .update-note {
+        opacity: 0.8;
+        font-size: 0.9rem;
+      }
+
+      /* --- CONTACT CTA BOX --- */
+      .cta-box {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--button-radius);
+        padding: 20px;
+        margin-top: 20px;
+        display: inline-block;
+        backdrop-filter: blur(5px);
+      }
+
+      .cta-text {
+        margin-bottom: 15px;
+        font-size: 1rem;
+      }
+
+      .btn-contact {
+        display: inline-block;
+        background-color: var(--surface-white);
+        color: var(--gradient-end);
+        text-decoration: none;
+        padding: 10px 24px;
+        border-radius: var(--button-radius);
+        font-weight: 900;
+        font-size: 1rem;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.2s ease;
+      }
+
+      .btn-contact:hover {
+        transform: translateY(-2px);
+        background-color: #f0f0f0;
+      }
+
+      /* --- POLICY CARD (The "Paper") --- */
+      .policy-card {
+        background-color: var(--surface-white);
+        border-radius: var(--card-radius);
+        padding: 50px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        color: var(--gradient-end); /* Brand purple headings */
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+
+      .section-title:first-child {
+        margin-top: 0;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        margin-top: 50px;
+        text-align: center;
+        color: var(--text-on-purple);
+        opacity: 0.6;
+        font-size: 0.9rem;
+      }
+      footer a {
+        color: white;
+      }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 600px) {
+        .policy-card {
+          padding: 30px 20px;
+        }
+        header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html" class="nav-logo">🤔 EmojiGuess</a>
+    </nav>
+
+    <div class="container">
+      <header>
+        <h1>Privacy Policy</h1>
+        <div class="update-note">Last updated: 22 December 2025</div>
+
+        <div class="cta-box">
+          <p class="cta-text" style="margin-bottom: 15px; opacity: 1">
+            Have questions about your privacy or need support?
+          </p>
+          <a href="mailto:hello@lewiswake.com" class="btn-contact"
+            >Contact Me</a
+          >
+        </div>
+      </header>
+
+      <main class="policy-card">
+        <h2 class="section-title">1. Privacy Overview</h2>
+        <p>
+          This Privacy Policy describes the policies and procedures on the
+          collection, use, and disclosure of information when you use the
+          <strong>EmojiGuess</strong> application.
+        </p>
+        <p>
+          I believe in privacy by default.
+          <strong
+            >EmojiGuess is designed to be played without collecting any personal
+            data from its users.</strong
+          >
+          I do not track you, I do not profile you, and I do not sell your data.
+        </p>
+
+        <h2 class="section-title">2. Types of Data Collected</h2>
+        <p>
+          <strong>Personal Data</strong><br />
+          I do not collect, store, or transmit any personally identifiable
+          information (such as your name, email address, phone number, or
+          location data). You do not need to create an account to use
+          EmojiGuess.
+        </p>
+
+        <p>
+          <strong>Usage Data</strong><br />
+          The EmojiGuess app itself does not collect usage data or analytics. I
+          do not use third-party tracking tools (like Google Analytics, Facebook
+          Pixel, or Mixpanel) within the app.
+        </p>
+
+        <p>
+          <strong>Apple App Analytics</strong><br />
+          Because EmojiGuess is distributed through the Apple App Store, Apple
+          Inc. may collect certain anonymized, aggregated technical data related
+          to the performance of the app (such as crash reports, installation
+          counts, and device types) in accordance with their own privacy policy.
+          This data is viewable by me only in an aggregated, non-identifiable
+          format and is used solely to ensure the app works correctly on
+          different devices.
+        </p>
+
+        <p>
+          You can read Apple’s Privacy Policy here:<br />
+          <a href="https://www.apple.com/legal/privacy/" target="_blank"
+            >https://www.apple.com/legal/privacy/</a
+          >
+        </p>
+
+        <h2 class="section-title">3. Advertising & Payments</h2>
+        <p>
+          <strong>No Advertising</strong><br />
+          EmojiGuess is a free app. It does not contain any third-party
+          advertisements, banner ads, or pop-ups. I do not share data with
+          advertising networks.
+        </p>
+
+        <p>
+          <strong>No In-App Purchases</strong><br />
+          There are no purchases, subscriptions, or payment gateways within the
+          app. I do not collect or process financial information.
+        </p>
+
+        <h2 class="section-title">4. Children's Privacy</h2>
+        <p>
+          This app is safe for users of all ages. I do not knowingly collect
+          personally identifiable information from anyone, including children
+          under the age of 13. If you are a parent or guardian and you believe
+          your child has provided me with Personal Data, please contact me so
+          that I can take necessary actions (though, as stated, I have no
+          mechanism to collect such data).
+        </p>
+
+        <h2 class="section-title">5. Changes to this Policy</h2>
+        <p>
+          I may update this Privacy Policy from time to time. I will notify you
+          of any changes by posting the new Privacy Policy on this page and
+          updating the "Last updated" date at the top of this Privacy Policy.
+        </p>
+
+        <h2 class="section-title">6. Contact Me</h2>
+        <p>
+          If you have any questions about this Privacy Policy, you can contact
+          me:
+        </p>
+        <p>
+          By visiting my website:<br />
+          <a href="https://lewiswake.com">https://lewiswake.com</a>
+        </p>
+      </main>
+
+      <footer>&copy; 2025 Lewis Wake. All rights reserved.</footer>
+    </div>
+  </body>
+</html>
