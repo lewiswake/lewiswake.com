@@ -36,13 +36,12 @@
 
       body {
         font-family: "Nunito", sans-serif;
-        /* UPDATED: Vertical Gradient Background */
         background: linear-gradient(
           180deg,
           var(--gradient-start) 0%,
           var(--gradient-end) 100%
         );
-        background-attachment: fixed; /* Keeps gradient nicely positioned on scroll */
+        background-attachment: fixed;
         color: var(--text-on-purple);
         line-height: 1.5;
         min-height: 100vh;
@@ -65,30 +64,14 @@
       .container {
         max-width: 1100px;
         margin: 0 auto;
-        padding: 0 20px;
-      }
-
-      .img-placeholder {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 2px dashed rgba(255, 255, 255, 0.3);
-        border-radius: var(--card-radius);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 700;
-        text-align: center;
-        padding: 20px;
-        backdrop-filter: blur(5px);
+        padding: 0 5%;
       }
 
       /* --- COMPONENTS --- */
       .btn-download {
         display: inline-block;
         background-color: var(--surface-white);
-        color: var(
-          --gradient-end
-        ); /* Uses the darker purple for text contrast */
+        color: var(--gradient-end);
         text-decoration: none;
         padding: 18px 36px;
         border-radius: var(--button-radius);
@@ -111,7 +94,7 @@
         border-radius: var(--card-radius);
         box-shadow: var(--card-shadow);
         text-align: center;
-        height: 100%; /* Ensures all cards are same height */
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -146,7 +129,8 @@
       }
 
       .hero {
-        padding: 40px 0 100px 0;
+        padding-top: 40px;
+        padding-bottom: 40px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -179,24 +163,26 @@
 
       .hero-placeholder {
         width: 300px;
-        height: 600px;
+        height: auto;
         transform: rotate(-5deg);
-        box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+        border-radius: var(--card-radius);
       }
 
       .features-section {
-        padding: 60px 0;
+        padding-top: 60px;
+        padding-bottom: 60px;
       }
 
       .features-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         gap: 30px;
         align-items: stretch;
       }
 
       .lifestyle-section {
-        padding: 100px 0;
+        padding-top: 20px;
+        padding-bottom: 40px;
         text-align: center;
       }
 
@@ -207,9 +193,17 @@
 
       .lifestyle-placeholder {
         width: 100%;
-        height: 500px;
+        height: auto;
         max-width: 900px;
         margin: 0 auto;
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        display: block;
+      }
+
+      /* NEW: Container for the bottom CTA */
+      .final-cta {
+        margin-top: 60px;
       }
 
       footer {
@@ -244,8 +238,8 @@
           font-size: 2.8rem;
         }
         .hero-placeholder {
-          height: 500px;
           width: 250px;
+          height: auto;
           transform: rotate(0deg);
         }
       }
@@ -268,9 +262,13 @@
         <a href="#" class="btn-download">Download on the App Store</a>
       </div>
       <div class="hero-image-container">
-        <div class="img-placeholder hero-placeholder">
-          APP SCREENSHOT<br />(Portrait iPhone View)
-        </div>
+        <img
+          src="screenshot.png"
+          alt="App Screenshot"
+          class="hero-placeholder"
+          width="735"
+          height="1000"
+        />
       </div>
     </header>
 
@@ -293,6 +291,14 @@
           </p>
         </div>
         <div class="feature-card">
+          <span class="feature-icon">🃏</span>
+          <h3>450+ Cards</h3>
+          <p>
+            Massive variety! Enjoy hundreds of unique prompts across all
+            categories so the game never gets old.
+          </p>
+        </div>
+        <div class="feature-card">
           <span class="feature-icon">🤣</span>
           <h3>Endless Laughter</h3>
           <p>
@@ -304,9 +310,16 @@
     </section>
 
     <section class="container lifestyle-section">
-      <h2>Perfect for Game Night</h2>
-      <div class="img-placeholder lifestyle-placeholder">
-        LIFESTYLE MOCKUP<br />(Photo of friends playing)
+      <h2>Perfect for Casual Games</h2>
+      <img
+        src="irl-example.jpg"
+        alt="Friends playing the game"
+        class="lifestyle-placeholder"
+        width="1500"
+        height="1000"
+      />
+      <div class="final-cta">
+        <a href="#" class="btn-download">Download on the App Store</a>
       </div>
     </section>
 
