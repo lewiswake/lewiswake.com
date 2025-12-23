@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="theme-color" content="#753a92" />
+
     <title>EmojiGuess 🤔 | The Ultimate Emoji Trivia Party Game</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -201,7 +204,6 @@
         display: block;
       }
 
-      /* NEW: Container for the bottom CTA */
       .final-cta {
         margin-top: 60px;
       }
@@ -243,6 +245,12 @@
           transform: rotate(0deg);
         }
       }
+
+      @media (max-width: 600px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
@@ -259,7 +267,11 @@
           Turn your next gathering into a game show! Hold up your phone and let
           your friends guess Movies, TV Shows, and Music using only emojis.
         </p>
-        <a href="https://apps.apple.com/gb/app/emojiguess/id6756858217" class="btn-download">Download on the App Store</a>
+        <a
+          href="https://apps.apple.com/gb/app/emojiguess/id6756858217"
+          class="btn-download"
+          >Download on the App Store</a
+        >
       </div>
       <div class="hero-image-container">
         <img
@@ -319,7 +331,11 @@
         height="1000"
       />
       <div class="final-cta">
-        <a href="https://apps.apple.com/gb/app/emojiguess/id6756858217" class="btn-download">Download on the App Store</a>
+        <a
+          href="https://apps.apple.com/gb/app/emojiguess/id6756858217"
+          class="btn-download"
+          >Download on the App Store</a
+        >
       </div>
     </section>
 
