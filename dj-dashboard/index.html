@@ -3,9 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>DJ Dashboard - RequestCue</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
 
-    <!-- Favicon / App Icons (optional) -->
     <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
     <link
       rel="icon"
@@ -31,10 +34,17 @@
       sizes="180x180"
     />
     <link rel="manifest" href="favicon/site.webmanifest" />
+
     <link href="screen.css" rel="stylesheet" media="screen" />
   </head>
 
   <body>
+    <div class="ambient-background">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
     <div class="app-shell" id="appShell">
       <nav
         id="navDrawer"
@@ -42,27 +52,66 @@
         aria-hidden="true"
         aria-label="Main navigation"
       >
-        <div class="nav-drawer-top">
-          <h2 class="nav-drawer-title" id="navDrawerTitle">Navigation</h2>
+        <div class="nav-drawer-header">
+          <h1 class="nav-brand">RequestCue</h1>
         </div>
 
         <div class="nav-drawer-content" role="presentation">
-          <ul class="nav-drawer-menu" aria-labelledby="navDrawerTitle">
-            <li>
-              <a href="#" data-nav-home class="nav-link">
-                <span class="nav-item-icon" aria-hidden="true">🏠</span>
-                <span class="nav-item-label">All dates</span>
-              </a>
-            </li>
-          </ul>
+          <div class="nav-group">
+            <h3 class="nav-heading">Overview</h3>
+            <ul class="nav-menu">
+              <li>
+                <a href="#" data-nav-home class="nav-link">
+                  <svg
+                    class="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect
+                      x="3"
+                      y="4"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      ry="2"
+                    ></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span class="nav-label">All Dates</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
-          <div class="nav-drawer-section">
-            <h3 class="nav-drawer-heading">Metrics</h3>
-            <ul class="nav-drawer-metrics">
+          <div class="nav-group">
+            <h3 class="nav-heading">Analytics</h3>
+            <ul class="nav-menu">
               <li>
                 <a href="#" data-metrics-view="metrics-songs" class="nav-link">
-                  <span class="nav-item-icon" aria-hidden="true">🎧</span>
-                  <span class="nav-item-label">Most requested songs</span>
+                  <svg
+                    class="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                  </svg>
+                  <span class="nav-label">Top Songs</span>
                 </a>
               </li>
               <li>
@@ -71,100 +120,163 @@
                   data-metrics-view="metrics-artists"
                   class="nav-link"
                 >
-                  <span class="nav-item-icon" aria-hidden="true">🎤</span>
-                  <span class="nav-item-label">Top requested artists</span>
+                  <svg
+                    class="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                    ></path>
+                  </svg>
+                  <span class="nav-label">Top Artists</span>
                 </a>
               </li>
               <li>
                 <a href="#" data-metrics-view="metrics-genres" class="nav-link">
-                  <span class="nav-item-icon" aria-hidden="true">🎵</span>
-                  <span class="nav-item-label">Top requested genres</span>
+                  <svg
+                    class="nav-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                  <span class="nav-label">Top Genres</span>
                 </a>
               </li>
             </ul>
           </div>
         </div>
+
+        <div class="nav-footer">
+          <span id="userBadge" class="user-badge-text">Guest</span>
+          <button
+            id="signOutBtn"
+            type="button"
+            class="sign-out-btn"
+            aria-label="Sign out"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
       </nav>
+
       <div id="navOverlay" class="nav-overlay" hidden></div>
 
       <main id="mainContent" class="app-content">
-        <!-- Main Dashboard Application -->
         <div id="app" class="view-home" hidden>
-          <header class="app-header">
+          <header class="app-header glass-panel">
             <div class="topbar">
-              <div class="topbar-inner">
-                <div class="topbar-left">
-                  <button
-                    id="menuToggle"
-                    class="hamburger-button"
-                    type="button"
-                    aria-label="Open navigation menu"
-                    aria-controls="navDrawer"
-                    aria-expanded="false"
-                  >
-                    <span class="hamburger-icon" aria-hidden="true">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </span>
-                  </button>
-                  <h1 class="site-title">RequestCue</h1>
-                </div>
-                <div class="topbar-right">
-                  <span
-                    id="userBadge"
-                    style="color: var(--muted); font-size: 0.875rem"
-                  ></span>
-                  <button id="signOutBtn" type="button" aria-label="Sign out">
-                    Sign out
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="view-heading">
-              <button id="backButton" type="button" aria-label="Back to dates">
-                &larr; Back
+              <button
+                id="menuToggle"
+                class="hamburger-button"
+                type="button"
+                aria-label="Open navigation menu"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
               </button>
-              <h2 id="viewTitle" class="view-title">Requests</h2>
+
+              <div class="view-heading-container">
+                <button
+                  id="backButton"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Back"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                <h2 id="viewTitle" class="view-title">Requests</h2>
+              </div>
+
+              <div class="header-actions"></div>
             </div>
 
             <div
-              class="controls"
+              class="controls-bar"
               role="region"
               aria-label="Filters and sorting"
             >
-              <label>
-                <span class="sr-only">Status</span>
+              <div class="select-wrapper">
                 <select id="statusFilter">
-                  <option value="all">All</option>
-                  <option value="unplayed" selected>Unplayed</option>
-                  <option value="played">Played</option>
+                  <option value="all">Status: All</option>
+                  <option value="unplayed" selected>Status: Unplayed</option>
+                  <option value="played">Status: Played</option>
                 </select>
-              </label>
-              <label>
-                <span class="sr-only">Sort order</span>
+              </div>
+              <div class="select-wrapper">
                 <select id="sortOrder">
-                  <option value="mostRequested">Most Requested</option>
-                  <option value="latestAdded">Latest Added</option>
-                  <option value="earliestAdded">Earliest Added</option>
+                  <option value="mostRequested">Sort: Popularity</option>
+                  <option value="latestAdded">Sort: Newest</option>
+                  <option value="earliestAdded">Sort: Oldest</option>
                   <option value="lastRequested" selected>
-                    Most Recently Requested
+                    Sort: Recent Request
                   </option>
                 </select>
-              </label>
-              <label>
-                <span class="sr-only">Decade filter</span>
+              </div>
+              <div class="select-wrapper">
                 <select id="decadeFilter">
-                  <option value="all">All Decades</option>
+                  <option value="all">Decade: All</option>
                 </select>
-              </label>
-              <label>
-                <span class="sr-only">Genre filter</span>
+              </div>
+              <div class="select-wrapper">
                 <select id="genreFilter">
-                  <option value="all">All Genres</option>
+                  <option value="all">Genre: All</option>
                 </select>
-              </label>
+              </div>
             </div>
           </header>
 
@@ -173,47 +285,81 @@
           </section>
 
           <footer class="bottom-controls">
-            <button id="exportCsvBtn" type="button">Download CSV</button>
-            <button id="clearAllBtn" class="clear-all-btn" type="button">
+            <button id="exportCsvBtn" class="glass-btn" type="button">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download CSV
+            </button>
+            <button id="clearAllBtn" class="glass-btn danger" type="button">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path
+                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                ></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
               Clear All
             </button>
           </footer>
         </div>
 
-        <!-- Integrated Login/Sign Up Interface -->
-        <div id="authContainer" class="auth-card-wrapper" hidden>
-          <div class="auth-card">
-            <h2 id="authTitle" class="auth-title">DJ Dashboard Login</h2>
+        <div id="authContainer" class="overlay-container" hidden>
+          <div class="glass-card auth-card">
+            <h2 id="authTitle" class="auth-title">Welcome Back</h2>
             <div id="authError" class="auth-error-message" hidden></div>
 
             <form id="authForm" class="auth-form">
-              <input
-                type="email"
-                id="emailInput"
-                placeholder="Email"
-                required
-                autocomplete="email"
-              />
-              <input
-                type="password"
-                id="passwordInput"
-                placeholder="Password"
-                required
-                autocomplete="current-password"
-              />
+              <div class="input-group">
+                <input
+                  type="email"
+                  id="emailInput"
+                  placeholder=" "
+                  required
+                  autocomplete="email"
+                />
+                <label for="emailInput">Email Address</label>
+              </div>
+              <div class="input-group">
+                <input
+                  type="password"
+                  id="passwordInput"
+                  placeholder=" "
+                  required
+                  autocomplete="current-password"
+                />
+                <label for="passwordInput">Password</label>
+              </div>
               <button
                 id="authPrimaryBtn"
                 type="submit"
-                class="auth-btn auth-primary"
+                class="primary-btn full-width"
               >
                 Sign In
               </button>
-              <button
-                id="toggleAuthBtn"
-                type="button"
-                class="auth-btn auth-secondary"
-              >
-                Need an account? Sign Up
+              <button id="toggleAuthBtn" type="button" class="text-btn">
+                Create an account
               </button>
             </form>
           </div>
@@ -221,47 +367,36 @@
       </main>
     </div>
 
-    <!-- Custom Dialog/Modal for Alerts and Confirms (Replacing alert/confirm) -->
-    <div id="customDialog" class="custom-dialog-wrapper">
-      <div class="custom-dialog">
-        <h3 id="dialogTitle"></h3>
+    <div
+      id="customDialog"
+      class="overlay-container custom-dialog-overlay"
+      hidden
+    >
+      <div class="glass-card custom-dialog">
+        <h3 id="dialogTitle">Notification</h3>
         <p id="dialogMessage"></p>
         <div id="dialogActions" class="dialog-actions">
-          <button
-            id="dialogConfirm"
-            type="button"
-            class="auth-btn auth-primary"
-          >
+          <button id="dialogConfirm" type="button" class="primary-btn">
             Yes
           </button>
-          <button
-            id="dialogCancel"
-            type="button"
-            class="auth-btn auth-secondary"
-          >
+          <button id="dialogCancel" type="button" class="glass-btn">
             Cancel
           </button>
         </div>
       </div>
     </div>
+
     <script>
       window.__firebase_config = JSON.stringify({
         apiKey: "AIzaSyBLZp3f5WAWkAJDpBidh-C2mib2nhnLys4",
-
         authDomain: "song-request-a8a68.firebaseapp.com",
-
         projectId: "song-request-a8a68",
-
         storageBucket: "song-request-a8a68.firebasestorage.app",
-
         messagingSenderId: "522633732679",
-
         appId: "1:522633732679:web:564894980a2e0484828762",
-
         measurementId: "G-H6NY9N42JF",
       });
     </script>
-
     <script type="module" src="scripts.js"></script>
   </body>
 </html>
