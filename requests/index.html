@@ -7,306 +7,422 @@
 
     <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
     <link
-      rel="icon"
-      href="favicon/favicon-96x96.png"
-      type="image/png"
-      sizes="96x96"
-    />
-    <link
-      rel="icon"
-      href="favicon/favicon-16x16.png"
-      type="image/png"
-      sizes="16x16"
-    />
-    <link
-      rel="icon"
-      href="favicon/favicon-32x32.png"
-      type="image/png"
-      sizes="32x32"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="favicon/apple-touch-icon.png"
-      sizes="180x180"
-    />
-    <link rel="manifest" href="favicon/site.webmanifest" />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
     <style>
       /* ===============================
-       Song Request — Stylesheet
-       - Safer resets
-       - Color variables respected in light/dark
-       =============================== */
+         GLASSMORPHISM DESIGN SYSTEM
+         =============================== */
 
       :root {
-        /* Colors (light) */
-        --bg: #f4f4f4;
-        --fg: #222;
-        --card-bg: #fff;
-        --primary: #3e2c6d;
-        --primary-hover: #2d2050;
-        --success: #0f766e;
-        --error: #e53e3e;
-        --border: #d9d9d9;
-        --muted: #666;
-        --shadow: rgba(0, 0, 0, 0.15);
+        /* Colors */
+        --bg-dark: #1a0b2e;
+        --glass-surface: rgba(45, 35, 60, 0.4);
+        --glass-surface-hover: rgba(60, 50, 80, 0.6);
+        --glass-border: rgba(255, 255, 255, 0.15);
 
-        /* Typography & radii */
-        --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-          Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji",
-          "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-        --radius: 10px;
-        --radius-sm: 8px;
+        --text-primary: #ffffff;
+        --text-secondary: #d0c5e0;
+
+        --accent: #bf5af2;
+        --success: #32d74b;
+        --error: #ff453a;
+
+        /* Form Elements */
+        --input-bg: rgba(0, 0, 0, 0.3);
+        --input-focus: 0 0 0 2px rgba(191, 90, 242, 0.5);
 
         /* Spacing & sizing */
-        --spacing: 1rem;
-        --spacing-sm: 0.75rem;
-        --font-size-base: 18px;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+        --spacing: 1.25rem;
 
-        /* Focus outline */
-        --focus: 2px solid #2563eb;
+        --font: "Inter", sans-serif;
       }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #121212;
-          --fg: #fff;
-          --card-bg: #1e1e1e;
-          --border: #333;
-          --shadow: rgba(0, 0, 0, 0.5);
-        }
-      }
-
-      /* --- Safer base reset --- */
+      /* --- Reset & Base --- */
       *,
       *::before,
       *::after {
         box-sizing: border-box;
       }
+
       html {
-        -webkit-text-size-adjust: 100%;
-      }
-      body {
-        margin: 0;
-        padding: var(--spacing);
-        font-family: var(--font);
-        font-size: var(--font-size-base);
-        line-height: 1.5;
-        background: var(--bg);
-        color: var(--fg);
-      }
-      img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-      button,
-      input,
-      select,
-      textarea {
-        font: inherit;
-        color: inherit;
-      }
-      a {
-        color: inherit;
+        scroll-behavior: smooth;
       }
 
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font);
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        justify-content: center;
+        line-height: 1.5;
+      }
+
+      /* --- Aurora Background --- */
+      .aurora-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -2;
+        background: radial-gradient(
+            circle at 10% 40%,
+            rgba(88, 86, 214, 0.3),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 10%,
+            rgba(191, 90, 242, 0.2),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 50% 80%,
+            rgba(10, 132, 255, 0.2),
+            transparent 50%
+          );
+        filter: blur(60px);
+        animation: pulse 10s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+      }
+
+      /* --- Layout --- */
       .wrapper {
+        width: 100%;
         max-width: 520px;
-        margin: 0 auto;
-        padding-bottom: 2rem;
+        padding: 60px 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      h1,
+      h2 {
+        color: var(--text-primary);
+        margin: 0 0 1rem;
       }
 
       .title {
-        margin: 0 0 1.25rem;
-        font-weight: 600;
+        font-weight: 800;
+        font-size: 2.2rem;
+        letter-spacing: -1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
-      /* Utilities */
+      /* --- Glass Card Utility --- */
+      .glass-panel {
+        background: var(--glass-surface);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+      }
+
+      /* --- Form Elements --- */
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .input {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--glass-border);
+        background: var(--input-bg);
+        color: white;
+        transition: all 0.2s ease;
+      }
+
+      .input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: var(--input-focus);
+      }
+
+      /* --- Submit Button --- */
+      .button {
+        width: 100%;
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 1rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+
+        /* Style matches "Book Me" button */
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+      }
+
+      .button:not(:disabled):hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+      }
+
+      .button:active {
+        transform: scale(0.98);
+      }
+
+      .button:disabled {
+        background: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      /* --- Search Suggestions --- */
+      .suggestions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: rgba(20, 15, 30, 0.95); /* Darker for readability */
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius-md);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        max-height: 320px;
+        overflow-y: auto;
+        border: 1px solid var(--glass-border);
+
+        /* Positioning */
+        margin-top: 8px;
+      }
+
+      .suggestions:empty {
+        display: none;
+      }
+
+      .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .suggestion-item:last-child {
+        border-bottom: none;
+      }
+
+      .suggestion-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .suggestion-thumb {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #333;
+      }
+
+      .track-title {
+        font-weight: 600;
+        color: #fff;
+      }
+      .track-artist {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      /* --- Selected Card --- */
+      .card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .card-heading {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      .card-body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .card-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      .card-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .card-artist {
+        color: var(--text-secondary);
+      }
+
+      /* --- Utilities --- */
       .hidden {
         display: none !important;
       }
       .visually-hidden {
-        position: absolute !important;
+        position: absolute;
         width: 1px;
         height: 1px;
         padding: 0;
         margin: -1px;
         overflow: hidden;
         clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
         border: 0;
       }
 
-      /* Form */
-      .form {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing);
-      }
-
-      .input,
-      .button {
-        width: 100%;
-        font-size: 1.125rem;
-        padding: var(--spacing);
-        border-radius: var(--radius);
-        font-family: var(--font);
-      }
-      .input {
-        border: 1px solid var(--border);
-        background: var(--card-bg);
-        color: var(--fg);
-      }
-      .input:focus {
-        outline: var(--focus);
-        outline-offset: 2px;
-      }
-
-      .button {
-        display: inline-block;
-        text-align: center;
-        background: var(--primary);
-        color: #fff;
-        cursor: pointer;
-        transition: background-color 150ms ease, transform 150ms ease;
-        text-decoration: none;
-        border: 0;
-        font-weight: 600;
-      }
-      .button:not(:disabled):hover {
-        background: var(--primary-hover);
-      }
-      .button:active {
-        transform: translateY(1px);
-      }
-      .button:disabled {
-        background: #aaa;
-        cursor: not-allowed;
-      }
-
-      .confirmation,
-      .warning-message {
-        margin-top: var(--spacing);
-        text-align: center;
-        font-weight: 600;
-      }
       .confirmation {
-        color: var(--success);
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(50, 215, 75, 0.2);
+        border: 1px solid var(--success);
+        border-radius: var(--radius-md);
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        animation: fadeIn 0.3s;
       }
+
       .warning-message {
-        color: var(--error);
-      }
-
-      /* Suggestions (typeahead) */
-      .suggestions {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: 0 2px 6px var(--shadow);
-        max-height: 320px;
-        overflow-y: auto;
-        position: relative;
-        z-index: 5;
-        border: 1px solid var(--border);
-      }
-      .suggestion-item {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        padding: var(--spacing);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        cursor: pointer;
-      }
-      .suggestion-item:last-child {
-        border-bottom: 0;
-      }
-      .suggestion-item:focus {
-        outline: var(--focus);
-        outline-offset: -2px;
-      }
-      .suggestion-thumb,
-      .card-thumb {
-        flex-shrink: 0;
-        width: 56px;
-        height: 56px;
-        border-radius: var(--radius-sm);
-        object-fit: cover;
-        background: #eee;
-      }
-      .suggestion-text .track-title,
-      .card-title {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(255, 69, 58, 0.2);
+        border: 1px solid var(--error);
+        border-radius: var(--radius-md);
+        color: #fff;
+        text-align: center;
         font-weight: 600;
-      }
-      .suggestion-text .track-artist,
-      .card-artist {
-        font-size: 0.9rem;
-        color: var(--muted);
+        animation: fadeIn 0.3s;
       }
 
-      /* Selected song card */
-      .card {
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        padding: calc(var(--spacing) * 1.5);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        border: 1px solid var(--border);
-      }
-      .card-heading {
-        font-weight: 600;
-        margin: -0.25rem 0 0.5rem;
-      }
-      .card-body {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing);
-      }
-
-      /* Sections */
+      /* --- Divider --- */
       .divider {
-        border: none;
-        border-top: 1px solid var(--border);
-        margin: var(--spacing) 0;
-      }
-      .tip-footer,
-      .about-section {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing);
-      }
-      .tip-footer h2,
-      .about-section h2 {
-        margin: 0;
-        font-weight: 600;
-      }
-      .tip-footer .button {
-        width: auto;
-        padding: var(--spacing-sm) var(--spacing);
-        font-size: 1rem;
+        border: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        margin: 2.5rem 0;
       }
 
-      /* About Section Specifics */
-      .about-text {
-        margin: 0;
-        color: var(--fg);
-        line-height: 1.6;
+      /* --- Section Headers --- */
+      section h2 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
       }
+      section p {
+        color: var(--text-secondary);
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+      }
+
+      /* --- Social & Payment Buttons --- */
+      .social-links,
+      .pay-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .social-btn,
+      .pay-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        transition: 0.2s ease;
+        text-decoration: none;
+        color: white;
+        backdrop-filter: blur(5px);
+      }
+
+      /* Circular Social Buttons */
+      .social-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+      }
+
+      /* Rectangular Pay Buttons */
+      .pay-btn {
+        padding: 0.8rem 1.2rem;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        gap: 8px;
+      }
+
+      .social-btn:hover,
+      .pay-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+      }
+
+      .social-icon-img,
+      .pay-icon {
+        width: 24px;
+        height: 24px;
+        display: block;
+        /* Make sure icons are white */
+        filter: brightness(0) invert(1);
+      }
+
+      /* --- About Section --- */
       .about-img {
         width: 100%;
-        border-radius: var(--radius);
-        aspect-ratio: 3/2;
-        object-fit: cover;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--glass-border);
+        margin-top: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       }
 
-      /* Modals */
+      /* --- Modal --- */
       .modal {
         position: fixed;
         inset: 0;
@@ -314,264 +430,163 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(4px);
-      }
-      .modal.hidden {
-        display: none !important;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        padding: 20px;
       }
 
       .modal-content {
-        background-color: var(--card-bg);
-        color: var(--fg);
-        padding: calc(var(--spacing) * 2);
-        border-radius: var(--radius);
-        box-shadow: 0 4px 12px var(--shadow);
-        max-width: 420px;
-        width: 92%;
+        background: rgba(30, 25, 45, 0.9);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        color: #fff;
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        max-width: 400px;
+        width: 100%;
         text-align: center;
         position: relative;
-        animation: fadeIn 200ms ease-out;
-        border: 1px solid var(--border);
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .modal-content h2 {
+        margin-top: 1rem;
       }
 
       .close-button {
         position: absolute;
-        top: 0.5rem;
-        right: 0.75rem;
+        top: 1rem;
+        right: 1rem;
         background: transparent;
         border: 0;
-        font-size: 2rem;
-        line-height: 1;
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.5);
         cursor: pointer;
-        color: #aaa;
-        transition: color 150ms ease, opacity 150ms ease;
       }
       .close-button:hover {
-        color: var(--fg);
-        opacity: 1;
-      }
-      .close-button:focus-visible {
-        outline: var(--focus);
+        color: #fff;
       }
 
-      .modal-content h2 {
-        margin-top: 0;
-      }
-      .modal-links {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing);
-        margin-top: 1.25rem;
+      .modal-links.social-links {
+        justify-content: center;
+        margin-top: 1.5rem;
       }
 
-      @keyframes fadeIn {
+      @keyframes slideUp {
         from {
           opacity: 0;
-          transform: translateY(-8px);
+          transform: translateY(20px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          animation: none !important;
-          transition: none !important;
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
         }
       }
 
-      /* Social buttons */
-      .social-links {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .social-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: var(--primary);
-        color: #fff;
-        text-decoration: none;
-        transition: background-color 150ms ease, transform 150ms ease;
-        outline: 0;
-      }
-      .social-btn:hover {
-        background: var(--primary-hover);
-      }
-      .social-btn:active {
-        transform: translateY(1px);
-      }
-      .social-btn:focus-visible {
-        outline: var(--focus);
-        outline-offset: 2px;
-      }
-      .social-icon-img {
-        width: 24px;
-        height: 24px;
-        display: block;
-        filter: brightness(0) invert(1);
-        image-rendering: crisp-edges;
-      }
-
-      /* Make the modal’s social row actually row-ish on small screens too */
-      .modal-links.social-links {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-      }
-      @media (max-width: 380px) {
-        .modal-links.social-links {
-          flex-wrap: wrap;
-        }
-      }
-
-      /* Payment buttons */
-      .pay-grid {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .pay-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        border-radius: var(--radius);
-        background: var(--primary);
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        transition: background-color 150ms ease, transform 150ms ease;
-        outline: 0;
-      }
-      .pay-btn:hover {
-        background: var(--primary-hover);
-      }
-      .pay-btn:active {
-        transform: translateY(1px);
-      }
-      .pay-btn:focus-visible {
-        outline: var(--focus);
-        outline-offset: 2px;
-      }
-      .pay-icon {
-        width: 22px;
-        height: 22px;
-        display: block;
-        filter: brightness(0) invert(1);
-        image-rendering: crisp-edges;
-      }
-
-      /* Footer */
+      /* --- Footer --- */
       .app-footer {
-        margin-top: 3rem; /* Space from the content above */
+        margin-top: 3rem;
         text-align: center;
         font-size: 0.85rem;
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.4);
       }
-
-      .app-footer p {
-        margin: 0;
-      }
-
-      .footer-link {
-        font-weight: 600;
+      .app-footer a {
+        color: #fff;
         text-decoration: none;
-        color: var(--primary);
-        transition: color 150ms ease;
+        font-weight: 600;
       }
-
-      .footer-link:hover {
-        color: var(--primary-hover);
+      .app-footer a:hover {
         text-decoration: underline;
-      }
-
-      .footer-sep {
-        margin: 0 0.35rem;
-        opacity: 0.5;
       }
     </style>
   </head>
 
   <body>
+    <div class="aurora-bg"></div>
+
     <main class="wrapper">
       <h1 class="title">🎵 Request a song</h1>
 
-      <form
-        id="requestForm"
-        class="form"
-        aria-describedby="confirmation"
-        novalidate
-      >
-        <label for="searchInput" class="visually-hidden">🔍 Search song</label>
-        <input
-          type="search"
-          id="searchInput"
-          class="input"
-          placeholder="Start typing a song…"
-          autocomplete="off"
-          required
-          aria-autocomplete="list"
-          aria-controls="suggestions"
-          aria-live="polite"
-        />
-
-        <ul
-          id="suggestions"
-          class="suggestions"
-          role="listbox"
-          aria-label="Song suggestions"
-        ></ul>
-
-        <input type="hidden" id="artist" name="artist" />
-        <input type="hidden" id="title" name="title" />
-        <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
-        <input type="hidden" id="artworkUrl" name="artworkUrl" />
-        <input type="hidden" id="genre" name="genre" />
-        <input type="hidden" id="releaseYear" name="releaseYear" />
-        <input type="hidden" id="bpm" name="bpm" value="" />
-
-        <div
-          id="selectedSongCard"
-          class="card hidden"
-          role="region"
-          aria-live="polite"
+      <div class="glass-panel">
+        <form
+          id="requestForm"
+          class="form"
+          aria-describedby="confirmation"
+          novalidate
         >
-          <h2 class="card-heading">Your request</h2>
-          <div class="card-body">
-            <img
-              id="cardArtwork"
-              src=""
-              alt="Song artwork"
-              class="card-thumb"
-            />
-            <div>
-              <div id="cardTitle" class="card-title"></div>
-              <div id="cardArtist" class="card-artist"></div>
+          <label for="searchInput" class="visually-hidden"
+            >🔍 Search song</label
+          >
+          <input
+            type="search"
+            id="searchInput"
+            class="input"
+            placeholder="Start typing a song…"
+            autocomplete="off"
+            required
+            aria-autocomplete="list"
+            aria-controls="suggestions"
+            aria-live="polite"
+          />
+
+          <ul
+            id="suggestions"
+            class="suggestions"
+            role="listbox"
+            aria-label="Song suggestions"
+          ></ul>
+
+          <input type="hidden" id="artist" name="artist" />
+          <input type="hidden" id="title" name="title" />
+          <input type="hidden" id="appleMusicUrl" name="appleMusicUrl" />
+          <input type="hidden" id="artworkUrl" name="artworkUrl" />
+          <input type="hidden" id="genre" name="genre" />
+          <input type="hidden" id="releaseYear" name="releaseYear" />
+          <input type="hidden" id="bpm" name="bpm" value="" />
+
+          <div
+            id="selectedSongCard"
+            class="card hidden"
+            role="region"
+            aria-live="polite"
+          >
+            <h2 class="card-heading">Your request</h2>
+            <div class="card-body">
+              <img
+                id="cardArtwork"
+                src=""
+                alt="Song artwork"
+                class="card-thumb"
+              />
+              <div>
+                <div id="cardTitle" class="card-title"></div>
+                <div id="cardArtist" class="card-artist"></div>
+              </div>
             </div>
           </div>
+
+          <button type="submit" id="submitButton" class="button" disabled>
+            Submit Request
+          </button>
+        </form>
+
+        <div id="confirmation" class="confirmation hidden" role="status">
+          ✅ Song request sent!
         </div>
-
-        <button type="submit" id="submitButton" class="button" disabled>
-          Submit
-        </button>
-      </form>
-
-      <div id="confirmation" class="confirmation hidden" role="status">
-        ✅ Song request sent!
+        <div id="warning" class="warning-message hidden" role="alert"></div>
       </div>
-      <div id="warning" class="warning-message hidden" role="alert"></div>
 
       <hr class="divider" />
+
       <section class="tip-footer">
         <h2>🎧 Follow the DJ</h2>
         <div class="social-links" role="group" aria-label="Follow the DJ">
@@ -644,6 +659,7 @@
       </section>
 
       <hr class="divider" />
+
       <section class="tip-footer">
         <h2>🍻 Buy the DJ a drink</h2>
         <p>It's thirsty work cooking this hard.</p>
@@ -697,25 +713,29 @@
       </section>
 
       <hr class="divider" />
+
       <section class="about-section">
-        <h2>👋 About the DJ</h2>
-        <p class="about-text">
-          <strong>Lewis Wake</strong><br />
-          I've been DJing in clubs since 2011. I've DJ'd all over the UK, at a
-          bunch of festivals, and with some pretty cool people. I love to play
-          songs that people didn't know they needed to hear until I drop them.
-        </p>
-        <img
-          src="assets/images/lewis-wake-dj-520x347.jpg"
-          alt="Lewis Wake DJing"
-          class="about-img"
-        />
+        <div class="glass-panel">
+          <h2>👋 About the DJ</h2>
+          <p class="about-text">
+            <strong>Lewis Wake</strong><br />
+            I've been DJing in clubs since 2011. I've DJ'd all over the UK, at a
+            bunch of festivals, and with some pretty cool people. I love to play
+            songs that people didn't know they needed to hear until I drop them.
+          </p>
+          <img
+            src="assets/images/lewis-wake-dj-520x347.jpg"
+            alt="Lewis Wake DJing"
+            class="about-img"
+          />
+        </div>
       </section>
+
       <footer class="app-footer">
         <p>
-          &copy; <span id="currentYear"></span
-          ><span class="footer-sep">&verbar;</span>Built with
-          <a href="#" class="footer-link">RequestCue</a>
+          &copy; <span id="currentYear"></span>
+          <span class="footer-sep">&verbar;</span> Built by
+          <a href="https://www.lewiswake.com" class="footer-link">Lewis Wake</a>
         </p>
       </footer>
     </main>
