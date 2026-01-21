@@ -1,104 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    
     <title>404: Track Not Found | Lewis Wake</title>
     <meta name="robots" content="noindex, follow" />
-
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/favicons/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicons/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicons/favicon-16x16.png"
-    />
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
     <link rel="manifest" href="/favicons/site.webmanifest" />
     <link rel="shortcut icon" href="/favicons/favicon.ico" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="css/screen.css"
-      media="screen"
-      type="text/css"
-    />
-
-    <style>
-      .error-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 60vh; /* Keeps it vertically centered */
-        text-align: center;
-        padding: 2rem;
-      }
-      .error-code {
-        font-size: 4rem;
-        font-weight: 800;
-        margin-bottom: 0;
-        line-height: 1;
-        opacity: 0.8;
-      }
-      .error-message {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-top: 0.5rem;
-        margin-bottom: 1.5rem;
-      }
-      .error-subtext {
-        opacity: 0.8;
-        margin-bottom: 2rem;
-        max-width: 400px;
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/screen.css" media="screen" type="text/css" />
   </head>
-
+  
   <body>
     <div class="aurora-bg"></div>
 
     <div class="main-wrapper">
-      <main class="error-container">
-        <div
-          class="glass"
-          style="padding: 3rem 2rem; width: 100%; max-width: 500px"
-        >
-          <h1 class="error-code">404</h1>
-          <h2 class="error-message">Page Not Found</h2>
+      
+      <header class="header-profile" style="margin-bottom: 0;">
+        <img
+          class="profile-pic"
+          src="https://lewiswake.com/requests/assets/images/lewis-wake-dj-520x347.jpg"
+          alt="Lewis Wake"
+        />
+      </header>
 
+      <main class="error-container">
+        <div class="glass error-box">
+          <h1 class="error-code">404</h1>
+          <h2 class="error-message">Track Not Found</h2>
+          
           <p class="error-subtext">
-            Whoa! That mix went off the rails. The page you are looking for has
-            been moved, deleted, or never existed.
+            The mix went off the rails. The page you are looking for has been moved, deleted, or never existed.
           </p>
 
-          <a
-            href="/"
-            class="btn-hero"
-            style="width: auto; display: inline-block; padding: 0.8rem 2rem"
-          >
-            Back to homepage
+          <a href="/" class="btn-hero inline">
+            Back to Main Stage
           </a>
         </div>
       </main>
 
-      <footer class="footer-links">&copy; 2026 Lewis Wake</footer>
+      <footer class="footer-links">
+        &copy; 2026 Lewis Wake
+      </footer>
     </div>
   </body>
 </html>
