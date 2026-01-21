@@ -138,8 +138,8 @@ p {
 }
 
 .profile-pic {
-  width: 200px; /* Increased from 130px */
-  height: 200px; /* Increased from 130px */
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.2);
   object-fit: cover;
@@ -182,7 +182,6 @@ p {
   }
   .profile-pic {
     margin-bottom: 16px;
-    /* Optional: slightly smaller on mobile if needed, but 200px usually looks good */
   }
 }
 
@@ -390,7 +389,7 @@ p {
   text-underline-offset: 4px;
 }
 
-/* --- 13. PRIVACY & TEXT PAGE STYLES --- */
+/* --- 13. GLOBAL UTILS --- */
 .back-link {
   color: var(--accent);
   text-decoration: none;
@@ -403,12 +402,96 @@ p {
   opacity: 0.8;
 }
 
-/* Ensure bullet points appear inside the glass container */
-.glass ul {
-  margin-left: 20px;
-  margin-bottom: 16px;
+/* --- 14. 404 PAGE STYLES --- */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 1rem;
+}
+.error-box {
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 500px;
+}
+.error-code {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 0;
+  line-height: 1;
+  opacity: 0.8;
+}
+.error-message {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.error-subtext {
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+/* Button tweak for 404 */
+.btn-hero.inline {
+  width: auto;
+  display: inline-block;
+  padding: 0.8rem 2rem;
+}
+
+/* --- 15. PRIVACY & TEXT PAGE STYLES --- */
+.policy-content {
+  max-width: 680px; 
+  margin: 0 auto;
+}
+
+/* Specific Header Overrides for Policy Pages */
+.policy-content h1 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+
+.policy-content h2 {
+  margin-top: 3rem; /* Adds breathing room above headers */
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+/* Readability Tweaks */
+.policy-content p {
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+  opacity: 0.9;
+}
+
+.policy-content ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.2rem;
+}
+
+.policy-content li {
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+  padding-left: 0.5rem;
   color: var(--text-secondary);
 }
-.glass li {
-  margin-bottom: 8px;
+
+/* "Last Updated" Date Bubble */
+.date-badge {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(4px);
+  color: #fff;
 }
