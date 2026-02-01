@@ -1,0 +1,123 @@
+{
+  "categories": [
+    {
+      "title": "Rap Replace Edits",
+      "description": "Original rap verse is replaced with another",
+      "tracks": [
+        { "artist": "Justin Bieber", "title": "Beauty and a Beat (No Nicki Edit)", "bpm": "129bpm" },
+        { "artist": "Justin Bieber", "title": "Beauty and a Beat (Pitbull Rap Edit)", "bpm": "128bpm" },
+        { "artist": "Ariana Grande", "title": "Side to Side (No Nicki Edit)", "bpm": "160bpm" },
+        { "artist": "Ariana Grande", "title": "Side to Side (Cruel Summer Edit)", "bpm": "160bpm" }
+      ]
+    },
+    {
+      "title": "Quantized Edits",
+      "description": "Songs snapped to the beat grid",
+      "tracks": [
+        { "artist": "ABBA", "title": "Dancing Queen (Intro and Outro)", "bpm": "100bpm" },
+        { "artist": "ABBA", "title": "Take a Chance on Me", "bpm": "107bpm" },
+        { "artist": "ABBA", "title": "Angeleyes", "bpm": "134bpm" },
+        { "artist": "AC/DC", "title": "Highway to Hell", "bpm": "118bpm" },
+        { "artist": "AC/DC", "title": "Thunderstruck", "bpm": "136bpm" },
+        { "artist": "AC/DC", "title": "Back in Black", "bpm": "94bpm" },
+        { "artist": "Arctic Monkeys", "title": "I Bet You Look Good on the Dancefloor", "bpm": "103bpm" },
+        { "artist": "Arctic Monkeys", "title": "R U Mine?", "bpm": "97bpm" },
+        { "artist": "Arctic Monkeys", "title": "Brianstorm", "bpm": "165bpm" },
+        { "artist": "Arctic Monkeys", "title": "Crying Lightning", "bpm": "106bpm" },
+        { "artist": "Arctic Monkeys", "title": "Mardy Bum", "bpm": "112bpm" },
+        { "artist": "Band Aid", "title": "Do They Know It's Christmas (1984 Version)", "bpm": "116bpm" },
+        { "artist": "The Black Keys", "title": "Lonely Boy", "bpm": "167bpm" },
+        { "artist": "Blink-182", "title": "What's My Age Again?", "bpm": "158bpm" },
+        { "artist": "Blink-182", "title": "Adam's Song", "bpm": "136bpm" },
+        { "artist": "Brenda Lee", "title": "Rockin Around The Christmas Tree", "bpm": "138bpm" },
+        { "artist": "Chappell Roan", "title": "Good Luck, Babe!", "bpm": "117bpm" },
+        { "artist": "Chappell Roan", "title": "My Kink Is Karma", "bpm": "89bpm" },
+        { "artist": "Charli XCX", "title": "365 (feat. Shygirl)", "bpm": "140bpm" },
+        { "artist": "Charli XCX", "title": "Party 4 U", "bpm": "160bpm" },
+        { "artist": "Chuck Berry", "title": "You Never Can Tell", "bpm": "162bpm" },
+        { "artist": "The Coral", "title": "Dreaming of You", "bpm": "100bpm" },
+        { "artist": "Creedence Clearwater Revival", "title": "I Heard It Through the Grapevine", "bpm": "118bpm" },
+        { "artist": "Daft Punk", "title": "Da Funk", "bpm": "112bpm" },
+        { "artist": "Daft Punk", "title": "Robot Rock", "bpm": "112bpm" },
+        { "artist": "David Bowie", "title": "Jean Genie", "bpm": "128bpm" },
+        { "artist": "DJ Badboy", "title": "Friday Nite", "bpm": "169bpm" },
+        { "artist": "Drake", "title": "Nokia", "bpm": "126bpm to 106bpm" },
+        { "artist": "Dropkick Murphys", "title": "I'm Shipping Up To Boston", "bpm": "130bpm" },
+        { "artist": "Elton John", "title": "Saturday Night's Alright (For Fighting)", "bpm": "148bpm" },
+        { "artist": "Fleetwood Mac", "title": "Go Your Own Way", "bpm": "135bpm" },
+        { "artist": "Fleetwood Mac", "title": "The Chain", "bpm": "153bpm" },
+        { "artist": "Fleetwood Mac", "title": "Little Lies", "bpm": "125bpm" },
+        { "artist": "Fleetwood Mac", "title": "Dreams", "bpm": "122bpm" },
+        { "artist": "Fleetwood Mac", "title": "Everywhere", "bpm": "114bpm" },
+        { "artist": "Fleetwood Mac", "title": "Don't Stop", "bpm": "117bpm" },
+        { "artist": "Franz Ferdinand", "title": "Take Me Out", "bpm": "105bpm" },
+        { "artist": "Franz Ferdinand", "title": "Michael", "bpm": "159bpm" },
+        { "artist": "Franz Ferdinand", "title": "This Fire", "bpm": "140bpm" },
+        { "artist": "The Fratellis", "title": "Chelsea Dagger", "bpm": "155bpm" },
+        { "artist": "Gloria Estefan", "title": "Conga", "bpm": "123bpm" },
+        { "artist": "Green Day", "title": "St. Jimmy", "bpm": "140bpm" },
+        { "artist": "Green Day", "title": "21 Guns", "bpm": "160bpm" },
+        { "artist": "Green Day", "title": "Basket Case", "bpm": "175bpm" },
+        { "artist": "Harry Styles", "title": "Watermelon Sugar", "bpm": "95bpm" },
+        { "artist": "Joan Jett & The Blackhearts", "title": "I Love Rock 'N Roll (No Outro)", "bpm": "96bpm" },
+        { "artist": "Jose Feliciano", "title": "Feliz Navidad", "bpm": "150bpm" },
+        { "artist": "Justin Bieber", "title": "Daisies", "bpm": "110bpm" },
+        { "artist": "Limp Bizkit", "title": "Rollin' (Air Raid Vehicle)", "bpm": "98bpm" },
+        { "artist": "Limp Bizkit", "title": "Break Stuff", "bpm": "110bpm" },
+        { "artist": "Mike Oldfield", "title": "In Dulci Jubilo", "bpm": "118bpm" },
+        { "artist": "Muse", "title": "Starlight", "bpm": "122bpm" },
+        { "artist": "Nirvana", "title": "Smells Like Teen Spirit", "bpm": "117bpm" },
+        { "artist": "Olivia Rodrigo", "title": "good 4 u", "bpm": "173bpm" },
+        { "artist": "Olivia Rodrigo", "title": "All-American Bitch", "bpm": "154bpm" },
+        { "artist": "Paul McCartney", "title": "Wonderful Christmastime", "bpm": "95bpm" },
+        { "artist": "PinkPantheress", "title": "Stateside (feat. Zara Larsson) (Extended Edit)", "bpm": "124bpm" },
+        { "artist": "Red Hot Chili Peppers", "title": "Can't Stop", "bpm": "183bpm" },
+        { "artist": "Red Hot Chili Peppers", "title": "Dani California", "bpm": "97bpm" },
+        { "artist": "Red Hot Chili Peppers", "title": "By the Way", "bpm": "125bpm" },
+        { "artist": "Rihanna", "title": "Disturbia (Extended Edit)", "bpm": "125bpm" },
+        { "artist": "Sam Fender", "title": "Seventeen Going Under", "bpm": "162bpm" },
+        { "artist": "Shakin' Stevens", "title": "Merry Xmas Everyone", "bpm": "100bpm" },
+        { "artist": "Slade", "title": "Merry Xmas Everybody", "bpm": "121bpm" },
+        { "artist": "The Beatles", "title": "Twist & Shout", "bpm": "125bpm" },
+        { "artist": "The Darkness", "title": "Christmas Time (Don't Let The Bells End)", "bpm": "82bpm" },
+        { "artist": "The Kooks", "title": "Naïve", "bpm": "103bpm" },
+        { "artist": "The Libertines", "title": "Can't Stand Me Now", "bpm": "162bpm" },
+        { "artist": "The Strokes", "title": "Last Nite", "bpm": "105bpm" },
+        { "artist": "Wham!", "title": "Last Christmas", "bpm": "108bpm" },
+        { "artist": "Wizzard", "title": "I Wish It Could Be Christmas Everyday", "bpm": "138bpm" }
+      ]
+    },
+    {
+      "title": "Transition Edits",
+      "description": "Slick mix from one song to another",
+      "tracks": [
+        { "artist": "Disco Lines x Yeah Yeah Yeahs", "title": "No Broke Boys x Heads Will Roll (Transition Edit)", "bpm": "132bpm" },
+        { "artist": "Jess Glynne x Jet2 x Benny Benassi", "title": "Hold My Hand Jet2 Edit x Satisfaction (Transition Edit)", "bpm": "127bpm" },
+        { "artist": "Jess Glynne x Jet2 x Martin Solveig", "title": "Hold My Hand Jet2 Edit x Hello (Transition Edit)", "bpm": "127bpm" },
+        { "artist": "Kendrick Lamar x Los del Rio", "title": "Not Like Us x Macarena (Toneplay Edit)", "bpm": "105bpm" },
+        { "artist": "Rihanna x Los del Rio", "title": "Umbrella x Macarena (Toneplay Edit)", "bpm": "95bpm" },
+        { "artist": "Rihanna x Otto Knows x Pitbull & Ne-Yo", "title": "Umbrella x Million Voices x Give Me Everything (Toneplay Edit)", "bpm": "95bpm to 126bpm" }
+      ]
+    },
+    {
+      "title": "Troll Edits",
+      "description": "Memes and shit",
+      "tracks": [
+        { "artist": "Jess Glynne", "title": "Hold My Hand (Jet2 Advert Version) (Lewis Wake Edit)", "bpm": "123bpm" },
+        { "artist": "Lewis Wake", "title": "Country Roads But It's-a-Me, Mario", "bpm": "165bpm" },
+        { "artist": "Lewis Wake", "title": "It's 3AM, Get The Fuck Out The Club", "bpm": "120bpm" },
+        { "artist": "Lewis Wake", "title": "Turn Down For Deez Nuts", "bpm": "100bpm" }
+      ]
+    },
+    {
+      "title": "Vocal Out Edits",
+      "description": "Only vox on the last 8/16 bars",
+      "tracks": [
+        { "artist": "Fatman Scoop", "title": "Be Faithful (Acapella Out)", "bpm": "101bpm" },
+        { "artist": "Jay-Z", "title": "99 Problems (Intro & Vocal Out)", "bpm": "94bpm" },
+        { "artist": "Miley Cyrus", "title": "Party In The U.S.A (Vocal Out)", "bpm": "96bpm" },
+        { "artist": "Spice Girls", "title": "Wannabe (Intro & Vocal Out)", "bpm": "110bpm" }
+      ]
+    }
+  ]
+}
