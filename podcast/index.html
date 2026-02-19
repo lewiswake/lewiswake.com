@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Lewis Wake | Podcast Hub</title>
+    <meta
+      name="description"
+      content="Exclusive podcast episodes and DJ mixes from Lewis Wake."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../css/screen.css"
+      media="screen"
+      type="text/css"
+    />
+
+    <style>
+      /* Custom Brand Gradients for Podcast Apps */
+      .brand-apple {
+        background: linear-gradient(135deg, #b150e2 0%, #8928ba 100%);
+      }
+      .brand-pocketcasts {
+        background: linear-gradient(135deg, #f43e37 0%, #c41f18 100%);
+      }
+      .brand-castro {
+        background: linear-gradient(135deg, #00b265 0%, #00824a 100%);
+      }
+      .brand-overcast {
+        background: linear-gradient(135deg, #fc7e0f 0%, #d46200 100%);
+      }
+      .brand-rss {
+        background: linear-gradient(135deg, #ff424d 0%, #cc2b35 100%);
+      }
+
+      /* Icon SVG sizing to match your existing icon-box imgs */
+      .icon-box svg {
+        width: 32px;
+        height: 32px;
+        fill: #ffffff;
+      }
+
+      /* Episode List Specifics */
+      .episode-card {
+        margin-bottom: 24px;
+      }
+
+      .episode-card h4 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+        line-height: 1.3;
+      }
+
+      .episode-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
+
+      .episode-desc {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Make standard HTML5 audio player look good on dark backgrounds */
+      audio {
+        width: 100%;
+        outline: none;
+        border-radius: 50px;
+      }
+      audio::-webkit-media-controls-panel {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+
+      .loading {
+        text-align: center;
+        color: var(--text-secondary);
+        padding: 2rem 0;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="aurora-bg"></div>
+
+    <div class="main-wrapper">
+      <header class="header-profile">
+        <img
+          class="profile-pic"
+          src="https://lewiswake.com/requests/assets/images/lewis-wake-dj-520x347.jpg"
+          alt="Lewis Wake Podcast Artwork"
+          id="podcast-image"
+        />
+        <div class="header-text">
+          <h1 id="podcast-title">Podcast Hub</h1>
+          <h2 id="podcast-desc">Loading...</h2>
+          <a href="../index.html" class="btn-hero">Back to Main Site</a>
+        </div>
+      </header>
+
+      <h3>Listen & Subscribe</h3>
+      <div class="grid-2">
+        <a
+          href="podcast://www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098"
+          class="glass interactive list-item"
+        >
+          <div class="icon-box brand-apple">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-7.5c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+              />
+            </svg>
+          </div>
+          <div class="list-text">
+            <h4>Apple Podcasts</h4>
+            <span>App Deep Link</span>
+          </div>
+        </a>
+
+        <a
+          href="pktc://subscribe/www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098"
+          class="glass interactive list-item"
+        >
+          <div class="icon-box brand-pocketcasts">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2a10 10 0 00-10 10c0 5.52 4.48 10 10 10s10-4.48 10-10A10 10 0 0012 2zm0 16.5c-3.59 0-6.5-2.91-6.5-6.5S8.41 5.5 12 5.5s6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5zm-2-9.5l5 3-5 3v-6z"
+              />
+            </svg>
+          </div>
+          <div class="list-text">
+            <h4>Pocket Casts</h4>
+            <span>App Deep Link</span>
+          </div>
+        </a>
+
+        <a
+          href="castro://subscribe/www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098"
+          class="glass interactive list-item"
+        >
+          <div class="icon-box brand-castro">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2.02c-5.51 0-9.98 4.47-9.98 9.98s4.47 9.98 9.98 9.98 9.98-4.47 9.98-9.98-4.47-9.98-9.98-9.98zm0 15.96c-3.3 0-5.98-2.68-5.98-5.98s2.68-5.98 5.98-5.98 5.98 2.68 5.98 5.98-2.68 5.98-5.98 5.98zm-1.5-8.5v5l4-2.5-4-2.5z"
+              />
+            </svg>
+          </div>
+          <div class="list-text">
+            <h4>Castro</h4>
+            <span>App Deep Link</span>
+          </div>
+        </a>
+
+        <a
+          href="overcast://x-callback-url/add?url=https://www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098"
+          class="glass interactive list-item"
+        >
+          <div class="icon-box brand-overcast">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
+              />
+            </svg>
+          </div>
+          <div class="list-text">
+            <h4>Overcast</h4>
+            <span>App Deep Link</span>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          onclick="copyRss(event, this)"
+          class="glass interactive list-item"
+        >
+          <div class="icon-box brand-rss">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93v-2.83z"
+              />
+            </svg>
+          </div>
+          <div class="list-text">
+            <h4>RSS Feed</h4>
+            <span id="rss-badge">Copy Link</span>
+          </div>
+        </a>
+      </div>
+
+      <h3>Latest Episodes</h3>
+      <div id="episodes-container">
+        <div class="glass">
+          <div class="loading">Fetching latest episodes from Patreon...</div>
+        </div>
+      </div>
+
+      <footer class="footer-links">
+        <p>&copy; 2026 Lewis Wake</p>
+        <a href="../index.html">Return to Main Site</a>
+      </footer>
+    </div>
+
+    <script>
+      const rssFeedUrl =
+        "https://www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098";
+
+      // Function to copy RSS link
+      function copyRss(event, element) {
+        event.preventDefault(); // Stop the link from jumping to top of page
+        const badge = element.querySelector("#rss-badge");
+
+        navigator.clipboard
+          .writeText(rssFeedUrl)
+          .then(() => {
+            const originalText = badge.innerText;
+            badge.innerText = "Copied!";
+            badge.style.backgroundColor = "#4CAF50"; // Green confirmation
+            badge.style.color = "#fff";
+
+            setTimeout(() => {
+              badge.innerText = originalText;
+              badge.style.backgroundColor = "";
+              badge.style.color = "";
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy text: ", err);
+            badge.innerText = "Error";
+          });
+      }
+
+      // Fetch and render episodes
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssFeedUrl)}`;
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "ok") {
+            // Populate Header Info dynamically
+            document.getElementById("podcast-desc").innerText =
+              data.feed.description || "Exclusive episodes and mixes.";
+
+            const container = document.getElementById("episodes-container");
+            container.innerHTML = ""; // Clear loading text
+
+            const episodes = data.items.slice(0, 10);
+
+            episodes.forEach((episode) => {
+              // Create episode card using your .glass styling
+              const article = document.createElement("article");
+              article.className = "glass episode-card";
+
+              const pubDate = new Date(episode.pubDate).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              );
+
+              article.innerHTML = `
+                            <h4>${episode.title}</h4>
+                            <div class="episode-meta">Published on ${pubDate}</div>
+                            <div class="episode-desc">${episode.description}</div>
+                            <audio controls preload="none">
+                                <source src="${episode.enclosure.link}" type="${episode.enclosure.type || "audio/mpeg"}">
+                                Your browser does not support the audio element.
+                            </audio>
+                        `;
+
+              container.appendChild(article);
+            });
+          } else {
+            document.getElementById("episodes-container").innerHTML =
+              '<div class="glass"><p class="loading">Could not load episodes. Please check the RSS feed link.</p></div>';
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching the RSS feed:", error);
+          document.getElementById("episodes-container").innerHTML =
+            '<div class="glass"><p class="loading">Error loading episodes. Please try again later.</p></div>';
+        });
+    </script>
+  </body>
+</html>
