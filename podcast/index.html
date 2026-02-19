@@ -53,18 +53,45 @@
         margin-bottom: 24px;
       }
 
-      .episode-card h4 {
+      .episode-header {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+
+      .episode-thumb {
+        width: 90px;
+        height: 90px;
+        border-radius: 12px;
+        object-fit: cover;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* Placeholder while loading */
+      }
+
+      .episode-title-group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .episode-title-group h4 {
         font-size: 1.25rem;
         font-weight: 700;
         color: #fff;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         line-height: 1.3;
       }
 
       .episode-meta {
         font-size: 0.85rem;
         color: var(--text-secondary);
-        margin-bottom: 16px;
         font-weight: 500;
       }
 
@@ -73,9 +100,10 @@
         color: var(--text-secondary);
         margin-bottom: 20px;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 3; /* Limits description to 3 lines */
         -webkit-box-orient: vertical;
         overflow: hidden;
+        line-height: 1.6;
       }
 
       /* Make standard HTML5 audio player look good on dark backgrounds */
@@ -94,6 +122,17 @@
         padding: 2rem 0;
         font-weight: 500;
       }
+
+      /* Mobile tweaks for episodes */
+      @media (max-width: 500px) {
+        .episode-thumb {
+          width: 70px;
+          height: 70px;
+        }
+        .episode-title-group h4 {
+          font-size: 1.1rem;
+        }
+      }
     </style>
   </head>
 
@@ -110,7 +149,7 @@
         />
         <div class="header-text">
           <h1 id="podcast-title">Podcast Hub</h1>
-          <h2 id="podcast-desc">Loading...</h2>
+          <h2 id="podcast-desc">Loading feed...</h2>
           <a href="../index.html" class="btn-hero">Back to Main Site</a>
         </div>
       </header>
@@ -204,10 +243,10 @@
         </a>
       </div>
 
-      <h3>Latest Episodes</h3>
+      <h3>All Episodes</h3>
       <div id="episodes-container">
         <div class="glass">
-          <div class="loading">Fetching latest episodes from Patreon...</div>
+          <div class="loading">Fetching episodes directly from Patreon...</div>
         </div>
       </div>
 
@@ -223,7 +262,7 @@
 
       // Function to copy RSS link
       function copyRss(event, element) {
-        event.preventDefault(); // Stop the link from jumping to top of page
+        event.preventDefault();
         const badge = element.querySelector("#rss-badge");
 
         navigator.clipboard
@@ -231,7 +270,7 @@
           .then(() => {
             const originalText = badge.innerText;
             badge.innerText = "Copied!";
-            badge.style.backgroundColor = "#4CAF50"; // Green confirmation
+            badge.style.backgroundColor = "#4CAF50";
             badge.style.color = "#fff";
 
             setTimeout(() => {
@@ -246,55 +285,112 @@
           });
       }
 
-      // Fetch and render episodes
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssFeedUrl)}`;
+      // Fetch raw XML using a free CORS proxy to avoid limits
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssFeedUrl)}`;
 
-      fetch(apiUrl)
-        .then((response) => response.json())
+      fetch(proxyUrl)
+        .then((response) => {
+          if (response.ok) return response.json();
+          throw new Error("Network response was not ok.");
+        })
         .then((data) => {
-          if (data.status === "ok") {
-            // Populate Header Info dynamically
-            document.getElementById("podcast-desc").innerText =
-              data.feed.description || "Exclusive episodes and mixes.";
+          // Parse the XML string into a DOM Document
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(data.contents, "text/xml");
 
-            const container = document.getElementById("episodes-container");
-            container.innerHTML = ""; // Clear loading text
+          // Get Channel Info
+          const channelDesc =
+            xmlDoc.querySelector("channel > description")?.textContent ||
+            "Exclusive episodes and mixes.";
+          document.getElementById("podcast-desc").innerText = channelDesc;
 
-            const episodes = data.items.slice(0, 10);
+          // Grab main podcast image as a fallback
+          let fallbackImage = "";
+          const mainImageNode = xmlDoc.querySelector("channel > image > url");
+          if (mainImageNode) fallbackImage = mainImageNode.textContent;
 
-            episodes.forEach((episode) => {
-              // Create episode card using your .glass styling
+          const container = document.getElementById("episodes-container");
+          container.innerHTML = ""; // Clear loading text
+
+          // Grab ALL episodes (<item> tags)
+          const items = xmlDoc.querySelectorAll("item");
+
+          if (items.length === 0) {
+            container.innerHTML =
+              '<div class="glass"><p class="loading">No episodes found.</p></div>';
+            return;
+          }
+
+          items.forEach((item) => {
+            // Title
+            const titleNode = item.querySelector("title");
+            const title = titleNode
+              ? titleNode.textContent
+              : "Untitled Episode";
+
+            // Description (strip HTML tags for a clean preview)
+            const descNode = item.querySelector("description");
+            let description = descNode ? descNode.textContent : "";
+            description = description.replace(/<[^>]*>?/gm, ""); // Strips HTML tags
+
+            // Date
+            const pubDateNode = item.querySelector("pubDate");
+            let formattedDate = "";
+            if (pubDateNode) {
+              formattedDate = new Date(
+                pubDateNode.textContent,
+              ).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+            }
+
+            // Audio File
+            const enclosureNode = item.querySelector("enclosure");
+            const audioUrl = enclosureNode
+              ? enclosureNode.getAttribute("url")
+              : "";
+            const audioType = enclosureNode
+              ? enclosureNode.getAttribute("type")
+              : "audio/mpeg";
+
+            // Individual Episode Image (itunes:image)
+            let episodeImage = fallbackImage;
+            const itunesImageNodes = item.getElementsByTagNameNS("*", "image");
+            if (
+              itunesImageNodes.length > 0 &&
+              itunesImageNodes[0].getAttribute("href")
+            ) {
+              episodeImage = itunesImageNodes[0].getAttribute("href");
+            }
+
+            // Only generate card if there is an audio file to play
+            if (audioUrl) {
               const article = document.createElement("article");
               article.className = "glass episode-card";
 
-              const pubDate = new Date(episode.pubDate).toLocaleDateString(
-                "en-US",
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                },
-              );
-
               article.innerHTML = `
-                            <h4>${episode.title}</h4>
-                            <div class="episode-meta">Published on ${pubDate}</div>
-                            <div class="episode-desc">${episode.description}</div>
+                            <div class="episode-header">
+                                <img src="${episodeImage}" class="episode-thumb" alt="Episode Artwork" loading="lazy">
+                                <div class="episode-title-group">
+                                    <h4>${title}</h4>
+                                    <div class="episode-meta">Published on ${formattedDate}</div>
+                                </div>
+                            </div>
+                            <div class="episode-desc">${description}</div>
                             <audio controls preload="none">
-                                <source src="${episode.enclosure.link}" type="${episode.enclosure.type || "audio/mpeg"}">
+                                <source src="${audioUrl}" type="${audioType}">
                                 Your browser does not support the audio element.
                             </audio>
                         `;
 
               container.appendChild(article);
-            });
-          } else {
-            document.getElementById("episodes-container").innerHTML =
-              '<div class="glass"><p class="loading">Could not load episodes. Please check the RSS feed link.</p></div>';
-          }
+            }
+          });
         })
         .catch((error) => {
-          console.error("Error fetching the RSS feed:", error);
+          console.error("Error fetching the XML feed:", error);
           document.getElementById("episodes-container").innerHTML =
             '<div class="glass"><p class="loading">Error loading episodes. Please try again later.</p></div>';
         });
