@@ -24,7 +24,6 @@
     />
 
     <style>
-      /* Custom Brand Gradients for Podcast Apps */
       .brand-apple {
         background: linear-gradient(135deg, #b150e2 0%, #8928ba 100%);
       }
@@ -41,14 +40,39 @@
         background: linear-gradient(135deg, #ff424d 0%, #cc2b35 100%);
       }
 
-      /* Icon SVG sizing to match your existing icon-box imgs */
       .icon-box svg {
         width: 32px;
         height: 32px;
         fill: #ffffff;
       }
 
-      /* Episode List Specifics */
+      /* Square Header Image */
+      .podcast-cover {
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        object-fit: cover;
+        flex-shrink: 0;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: opacity 0.3s ease;
+      }
+
+      /* Update to Tag styling to align the icon */
+      .list-text span {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      svg.external-icon {
+        width: 14px;
+        height: 14px;
+        margin-left: 6px;
+        fill: currentColor;
+        vertical-align: middle;
+      }
+
       .episode-card {
         margin-bottom: 24px;
       }
@@ -67,12 +91,7 @@
         object-fit: cover;
         flex-shrink: 0;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.05
-        ); /* Placeholder while loading */
+        background-color: rgba(255, 255, 255, 0.05);
       }
 
       .episode-title-group {
@@ -99,14 +118,9 @@
         font-size: 0.95rem;
         color: var(--text-secondary);
         margin-bottom: 20px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* Limits description to 3 lines */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
         line-height: 1.6;
       }
 
-      /* Make standard HTML5 audio player look good on dark backgrounds */
       audio {
         width: 100%;
         outline: none;
@@ -116,6 +130,29 @@
         background-color: rgba(255, 255, 255, 0.9);
       }
 
+      /* Patreon Post Button */
+      .btn-post {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 16px;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .btn-post:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.02);
+      }
+
       .loading {
         text-align: center;
         color: var(--text-secondary);
@@ -123,7 +160,18 @@
         font-weight: 500;
       }
 
-      /* Mobile tweaks for episodes */
+      .error-text {
+        color: #ff424d;
+      }
+
+      @media (max-width: 600px) {
+        .podcast-cover {
+          margin-bottom: 16px;
+          width: 160px;
+          height: 160px;
+        }
+      }
+
       @media (max-width: 500px) {
         .episode-thumb {
           width: 70px;
@@ -142,7 +190,7 @@
     <div class="main-wrapper">
       <header class="header-profile">
         <img
-          class="profile-pic"
+          class="podcast-cover"
           src="https://lewiswake.com/requests/assets/images/lewis-wake-dj-520x347.jpg"
           alt="Lewis Wake Podcast Artwork"
           id="podcast-image"
@@ -150,11 +198,10 @@
         <div class="header-text">
           <h1 id="podcast-title">Podcast Hub</h1>
           <h2 id="podcast-desc">Loading feed...</h2>
-          <a href="../index.html" class="btn-hero">Back to Main Site</a>
         </div>
       </header>
 
-      <h3>Listen & Subscribe</h3>
+      <h3>Add to podcast app</h3>
       <div class="grid-2">
         <a
           href="podcast://www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098"
@@ -169,7 +216,13 @@
           </div>
           <div class="list-text">
             <h4>Apple Podcasts</h4>
-            <span>App Deep Link</span>
+            <span
+              >Add
+              <svg class="external-icon" viewBox="0 0 24 24">
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                /></svg
+            ></span>
           </div>
         </a>
 
@@ -186,7 +239,13 @@
           </div>
           <div class="list-text">
             <h4>Pocket Casts</h4>
-            <span>App Deep Link</span>
+            <span
+              >Add
+              <svg class="external-icon" viewBox="0 0 24 24">
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                /></svg
+            ></span>
           </div>
         </a>
 
@@ -203,7 +262,13 @@
           </div>
           <div class="list-text">
             <h4>Castro</h4>
-            <span>App Deep Link</span>
+            <span
+              >Add
+              <svg class="external-icon" viewBox="0 0 24 24">
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                /></svg
+            ></span>
           </div>
         </a>
 
@@ -220,7 +285,13 @@
           </div>
           <div class="list-text">
             <h4>Overcast</h4>
-            <span>App Deep Link</span>
+            <span
+              >Add
+              <svg class="external-icon" viewBox="0 0 24 24">
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                /></svg
+            ></span>
           </div>
         </a>
 
@@ -246,7 +317,9 @@
       <h3>All Episodes</h3>
       <div id="episodes-container">
         <div class="glass">
-          <div class="loading">Fetching episodes directly from Patreon...</div>
+          <div class="loading" id="loading-msg">
+            Fetching episodes directly from Patreon...
+          </div>
         </div>
       </div>
 
@@ -260,7 +333,6 @@
       const rssFeedUrl =
         "https://www.patreon.com/rss/lewiswakedj?auth=5CsHG3OIirvdg6qUlIzx9jyQVma5Pl4e&show=1513098";
 
-      // Function to copy RSS link
       function copyRss(event, element) {
         event.preventDefault();
         const badge = element.querySelector("#rss-badge");
@@ -268,13 +340,13 @@
         navigator.clipboard
           .writeText(rssFeedUrl)
           .then(() => {
-            const originalText = badge.innerText;
+            const originalText = badge.innerHTML;
             badge.innerText = "Copied!";
             badge.style.backgroundColor = "#4CAF50";
             badge.style.color = "#fff";
 
             setTimeout(() => {
-              badge.innerText = originalText;
+              badge.innerHTML = originalText;
               badge.style.backgroundColor = "";
               badge.style.color = "";
             }, 2000);
@@ -285,55 +357,79 @@
           });
       }
 
-      // Fetch raw XML using a free CORS proxy to avoid limits
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssFeedUrl)}`;
+      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssFeedUrl)}`;
 
       fetch(proxyUrl)
         .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("Network response was not ok.");
+          if (!response.ok)
+            throw new Error(`Proxy responded with status: ${response.status}`);
+          return response.text();
         })
-        .then((data) => {
-          // Parse the XML string into a DOM Document
+        .then((str) => {
           const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+          const xmlDoc = parser.parseFromString(str, "text/xml");
 
-          // Get Channel Info
+          const parseError = xmlDoc.querySelector("parsererror");
+          if (parseError)
+            throw new Error("The feed data couldn't be parsed properly.");
+
+          const channel = xmlDoc.querySelector("channel");
+
+          const channelTitle =
+            channel.querySelector("title")?.textContent || "Podcast Hub";
           const channelDesc =
-            xmlDoc.querySelector("channel > description")?.textContent ||
+            channel.querySelector("description")?.textContent ||
             "Exclusive episodes and mixes.";
+          document.getElementById("podcast-title").innerText = channelTitle;
           document.getElementById("podcast-desc").innerText = channelDesc;
 
-          // Grab main podcast image as a fallback
-          let fallbackImage = "";
-          const mainImageNode = xmlDoc.querySelector("channel > image > url");
-          if (mainImageNode) fallbackImage = mainImageNode.textContent;
+          let showImage =
+            "https://lewiswake.com/requests/assets/images/lewis-wake-dj-520x347.jpg";
+          try {
+            const itunesChannelImage =
+              channel.getElementsByTagName("itunes:image")[0];
+            if (itunesChannelImage && itunesChannelImage.getAttribute("href")) {
+              showImage = itunesChannelImage.getAttribute("href");
+            } else {
+              const stdImageNode = channel.querySelector("image > url");
+              if (stdImageNode) showImage = stdImageNode.textContent;
+            }
+          } catch (e) {
+            console.warn("Could not parse main channel image.");
+          }
+
+          document.getElementById("podcast-image").src = showImage;
 
           const container = document.getElementById("episodes-container");
-          container.innerHTML = ""; // Clear loading text
+          container.innerHTML = "";
 
-          // Grab ALL episodes (<item> tags)
           const items = xmlDoc.querySelectorAll("item");
 
           if (items.length === 0) {
             container.innerHTML =
-              '<div class="glass"><p class="loading">No episodes found.</p></div>';
+              '<div class="glass"><p class="loading">No episodes found in the feed.</p></div>';
             return;
           }
 
           items.forEach((item) => {
-            // Title
             const titleNode = item.querySelector("title");
             const title = titleNode
               ? titleNode.textContent
               : "Untitled Episode";
 
-            // Description (strip HTML tags for a clean preview)
             const descNode = item.querySelector("description");
             let description = descNode ? descNode.textContent : "";
-            description = description.replace(/<[^>]*>?/gm, ""); // Strips HTML tags
 
-            // Date
+            // Allow breaks but strip heavier HTML for clean rendering
+            description = description
+              .replace(/<p>/g, "")
+              .replace(/<\/p>/g, "<br><br>")
+              .trim();
+
+            // Extract the Patreon Post Link
+            const linkNode = item.querySelector("link");
+            const postLink = linkNode ? linkNode.textContent : "";
+
             const pubDateNode = item.querySelector("pubDate");
             let formattedDate = "";
             if (pubDateNode) {
@@ -346,7 +442,17 @@
               });
             }
 
-            // Audio File
+            // Extract Episode Number
+            let episodeNumText = "";
+            try {
+              const itunesEpisode = item.getElementsByTagName("itunes:episode");
+              if (itunesEpisode.length > 0 && itunesEpisode[0].textContent) {
+                episodeNumText = `Episode ${itunesEpisode[0].textContent} &bull; `;
+              }
+            } catch (e) {
+              console.warn("Could not parse episode number.");
+            }
+
             const enclosureNode = item.querySelector("enclosure");
             const audioUrl = enclosureNode
               ? enclosureNode.getAttribute("url")
@@ -355,18 +461,36 @@
               ? enclosureNode.getAttribute("type")
               : "audio/mpeg";
 
-            // Individual Episode Image (itunes:image)
-            let episodeImage = fallbackImage;
-            const itunesImageNodes = item.getElementsByTagNameNS("*", "image");
-            if (
-              itunesImageNodes.length > 0 &&
-              itunesImageNodes[0].getAttribute("href")
-            ) {
-              episodeImage = itunesImageNodes[0].getAttribute("href");
+            let episodeImage = showImage;
+            try {
+              const itunesImageNS = item.getElementsByTagNameNS("*", "image");
+              if (
+                itunesImageNS.length > 0 &&
+                itunesImageNS[0].getAttribute("href")
+              ) {
+                episodeImage = itunesImageNS[0].getAttribute("href");
+              } else {
+                const itunesImageRegular =
+                  item.getElementsByTagName("itunes:image");
+                if (
+                  itunesImageRegular.length > 0 &&
+                  itunesImageRegular[0].getAttribute("href")
+                ) {
+                  episodeImage = itunesImageRegular[0].getAttribute("href");
+                }
+              }
+            } catch (e) {
+              console.warn("Image parse skipped for an episode.");
             }
 
-            // Only generate card if there is an audio file to play
+            // Only generate the card if there's an audio file
             if (audioUrl) {
+              // Generate the Patreon Button HTML if a link exists
+              let patreonButtonHtml = "";
+              if (postLink) {
+                patreonButtonHtml = `<a href="${postLink}" target="_blank" rel="noopener noreferrer" class="btn-post">View on Patreon <svg class="external-icon" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a>`;
+              }
+
               const article = document.createElement("article");
               article.className = "glass episode-card";
 
@@ -375,7 +499,7 @@
                                 <img src="${episodeImage}" class="episode-thumb" alt="Episode Artwork" loading="lazy">
                                 <div class="episode-title-group">
                                     <h4>${title}</h4>
-                                    <div class="episode-meta">Published on ${formattedDate}</div>
+                                    <div class="episode-meta">${episodeNumText}Published on ${formattedDate}</div>
                                 </div>
                             </div>
                             <div class="episode-desc">${description}</div>
@@ -383,6 +507,7 @@
                                 <source src="${audioUrl}" type="${audioType}">
                                 Your browser does not support the audio element.
                             </audio>
+                            ${patreonButtonHtml}
                         `;
 
               container.appendChild(article);
@@ -390,9 +515,9 @@
           });
         })
         .catch((error) => {
-          console.error("Error fetching the XML feed:", error);
+          console.error("Feed Error:", error);
           document.getElementById("episodes-container").innerHTML =
-            '<div class="glass"><p class="loading">Error loading episodes. Please try again later.</p></div>';
+            `<div class="glass"><p class="loading error-text"><strong>Could not load feed.</strong><br>Patreon may be temporarily blocking proxy access. Please try refreshing.<br><small>${error.message}</small></p></div>`;
         });
     </script>
   </body>
