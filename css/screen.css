@@ -25,7 +25,11 @@ html {
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-primary);
   min-height: 100vh;
@@ -43,12 +47,13 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -2;
-  background: radial-gradient(
-      circle at 10% 40%,
-      rgba(88, 86, 214, 0.3),
+  background:
+    radial-gradient(circle at 10% 40%, rgba(88, 86, 214, 0.3), transparent 40%),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(191, 90, 242, 0.2),
       transparent 40%
     ),
-    radial-gradient(circle at 90% 10%, rgba(191, 90, 242, 0.2), transparent 40%),
     radial-gradient(circle at 50% 80%, rgba(10, 132, 255, 0.2), transparent 50%);
   filter: blur(60px);
   animation: pulse 10s ease-in-out infinite alternate;
@@ -141,7 +146,9 @@ p {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 1),
+    0 0 0 3px rgba(255, 255, 255, 0.2);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -161,7 +168,9 @@ p {
   padding: 14px 32px;
   border-radius: 50px;
   text-decoration: none;
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
   display: inline-block;
 }
@@ -347,7 +356,9 @@ p {
   color: white;
   font-family: inherit;
   font-size: 1.1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .form-input:focus,
 .form-textarea:focus {
@@ -443,7 +454,7 @@ p {
 
 /* --- 15. PRIVACY & TEXT PAGE STYLES --- */
 .policy-content {
-  max-width: 680px; 
+  max-width: 680px;
   margin: 0 auto;
 }
 
@@ -494,4 +505,82 @@ p {
   letter-spacing: 0.02em;
   backdrop-filter: blur(4px);
   color: #fff;
+}
+
+/* Upcoming Gigs Stacked Cards */
+.gigs-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gig-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.gig-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.gig-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.gig-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gig-action {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ticket Button Styling */
+.btn-ticket {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.15
+  ); /* Fits the glassmorphism theme */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-ticket:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* On desktop, put the button on the right side of the card */
+@media (min-width: 600px) {
+  .gig-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .gig-action {
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
 }
