@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Artist Index — Lewis Wake Mashups</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* --- Artist Index Specific Layout --- */
+      .nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+      .nav .chip {
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        text-decoration: none;
+      }
+
+      h2 {
+        margin: 32px 0 16px;
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 8px;
+      }
+      h2:first-child {
+        margin-top: 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        display: block;
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--glass-border);
+        background: rgba(255, 255, 255, 0.05);
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all 0.2s;
+        font-weight: 500;
+      }
+      .card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .footer {
+        margin-top: 24px;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .count-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        padding-left: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="aurora-bg"></div>
+
+    <div class="main-wrapper">
+      <div class="top-header">
+        <div>
+          <h1>Artist Index</h1>
+          <p>Click an artist to filter the database view.</p>
+        </div>
+        <div class="nav-pills">
+          <a class="pill-btn" href="index.html">← Back to Database</a>
+        </div>
+      </div>
+
+      <div class="glass controls">
+        <input
+          id="q"
+          type="text"
+          placeholder="Filter artists…"
+          autocomplete="off"
+        />
+        <div class="count-label" id="count">Loading...</div>
+      </div>
+
+      <div class="glass">
+        <div class="nav" id="nav"></div>
+        <div id="sections"></div>
+
+        <div class="footer">Database automatically updates when clicked.</div>
+      </div>
+    </div>
+
+    <script>
+      const JSON_FILE = "lewis_wake_mashups_database.json";
+      const q = document.getElementById("q");
+      const count = document.getElementById("count");
+      const navContainer = document.getElementById("nav");
+      const sectionsContainer = document.getElementById("sections");
+
+      let allArtists = [];
+
+      // Helper to match the main database logic for multiple artists in one string
+      function splitArtists(str) {
+        return (str || "")
+          .toString()
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
+
+      function norm(s) {
+        return (s ?? "").toString().toLowerCase().trim();
+      }
+
+      // 1. Fetch JSON and Extract Unique Artists
+      async function loadArtists() {
+        try {
+          const res = await fetch(JSON_FILE, { cache: "no-store" });
+          if (!res.ok) throw new Error("Fetch Error");
+          const data = await res.json();
+
+          const artistSet = new Set();
+
+          data.forEach((row) => {
+            splitArtists(row["vocal artist"]).forEach((a) => artistSet.add(a));
+            splitArtists(row["instrumental artist"]).forEach((a) =>
+              artistSet.add(a),
+            );
+          });
+
+          // Sort alphabetically, case-insensitive
+          allArtists = Array.from(artistSet).sort((a, b) =>
+            a.toLowerCase().localeCompare(b.toLowerCase()),
+          );
+
+          renderPage();
+        } catch (err) {
+          count.textContent = "—";
+          sectionsContainer.innerHTML =
+            "<p style='color: #ff6b6b;'>Error loading database file. Ensure you are running on a server (like GitHub Pages or localhost).</p>";
+        }
+      }
+
+      // 2. Generate the DOM Elements
+      function renderPage() {
+        // Group artists by their starting letter
+        const groups = {};
+        allArtists.forEach((artist) => {
+          let firstChar = artist.charAt(0).toUpperCase();
+          // If it starts with a quote, number, or symbol, group under "#"
+          if (!/[A-Z]/.test(firstChar)) {
+            firstChar = "#";
+          }
+          if (!groups[firstChar]) groups[firstChar] = [];
+          groups[firstChar].push(artist);
+        });
+
+        // Sort groups: "#" first, then A-Z
+        const sortedKeys = Object.keys(groups).sort((a, b) => {
+          if (a === "#") return -1;
+          if (b === "#") return 1;
+          return a.localeCompare(b);
+        });
+
+        navContainer.innerHTML = "";
+        sectionsContainer.innerHTML = "";
+
+        sortedKeys.forEach((key) => {
+          // Create the A-Z navigation chips dynamically based on existing data
+          const chip = document.createElement("a");
+          chip.className = "chip";
+          chip.href = `#sec-${key}`;
+          chip.textContent = key;
+          navContainer.appendChild(chip);
+
+          // Create the section header
+          const h2 = document.createElement("h2");
+          h2.id = `sec-${key}`;
+          h2.textContent = key;
+          sectionsContainer.appendChild(h2);
+
+          // Create the grid for this letter
+          const grid = document.createElement("div");
+          grid.className = "grid";
+
+          groups[key].forEach((artist) => {
+            const card = document.createElement("a");
+            card.className = "card";
+            // encodeURIComponent ensures special characters don't break the URL
+            card.href = `index.html?artist=${encodeURIComponent(artist)}`;
+            card.textContent = artist;
+            grid.appendChild(card);
+          });
+
+          sectionsContainer.appendChild(grid);
+        });
+
+        updateFilter(); // Run once to update the count label
+      }
+
+      // 3. Search / Filter Logic
+      function updateFilter() {
+        const query = norm(q.value);
+        const cards = document.querySelectorAll(".card");
+        let shown = 0;
+
+        cards.forEach((a) => {
+          const name = norm(a.textContent);
+          const ok = !query || name.includes(query);
+          a.classList.toggle("hidden", !ok);
+          if (ok) shown++;
+        });
+
+        // Hide empty sections when filtering
+        document.querySelectorAll("#sections h2").forEach((h) => {
+          const grid = h.nextElementSibling;
+          const anyVisible = [...grid.querySelectorAll(".card")].some(
+            (c) => !c.classList.contains("hidden"),
+          );
+          h.classList.toggle("hidden", query && !anyVisible);
+          grid.classList.toggle("hidden", query && !anyVisible);
+        });
+
+        count.textContent = `${shown.toLocaleString()} / ${allArtists.length.toLocaleString()} artists`;
+      }
+
+      q.addEventListener("input", updateFilter);
+
+      // Initialize
+      loadArtists();
+    </script>
+  </body>
+</html>

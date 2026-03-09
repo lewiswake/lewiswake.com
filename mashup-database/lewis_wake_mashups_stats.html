@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mashups Stats — Lewis Wake</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* --- Stats Specific Layout --- */
+      .stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+      }
+
+      .card h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #fff;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+      }
+
+      .card .small {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+      }
+
+      canvas {
+        width: 100%;
+        height: 600px; /* Kept tall for clarity */
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        margin-bottom: 24px;
+      }
+
+      .count-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        padding-left: 8px;
+      }
+
+      .footer {
+        margin-top: 32px;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      @media (max-width: 900px) {
+        canvas {
+          height: 500px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="aurora-bg"></div>
+
+    <div class="main-wrapper">
+      <div class="top-header">
+        <div>
+          <h1>Mashups Stats</h1>
+          <p>Top artists by mashup count.</p>
+        </div>
+        <div class="nav-pills">
+          <a class="pill-btn" href="index.html">← Database</a>
+          <a class="pill-btn" href="lewis_wake_artist_index.html"
+            >Artist Index</a
+          >
+          <a class="pill-btn" id="copyLink" href="javascript:void(0)"
+            >Share Link</a
+          >
+        </div>
+      </div>
+
+      <div class="glass controls">
+        <input
+          id="q"
+          type="text"
+          placeholder="Filter artist names…"
+          autocomplete="off"
+        />
+        <div class="count-label" id="meta">Loading...</div>
+      </div>
+
+      <div class="stats-container">
+        <div class="glass card">
+          <h2>Top 10 Vocal Artists</h2>
+          <div class="small">
+            Click a row in the table below to open the database filtered to that
+            artist.
+          </div>
+          <canvas id="vocalChart" width="1200" height="800"></canvas>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Artist</th>
+                  <th style="width: 90px">Count</th>
+                </tr>
+              </thead>
+              <tbody id="vocalTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="glass card">
+          <h2>Top 10 Instrumental Artists</h2>
+          <div class="small">
+            Click a row in the table below to open the database filtered to that
+            artist.
+          </div>
+          <canvas id="instChart" width="1200" height="800"></canvas>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Artist</th>
+                  <th style="width: 90px">Count</th>
+                </tr>
+              </thead>
+              <tbody id="instTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Data source: <code>lewis_wake_mashups_database.json</code>
+      </div>
+    </div>
+
+    <script>
+      const JSON_FILE = "lewis_wake_mashups_database.json";
+      let DATA = [];
+
+      const els = {
+        q: document.getElementById("q"),
+        meta: document.getElementById("meta"),
+        vocalChart: document.getElementById("vocalChart"),
+        instChart: document.getElementById("instChart"),
+        vocalTable: document.getElementById("vocalTable"),
+        instTable: document.getElementById("instTable"),
+        copyLink: document.getElementById("copyLink"),
+      };
+
+      function norm(v) {
+        return (v ?? "").toString().toLowerCase().trim();
+      }
+
+      function esc(s) {
+        return (s ?? "")
+          .toString()
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function splitArtists(str) {
+        return (str || "")
+          .toString()
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
+
+      function countBy(field, query = "") {
+        const m = new Map();
+        for (const r of DATA) {
+          const names = splitArtists(r[field]);
+          for (const name of names) {
+            if (query && !norm(name).includes(norm(query))) continue;
+            m.set(name, (m.get(name) || 0) + 1);
+          }
+        }
+        return Array.from(m.entries())
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0, 10); // Changed back to Top 10
+      }
+
+      function drawBarChart(canvas, items) {
+        const ctx = canvas.getContext("2d");
+        const W = canvas.width,
+          H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        const padL = 16,
+          padR = 16,
+          padT = 24,
+          padB = 40;
+        const chartW = W - padL - padR;
+        const chartH = H - padT - padB;
+
+        ctx.fillStyle = "rgba(0,0,0,0.15)";
+        ctx.fillRect(0, 0, W, H);
+
+        const max = Math.max(1, ...items.map((x) => x[1]));
+        const barGap = 16;
+        const barH =
+          (chartH - barGap * (items.length - 1)) / Math.max(1, items.length);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const x = padL + chartW * (i / 4);
+          ctx.beginPath();
+          ctx.moveTo(x, padT);
+          ctx.lineTo(x, padT + chartH);
+          ctx.stroke();
+
+          ctx.fillStyle = "rgba(255,255,255,0.45)";
+          ctx.font = '16px "Inter", sans-serif';
+          ctx.textAlign = "center";
+          ctx.fillText(String(Math.round(max * (i / 4))), x, H - 12);
+        }
+
+        ctx.textAlign = "left";
+        for (let i = 0; i < items.length; i++) {
+          const [label, val] = items[i];
+          const y = padT + i * (barH + barGap);
+          const w = (val / max) * chartW;
+
+          ctx.fillStyle = "rgba(191, 90, 242, 0.6)";
+          ctx.fillRect(padL, y, w, barH);
+
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          // Bumped the font size slightly for the thicker bars
+          ctx.font = '22px "Inter", sans-serif';
+          const text = label.length > 50 ? label.slice(0, 47) + "…" : label;
+          ctx.fillText(text, padL + 16, y + barH / 2 + 8);
+
+          ctx.textAlign = "right";
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          ctx.fillText(
+            String(val),
+            padL + Math.max(w, 60) - 16,
+            y + barH / 2 + 8,
+          );
+          ctx.textAlign = "left";
+        }
+
+        if (!items.length) {
+          ctx.fillStyle = "rgba(255,255,255,0.6)";
+          ctx.font = '20px "Inter", sans-serif';
+          ctx.fillText("No matches for this filter.", padL + 16, padT + 30);
+        }
+      }
+
+      function renderTable(tbody, items) {
+        tbody.innerHTML = "";
+        for (const [artist, count] of items) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td><a href="index.html?artist=${encodeURIComponent(
+            artist,
+          )}" class="rowlink">${esc(artist)}</a></td><td>${count}</td>`;
+          tbody.appendChild(tr);
+        }
+        if (!items.length) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td colspan="2" style="color: var(--text-secondary);">No matches found.</td>`;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function update() {
+        const q = els.q.value || "";
+        const vocalTop = countBy("vocal artist", q);
+        const instTop = countBy("instrumental artist", q);
+
+        drawBarChart(els.vocalChart, vocalTop);
+        drawBarChart(els.instChart, instTop);
+
+        renderTable(els.vocalTable, vocalTop);
+        renderTable(els.instTable, instTop);
+
+        els.meta.textContent =
+          `${DATA.length.toLocaleString()} mashups parsed` +
+          (q ? ` • filter: "${q}"` : "");
+      }
+
+      async function load() {
+        try {
+          const res = await fetch(JSON_FILE, { cache: "no-store" });
+          if (!res.ok)
+            throw new Error(`HTTP ${res.status} loading ${JSON_FILE}`);
+          DATA = await res.json();
+        } catch (e) {
+          console.error(e);
+          els.meta.textContent =
+            "0 mashups loaded (Error: make sure you are running a local server).";
+          update();
+          return;
+        }
+        update();
+      }
+
+      els.q.addEventListener("input", update);
+
+      els.copyLink.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          els.copyLink.textContent = "Copied!";
+          setTimeout(() => (els.copyLink.textContent = "Share Link"), 1500);
+        } catch {
+          prompt("Copy link:", window.location.href);
+        }
+      });
+
+      load();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lewis Wake Mashups Database</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="aurora-bg"></div>
+
+    <div class="main-wrapper">
+      <div class="top-header">
+        <div>
+          <h1>Lewis Wake Mashups Database</h1>
+          <p>Search, filter, and listen to the complete archive.</p>
+        </div>
+        <div class="nav-pills">
+          <a class="pill-btn" href="lewis_wake_artist_index.html"
+            >Artist Index</a
+          >
+          <a class="pill-btn" href="lewis_wake_mashups_stats.html">Stats</a>
+          <a class="pill-btn" id="copyLink" href="javascript:void(0)"
+            >Share View</a
+          >
+        </div>
+      </div>
+
+      <section id="listView" class="view active">
+        <div class="glass controls">
+          <input
+            id="artistSearch"
+            type="search"
+            placeholder="Search Artist..."
+          />
+          <input id="keySearch" type="search" placeholder="Key (e.g. 5A)" />
+          <select id="albumSelect">
+            <option value="__ALL__">All Albums</option>
+          </select>
+          <div class="checkbox-group">
+            <label class="cb"
+              ><input id="hasYoutube" type="checkbox" /> Video</label
+            >
+            <label class="cb"
+              ><input id="hasBandcamp" type="checkbox" /> Bandcamp</label
+            >
+          </div>
+          <button id="clearBtn" type="button">Reset</button>
+        </div>
+
+        <div style="height: 20px"></div>
+
+        <div class="glass" style="padding: 0; overflow: hidden">
+          <div
+            style="
+              padding: 16px 24px;
+              border-bottom: 1px solid var(--glass-border);
+            "
+          >
+            <div
+              id="counts"
+              style="font-weight: 600; color: var(--text-secondary)"
+            >
+              Loading...
+            </div>
+            <div
+              id="error"
+              style="color: #ff6b6b; display: none; margin-top: 8px"
+            ></div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th data-col="track title" data-type="string">
+                    Track <span class="arrow"></span>
+                  </th>
+                  <th data-col="vocal artist" data-type="string">
+                    Vocal <span class="arrow"></span>
+                  </th>
+                  <th data-col="instrumental artist" data-type="string">
+                    Instrumental <span class="arrow"></span>
+                  </th>
+                  <th data-col="year" data-type="number">
+                    Year <span class="arrow"></span>
+                  </th>
+                  <th data-col="bpm" data-type="number">
+                    BPM <span class="arrow"></span>
+                  </th>
+                  <th data-col="key" data-type="string">
+                    Key <span class="arrow"></span>
+                  </th>
+                  <th data-col="album" data-type="string">
+                    Album <span class="arrow"></span>
+                  </th>
+                  <th data-col="links" data-type="string">Links</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="detailView" class="view">
+        <button id="backBtn" class="btn-back" type="button">
+          ← Back to Results
+        </button>
+
+        <div class="glass" id="detailCard"></div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
