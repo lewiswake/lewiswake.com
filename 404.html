@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>404: Track Not Found | Lewis Wake</title>
+    <meta
+      name="description"
+      content="The page you are looking for has been moved, deleted, or never existed."
+    />
     <meta name="robots" content="noindex, follow" />
 
     <link
@@ -25,7 +29,7 @@
       href="/favicons/favicon-16x16.png"
     />
     <link rel="manifest" href="/favicons/site.webmanifest" />
-    <link rel="shortcut icon" href="/favicons/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,16 +37,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="css/screen.css"
-      media="screen"
-      type="text/css"
-    />
+
+    <link rel="stylesheet" href="/css/screen.css" media="screen" />
   </head>
 
   <body>
-    <div class="aurora-bg"></div>
+    <div class="aurora-bg" aria-hidden="true"></div>
 
     <div class="main-wrapper">
       <main class="error-container">
@@ -57,11 +57,13 @@
             existed.
           </p>
 
-          <a href="/" class="btn-hero inline"> Back to Main Stage </a>
+          <a href="/" class="btn-hero inline">Back to Main Stage</a>
         </div>
       </main>
 
-      <footer class="footer-links">&copy; 2026 Lewis Wake</footer>
+      <footer class="footer-links">
+        <p>&copy; 2026 Lewis Wake</p>
+      </footer>
     </div>
   </body>
 </html>
