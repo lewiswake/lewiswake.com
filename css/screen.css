@@ -1,7 +1,31 @@
-/* --- 1. DESIGN VARIABLES --- */
+/* ==========================================================================
+   LEWIS WAKE - OFFICIAL WEBSITE STYLESHEET
+   ========================================================================== */
+
+/* TABLE OF CONTENTS
+   01. Variables (Colors, Spacing, Radii)
+   02. Reset & Base Styles
+   03. Typography
+   04. Background & Effects
+   05. Layout 
+   06. UI Components (Glass, Buttons)
+   07. Forms
+   08. Header & Profile
+   09. Social Dock & Link Widgets
+   10. Media (Video Embeds)
+   11. Page Specific: 404 Error
+   12. Page Specific: Privacy & Text Content
+   13. Page Specific: Live Gigs
+   14. Footer
+   15. Utilities
+   ========================================================================== */
+
+/* ==========================================================================
+   01. VARIABLES
+   ========================================================================== */
 :root {
   /* Colors */
-  --bg-dark: #1a0b2e; /* Deep Purple */
+  --bg-dark: #1a0b2e; /* Deep Purple base */
   --glass-surface: rgba(45, 35, 60, 0.4);
   --glass-border: rgba(255, 255, 255, 0.15);
   --text-primary: #ffffff;
@@ -14,10 +38,13 @@
   --padding: 24px;
 }
 
-/* --- 2. BASE STYLES --- */
+/* ==========================================================================
+   02. RESET & BASE STYLES
+   ========================================================================== */
 html {
   scroll-behavior: smooth;
 }
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -25,11 +52,7 @@ html {
 }
 
 body {
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-primary);
   min-height: 100vh;
@@ -39,7 +62,45 @@ body {
   line-height: 1.5;
 }
 
-/* --- 3. BACKGROUND (Aurora Only) --- */
+/* ==========================================================================
+   03. TYPOGRAPHY
+   ========================================================================== */
+h1 {
+  font-weight: 800;
+  font-size: 3.5rem;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 24px;
+  margin-bottom: 16px;
+  padding-left: 4px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   04. BACKGROUND & EFFECTS
+   ========================================================================== */
 .aurora-bg {
   position: fixed;
   top: 0;
@@ -47,16 +108,12 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -2;
-  background:
-    radial-gradient(circle at 10% 40%, rgba(88, 86, 214, 0.3), transparent 40%),
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(191, 90, 242, 0.2),
-      transparent 40%
-    ),
-    radial-gradient(circle at 50% 80%, rgba(10, 132, 255, 0.2), transparent 50%);
   filter: blur(60px);
   animation: pulse 10s ease-in-out infinite alternate;
+  background:
+    radial-gradient(circle at 10% 40%, rgba(88, 86, 214, 0.3), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(191, 90, 242, 0.2), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(10, 132, 255, 0.2), transparent 50%);
 }
 
 @keyframes pulse {
@@ -70,7 +127,9 @@ body {
   }
 }
 
-/* --- 4. LAYOUT --- */
+/* ==========================================================================
+   05. LAYOUT
+   ========================================================================== */
 .main-wrapper {
   width: 100%;
   max-width: 680px;
@@ -81,7 +140,10 @@ body {
   z-index: 1;
 }
 
-/* --- 5. GLASS CARD COMPONENT --- */
+/* ==========================================================================
+   06. UI COMPONENTS (Cards & Buttons)
+   ========================================================================== */
+/* Glass Card Base */
 .glass {
   background: var(--glass-surface);
   backdrop-filter: blur(30px);
@@ -89,8 +151,8 @@ body {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: var(--padding);
-  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .glass.interactive:hover {
@@ -99,39 +161,110 @@ body {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* --- 6. TYPOGRAPHY --- */
-h1 {
-  font-weight: 800;
-  font-size: 3.5rem;
-  letter-spacing: -1px;
-  margin-bottom: 4px;
-  color: #ffffff;
-  line-height: 1.1;
-}
-h2 {
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #ffffff;
-  opacity: 0.9;
-  margin-bottom: 20px;
-}
-h3 {
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 16px;
-  margin-top: 24px;
-  opacity: 1;
-  padding-left: 4px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-p {
-  color: var(--text-secondary);
+/* Primary Hero Button */
+.btn-hero {
+  display: inline-block;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 14px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s, opacity 0.2s;
 }
 
-/* --- 7. HEADER SECTION --- */
+.btn-hero:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Form Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: none;
+  background: #ffffff;
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}
+
+/* Gig Ticket Button */
+.btn-ticket {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-ticket:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   07. FORMS
+   ========================================================================== */
+.contact-section {
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(191, 90, 242, 0.3);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+/* ==========================================================================
+   08. HEADER & PROFILE
+   ========================================================================== */
 .header-profile {
   display: flex;
   flex-direction: row;
@@ -146,9 +279,7 @@ p {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 1),
-    0 0 0 3px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.2);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -160,26 +291,6 @@ p {
   text-align: left;
 }
 
-.btn-hero {
-  background: #ffffff;
-  color: #000000;
-  font-weight: 700;
-  font-size: 1.1rem;
-  padding: 14px 32px;
-  border-radius: 50px;
-  text-decoration: none;
-  transition:
-    transform 0.2s,
-    opacity 0.2s;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-  display: inline-block;
-}
-.btn-hero:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-/* Mobile Layout */
 @media (max-width: 600px) {
   .header-profile {
     flex-direction: column;
@@ -194,7 +305,9 @@ p {
   }
 }
 
-/* --- 8. SOCIAL DOCK --- */
+/* ==========================================================================
+   09. SOCIAL DOCK & LINK WIDGETS
+   ========================================================================== */
 .dock-container {
   display: flex;
   justify-content: center;
@@ -207,6 +320,7 @@ p {
   border: 1px solid var(--glass-border);
   margin-bottom: 10px;
 }
+
 .dock-icon {
   width: 48px;
   height: 48px;
@@ -214,13 +328,15 @@ p {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: rgba(255, 255, 255, 0.08);
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 .dock-icon:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-8px) scale(1.1);
 }
+
 .dock-icon img,
 .dock-icon svg {
   width: 24px;
@@ -228,29 +344,29 @@ p {
   filter: invert(1);
 }
 
-/* --- 9. WIDGET GRIDS & ICONS --- */
+/* Link Grids */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
 }
+
 @media (min-width: 600px) {
   .grid-2 {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-/* List Item Style */
 .list-item {
   display: flex;
   align-items: center;
   gap: 16px;
   text-decoration: none;
-  color: white;
+  color: var(--text-primary);
   width: 100%;
 }
 
-/* Icon Box Styles */
+/* Link Widget Icon Box */
 .icon-box {
   width: 60px;
   height: 60px;
@@ -263,7 +379,6 @@ p {
   overflow: hidden;
 }
 
-/* Images inside icon box: White filter & padding */
 .icon-box img {
   width: 32px;
   height: 32px;
@@ -271,21 +386,13 @@ p {
   filter: brightness(0) invert(1);
 }
 
-/* BRAND COLORS (Fixed Gradients) */
-.brand-patreon {
-  background: linear-gradient(135deg, #f96854 0%, #e0533f 100%);
-}
-.brand-bandcamp {
-  background: linear-gradient(135deg, #629aa9 0%, #4b8291 100%);
-}
-.brand-gumroad {
-  background: linear-gradient(135deg, #ff7bf3 0%, #d560c9 100%);
-}
-.brand-paypal {
-  background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
-}
+/* Widget Brand Gradients */
+.brand-patreon { background: linear-gradient(135deg, #f96854 0%, #e0533f 100%); }
+.brand-bandcamp { background: linear-gradient(135deg, #629aa9 0%, #4b8291 100%); }
+.brand-gumroad { background: linear-gradient(135deg, #ff7bf3 0%, #d560c9 100%); }
+.brand-paypal { background: linear-gradient(135deg, #0070ba 0%, #003087 100%); }
 
-/* LIST TEXT UPDATES */
+/* Widget Text */
 .list-text {
   display: flex;
   flex-direction: column;
@@ -293,18 +400,18 @@ p {
   gap: 6px;
   flex: 1;
 }
+
 .list-text h4 {
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
-  color: #fff;
   line-height: 1.35;
 }
-/* Tag Style for Subtitle */
+
 .list-text span {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.15);
   padding: 4px 10px;
   border-radius: 12px;
@@ -312,16 +419,19 @@ p {
   backdrop-filter: blur(4px);
 }
 
-/* --- 10. VIDEO EMBED --- */
+/* ==========================================================================
+   10. MEDIA (Video Embeds)
+   ========================================================================== */
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%; /* Maintains a strict 16:9 Aspect Ratio */
   height: 0;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: #000;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
 .video-container iframe {
   position: absolute;
   top: 0;
@@ -331,89 +441,9 @@ p {
   border: none;
 }
 
-/* --- 11. FORM SECTION --- */
-.contact-section {
-  margin-top: 20px;
-}
-.form-group {
-  margin-bottom: 20px;
-}
-.form-label {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 8px;
-  margin-left: 4px;
-}
-.form-input,
-.form-textarea {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 16px;
-  color: white;
-  font-family: inherit;
-  font-size: 1.1rem;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(191, 90, 242, 0.3);
-}
-.form-textarea {
-  resize: vertical;
-  min-height: 140px;
-}
-.btn-submit {
-  width: 100%;
-  padding: 18px;
-  border-radius: 16px;
-  border: none;
-  background: #ffffff;
-  color: black;
-  font-size: 1.1rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-submit:hover {
-  opacity: 0.9;
-}
-
-/* --- 12. FOOTER --- */
-.footer-links {
-  text-align: center;
-  margin-top: 40px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-.footer-links a {
-  color: #fff;
-  margin: 0 12px;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-/* --- 13. GLOBAL UTILS --- */
-.back-link {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
-  margin-bottom: 24px;
-  transition: opacity 0.2s;
-}
-.back-link:hover {
-  opacity: 0.8;
-}
-
-/* --- 14. 404 PAGE STYLES --- */
+/* ==========================================================================
+   11. PAGE SPECIFIC: 404 ERROR
+   ========================================================================== */
 .error-container {
   display: flex;
   flex-direction: column;
@@ -423,11 +453,13 @@ p {
   text-align: center;
   padding: 1rem;
 }
+
 .error-box {
   padding: 3rem 2rem;
   width: 100%;
   max-width: 500px;
 }
+
 .error-code {
   font-size: 4rem;
   font-weight: 800;
@@ -435,30 +467,33 @@ p {
   line-height: 1;
   opacity: 0.8;
 }
+
 .error-message {
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
 }
+
 .error-subtext {
   opacity: 0.8;
   margin-bottom: 2rem;
 }
-/* Button tweak for 404 */
+
 .btn-hero.inline {
   width: auto;
   display: inline-block;
   padding: 0.8rem 2rem;
 }
 
-/* --- 15. PRIVACY & TEXT PAGE STYLES --- */
+/* ==========================================================================
+   12. PAGE SPECIFIC: PRIVACY & TEXT CONTENT
+   ========================================================================== */
 .policy-content {
   max-width: 680px;
   margin: 0 auto;
 }
 
-/* Specific Header Overrides for Policy Pages */
 .policy-content h1 {
   margin-bottom: 1rem;
   font-size: 2.5rem;
@@ -466,14 +501,13 @@ p {
 }
 
 .policy-content h2 {
-  margin-top: 3rem; /* Adds breathing room above headers */
+  margin-top: 3rem;
   margin-bottom: 1rem;
   font-size: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
 }
 
-/* Readability Tweaks */
 .policy-content p {
   line-height: 1.7;
   margin-bottom: 1.2rem;
@@ -492,7 +526,20 @@ p {
   color: var(--text-secondary);
 }
 
-/* "Last Updated" Date Bubble */
+.policy-content a {
+  color: #a8b1ff;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(168, 177, 255, 0.3);
+  font-weight: 600;
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.policy-content a:hover,
+.policy-content a:focus {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
 .date-badge {
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.15);
@@ -504,10 +551,12 @@ p {
   margin-bottom: 2rem;
   letter-spacing: 0.02em;
   backdrop-filter: blur(4px);
-  color: #fff;
+  color: var(--text-primary);
 }
 
-/* Upcoming Gigs Stacked Cards */
+/* ==========================================================================
+   13. PAGE SPECIFIC: LIVE GIGS
+   ========================================================================== */
 .gigs-stack {
   display: flex;
   flex-direction: column;
@@ -547,40 +596,55 @@ p {
   flex-direction: column;
 }
 
-/* Ticket Button Styling */
-.btn-ticket {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.15
-  ); /* Fits the glassmorphism theme */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.btn-ticket:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-/* On desktop, put the button on the right side of the card */
 @media (min-width: 600px) {
   .gig-card {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
-
   .gig-action {
     flex-shrink: 0;
     margin-left: 1rem;
   }
+}
+
+/* ==========================================================================
+   14. FOOTER
+   ========================================================================== */
+.footer-links {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.footer-links a {
+  color: var(--text-primary);
+  margin: 0 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ==========================================================================
+   15. UTILITIES
+   ========================================================================== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
