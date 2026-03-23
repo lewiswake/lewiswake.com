@@ -1,27 +1,28 @@
-/* ==========================================================================
-   LEWIS WAKE - OFFICIAL WEBSITE STYLESHEET
+/* ========================================================================== 
+   LEWIS WAKE - OFFICIAL WEBSITE STYLESHEET 
    ========================================================================== */
 
-/* TABLE OF CONTENTS
-   01. Variables (Colors, Spacing, Radii)
-   02. Reset & Base Styles
-   03. Typography
-   04. Background & Effects
-   05. Layout 
-   06. UI Components (Glass, Buttons)
-   07. Forms
-   08. Header & Profile
-   09. Social Dock & Link Widgets
-   10. Media (Video Embeds)
-   11. Page Specific: 404 Error
-   12. Page Specific: Privacy & Text Content
-   13. Page Specific: Live Gigs
-   14. Footer
-   15. Utilities
+/* TABLE OF CONTENTS 
+   01. Variables (Colors, Spacing, Radii) 
+   02. Reset & Base Styles 
+   03. Typography 
+   04. Background & Effects 
+   05. Layout  
+   06. UI Components (Glass, Buttons) 
+   07. Forms 
+   08. Header & Profile 
+   09. Social Dock & Link Widgets 
+   10. Media (Video Embeds) 
+   11. Page Specific: 404 Error 
+   12. Page Specific: Privacy & Text Content 
+   13. Page Specific: Live Gigs 
+   14. Page Specific: DJ Gig History Dashboard
+   15. Footer 
+   16. Utilities 
    ========================================================================== */
 
-/* ==========================================================================
-   01. VARIABLES
+/* ========================================================================== 
+   01. VARIABLES 
    ========================================================================== */
 :root {
   /* Colors */
@@ -38,8 +39,8 @@
   --padding: 24px;
 }
 
-/* ==========================================================================
-   02. RESET & BASE STYLES
+/* ========================================================================== 
+   02. RESET & BASE STYLES 
    ========================================================================== */
 html {
   scroll-behavior: smooth;
@@ -52,7 +53,11 @@ html {
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-primary);
   min-height: 100vh;
@@ -62,8 +67,8 @@ body {
   line-height: 1.5;
 }
 
-/* ==========================================================================
-   03. TYPOGRAPHY
+/* ========================================================================== 
+   03. TYPOGRAPHY 
    ========================================================================== */
 h1 {
   font-weight: 800;
@@ -98,8 +103,8 @@ p {
   color: var(--text-secondary);
 }
 
-/* ==========================================================================
-   04. BACKGROUND & EFFECTS
+/* ========================================================================== 
+   04. BACKGROUND & EFFECTS 
    ========================================================================== */
 .aurora-bg {
   position: fixed;
@@ -112,7 +117,11 @@ p {
   animation: pulse 10s ease-in-out infinite alternate;
   background:
     radial-gradient(circle at 10% 40%, rgba(88, 86, 214, 0.3), transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(191, 90, 242, 0.2), transparent 40%),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(191, 90, 242, 0.2),
+      transparent 40%
+    ),
     radial-gradient(circle at 50% 80%, rgba(10, 132, 255, 0.2), transparent 50%);
 }
 
@@ -127,8 +136,8 @@ p {
   }
 }
 
-/* ==========================================================================
-   05. LAYOUT
+/* ========================================================================== 
+   05. LAYOUT 
    ========================================================================== */
 .main-wrapper {
   width: 100%;
@@ -140,8 +149,8 @@ p {
   z-index: 1;
 }
 
-/* ==========================================================================
-   06. UI COMPONENTS (Cards & Buttons)
+/* ========================================================================== 
+   06. UI COMPONENTS (Cards & Buttons) 
    ========================================================================== */
 /* Glass Card Base */
 .glass {
@@ -172,7 +181,9 @@ p {
   border-radius: 50px;
   text-decoration: none;
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
 }
 
 .btn-hero:hover {
@@ -217,8 +228,8 @@ p {
   transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   07. FORMS
+/* ========================================================================== 
+   07. FORMS 
    ========================================================================== */
 .contact-section {
   margin-top: 20px;
@@ -247,7 +258,9 @@ p {
   color: var(--text-primary);
   font-family: inherit;
   font-size: 1.1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-input:focus,
@@ -262,8 +275,8 @@ p {
   min-height: 140px;
 }
 
-/* ==========================================================================
-   08. HEADER & PROFILE
+/* ========================================================================== 
+   08. HEADER & PROFILE 
    ========================================================================== */
 .header-profile {
   display: flex;
@@ -279,7 +292,9 @@ p {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 1),
+    0 0 0 3px rgba(255, 255, 255, 0.2);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -305,8 +320,8 @@ p {
   }
 }
 
-/* ==========================================================================
-   09. SOCIAL DOCK & LINK WIDGETS
+/* ========================================================================== 
+   09. SOCIAL DOCK & LINK WIDGETS 
    ========================================================================== */
 .dock-container {
   display: flex;
@@ -387,10 +402,18 @@ p {
 }
 
 /* Widget Brand Gradients */
-.brand-patreon { background: linear-gradient(135deg, #f96854 0%, #e0533f 100%); }
-.brand-bandcamp { background: linear-gradient(135deg, #629aa9 0%, #4b8291 100%); }
-.brand-gumroad { background: linear-gradient(135deg, #ff7bf3 0%, #d560c9 100%); }
-.brand-paypal { background: linear-gradient(135deg, #0070ba 0%, #003087 100%); }
+.brand-patreon {
+  background: linear-gradient(135deg, #f96854 0%, #e0533f 100%);
+}
+.brand-bandcamp {
+  background: linear-gradient(135deg, #629aa9 0%, #4b8291 100%);
+}
+.brand-gumroad {
+  background: linear-gradient(135deg, #ff7bf3 0%, #d560c9 100%);
+}
+.brand-paypal {
+  background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
+}
 
 /* Widget Text */
 .list-text {
@@ -419,8 +442,8 @@ p {
   backdrop-filter: blur(4px);
 }
 
-/* ==========================================================================
-   10. MEDIA (Video Embeds)
+/* ========================================================================== 
+   10. MEDIA (Video Embeds) 
    ========================================================================== */
 .video-container {
   position: relative;
@@ -441,8 +464,8 @@ p {
   border: none;
 }
 
-/* ==========================================================================
-   11. PAGE SPECIFIC: 404 ERROR
+/* ========================================================================== 
+   11. PAGE SPECIFIC: 404 ERROR 
    ========================================================================== */
 .error-container {
   display: flex;
@@ -486,8 +509,8 @@ p {
   padding: 0.8rem 2rem;
 }
 
-/* ==========================================================================
-   12. PAGE SPECIFIC: PRIVACY & TEXT CONTENT
+/* ========================================================================== 
+   12. PAGE SPECIFIC: PRIVACY & TEXT CONTENT 
    ========================================================================== */
 .policy-content {
   max-width: 680px;
@@ -531,7 +554,9 @@ p {
   text-decoration: none;
   border-bottom: 2px solid rgba(168, 177, 255, 0.3);
   font-weight: 600;
-  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-bottom-color 0.2s ease;
 }
 
 .policy-content a:hover,
@@ -554,8 +579,8 @@ p {
   color: var(--text-primary);
 }
 
-/* ==========================================================================
-   13. PAGE SPECIFIC: LIVE GIGS
+/* ========================================================================== 
+   13. PAGE SPECIFIC: LIVE GIGS 
    ========================================================================== */
 .gigs-stack {
   display: flex;
@@ -608,8 +633,124 @@ p {
   }
 }
 
-/* ==========================================================================
-   14. FOOTER
+/* ========================================================================== 
+   14. PAGE SPECIFIC: DJ GIG HISTORY DASHBOARD
+   ========================================================================== */
+.dashboard-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.stat-subtext {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 15px;
+  line-height: 1.4;
+}
+
+.city-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.city-gigs {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 0;
+}
+
+.city-hours {
+  font-size: 0.9rem;
+  color: var(--accent);
+  opacity: 0.9;
+  margin: 5px 0 0 0;
+  font-weight: 600;
+}
+
+/* Timeline / Year Bars */
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.year-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+.year-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  width: 60px;
+  color: var(--text-primary);
+}
+
+.year-bar-container {
+  flex-grow: 1;
+  background-color: rgba(255, 255, 255, 0.05);
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.year-bar-fill {
+  height: 100%;
+  background-color: var(--accent);
+  border-radius: 6px;
+  transition: width 1s ease-in-out;
+}
+
+.year-gigs {
+  width: 80px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.top-tier-badge {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(191, 90, 242, 0.15);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid rgba(191, 90, 242, 0.4);
+}
+
+.card-relative {
+  position: relative;
+}
+
+/* ========================================================================== 
+   15. FOOTER 
    ========================================================================== */
 .footer-links {
   text-align: center;
@@ -625,8 +766,8 @@ p {
   text-underline-offset: 4px;
 }
 
-/* ==========================================================================
-   15. UTILITIES
+/* ========================================================================== 
+   16. UTILITIES 
    ========================================================================== */
 .back-link {
   display: inline-flex;
@@ -641,7 +782,9 @@ p {
   font-weight: 600;
   font-size: 0.95rem;
   backdrop-filter: blur(10px);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .back-link:hover {
