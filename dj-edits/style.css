@@ -8,6 +8,12 @@
   --text-secondary: #d0c5e0;
   --accent: #bf5af2;
 
+  /* New AA Compliant Green CTA Colors */
+  --cta-green: #158540;
+  --cta-green-hover: #1aa04d;
+  --cta-shadow: rgba(21, 133, 64, 0.4);
+  --cta-shadow-hover: rgba(21, 133, 64, 0.6);
+
   /* Spacing & Shape */
   --radius-lg: 28px;
   --radius-md: 16px;
@@ -17,7 +23,7 @@
 
 /* --- 2. BASE STYLES --- */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; /* Gives a nice glide effect when clicking TOC links */
 }
 
 * {
@@ -72,7 +78,7 @@ body {
 .container {
   width: 100%;
   max-width: 800px;
-  padding: 40px 20px 80px 20px;
+  padding: 40px 20px 100px 20px; /* Increased bottom padding to prevent the sticky button from covering content */
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -93,7 +99,7 @@ body {
 /* --- 6. HEADER --- */
 header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 h1 {
@@ -123,57 +129,67 @@ h1 {
   backdrop-filter: blur(4px);
 }
 
-.back-link {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
-  margin-bottom: 20px;
-  transition: opacity 0.2s;
-}
-.back-link:hover {
-  opacity: 0.8;
+/* --- 7. NEW CONTROLS (FILTER & TOC) --- */
+#controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 10px;
 }
 
-/* --- 7. CTA BOX --- */
-.cta-container {
-  margin-top: 32px;
-  text-align: center;
-}
-
-.cta-text {
-  margin-bottom: 20px;
-  font-size: 1.1rem;
+.glass-input {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
   color: white;
-  line-height: 1.5;
+  font-family: var(--font);
+  font-size: 1rem;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s;
 }
 
-.cta-button {
-  display: inline-block;
-  background: #ffffff;
-  color: #000000;
-  padding: 14px 32px;
-  border-radius: 50px;
+.glass-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+}
+
+.toc-link {
+  color: var(--text-secondary);
   text-decoration: none;
-  font-weight: 800;
-  font-size: 1.1rem;
-  transition:
-    transform 0.2s,
-    opacity 0.2s;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
-.cta-button:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+.toc-link:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
 }
 
 /* --- 8. LIST SECTIONS --- */
-
-/* Added class to control spacing between sections */
 .category-section {
   margin-bottom: 60px;
 }
+
 .category-section:last-child {
   margin-bottom: 0;
 }
@@ -256,14 +272,58 @@ li:hover {
   backdrop-filter: blur(4px);
 }
 
+/* --- 9. STICKY PATREON CTA --- */
+.sticky-cta {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--cta-green);
+  color: #ffffff;
+  padding: 16px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: 0 8px 32px var(--cta-shadow);
+  z-index: 1000;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.sticky-cta:hover {
+  transform: translateY(-3px) scale(1.03);
+  background: var(--cta-green-hover);
+  box-shadow: 0 12px 40px var(--cta-shadow-hover);
+}
+
+/* --- 10. RESPONSIVE --- */
 @media (max-width: 600px) {
   h1 {
     font-size: 2rem;
   }
+
   li {
     align-items: flex-start;
   }
+
   .bpm {
     margin-top: 4px;
+  }
+
+  /* Make the sticky button sit neatly at the bottom center on mobile */
+  .sticky-cta {
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    width: max-content;
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+
+  .sticky-cta:hover {
+    transform: translateX(50%) translateY(-3px) scale(1.03);
   }
 }
