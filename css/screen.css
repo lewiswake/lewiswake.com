@@ -17,8 +17,9 @@
    12. Page Specific: Privacy & Text Content 
    13. Page Specific: Live Gigs 
    14. Page Specific: DJ Gig History Dashboard
-   15. Footer 
-   16. Utilities 
+   15. Page Specific: Music Releases
+   16. Footer 
+   17. Utilities 
    ========================================================================== */
 
 /* ========================================================================== 
@@ -750,7 +751,68 @@ p {
 }
 
 /* ========================================================================== 
-   15. FOOTER 
+   15. PAGE SPECIFIC: MUSIC RELEASES 
+   ========================================================================== */
+.header-music {
+  text-align: center;
+  padding-top: 3rem;
+  padding-bottom: 1rem;
+}
+
+.header-music h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.release-card {
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.release-card:hover {
+  transform: translateY(-5px);
+}
+
+.release-art {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.release-card:hover .release-art {
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.release-title {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.release-card:hover .release-title {
+  color: #a238ff; /* Subtle hover color, matches your brand gradients */
+}
+
+/* ========================================================================== 
+   16. FOOTER 
    ========================================================================== */
 .footer-links {
   text-align: center;
@@ -767,7 +829,7 @@ p {
 }
 
 /* ========================================================================== 
-   16. UTILITIES 
+   17. UTILITIES 
    ========================================================================== */
 .back-link {
   display: inline-flex;
