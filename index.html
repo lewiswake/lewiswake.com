@@ -160,67 +160,6 @@
             "worksFor": {
               "@id": "https://lewiswake.com/#business"
             }
-          },
-          {
-            "@type": "DanceEvent",
-            "name": "Lewis Wake DJ Set @ Subway Cowgate",
-            "startDate": "2026-04-03T22:00:00+00:00",
-            "endDate": "2026-04-04T03:00:00+00:00",
-            "previousStartDate": "2026-03-27T22:00:00+00:00",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "eventStatus": "https://schema.org/EventRescheduled",
-            "location": {
-              "@type": "Place",
-              "name": "Subway Cowgate",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Edinburgh",
-                "addressCountry": "UK"
-              }
-            },
-            "performer": {
-              "@id": "https://lewiswake.com/#person"
-            }
-          },
-          {
-            "@type": "DanceEvent",
-            "name": "Lewis Wake DJ Set @ Subway Cowgate",
-            "startDate": "2026-04-10T22:00:00+00:00",
-            "endDate": "2026-04-11T03:00:00+00:00",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "location": {
-              "@type": "Place",
-              "name": "Subway Cowgate",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Edinburgh",
-                "addressCountry": "UK"
-              }
-            },
-            "performer": {
-              "@id": "https://lewiswake.com/#person"
-            }
-          },
-          {
-            "@type": "DanceEvent",
-            "name": "Lewis Wake DJ Set @ Subway Cowgate",
-            "startDate": "2026-04-24T22:00:00+00:00",
-            "endDate": "2026-04-25T03:00:00+00:00",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "location": {
-              "@type": "Place",
-              "name": "Subway Cowgate",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Edinburgh",
-                "addressCountry": "UK"
-              }
-            },
-            "performer": {
-              "@id": "https://lewiswake.com/#person"
-            }
           }
         ]
       }
@@ -258,7 +197,17 @@
         <div class="header-text">
           <h1>Lewis Wake</h1>
           <h2>DJ & Producer // Scotland</h2>
+
           <a href="#contact" class="btn-hero">Contact & Bookings</a>
+
+          <a
+            href="https://bnds.us/f2lvpo"
+            class="btn-hero"
+            style="margin-top: 1rem; display: inline-block"
+            target="_blank"
+            rel="noopener noreferrer"
+            >View Upcoming Gigs</a
+          >
         </div>
       </header>
 
@@ -542,50 +491,6 @@
           </div>
         </section>
 
-        <section aria-labelledby="gigs" style="margin-top: 2rem">
-          <h3 id="gigs">Upcoming Gigs</h3>
-          <div class="gigs-stack">
-            <div class="glass gig-card">
-              <div class="gig-details">
-                <h4 class="gig-title">Fit Fridays</h4>
-                <div class="gig-meta">
-                  <time class="gig-date" datetime="2026-04-03"
-                    >📅 Fri, Apr 3, 2026</time
-                  >
-                  <span class="gig-venue">📍 Subway Cowgate, Edinburgh</span>
-                  <span class="gig-time">⏰ 10:00pm - 3:00am</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="glass gig-card">
-              <div class="gig-details">
-                <h4 class="gig-title">Fit Fridays</h4>
-                <div class="gig-meta">
-                  <time class="gig-date" datetime="2026-04-10"
-                    >📅 Fri, Apr 10, 2026</time
-                  >
-                  <span class="gig-venue">📍 Subway Cowgate, Edinburgh</span>
-                  <span class="gig-time">⏰ 10:00pm - 3:00am</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="glass gig-card">
-              <div class="gig-details">
-                <h4 class="gig-title">Fit Fridays</h4>
-                <div class="gig-meta">
-                  <time class="gig-date" datetime="2026-04-24"
-                    >📅 Fri, Apr 24, 2026</time
-                  >
-                  <span class="gig-venue">📍 Subway Cowgate, Edinburgh</span>
-                  <span class="gig-time">⏰ 10:00pm - 3:00am</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section id="contact" class="contact-section">
           <h3>Contact & Bookings</h3>
           <div class="glass">
@@ -628,72 +533,9 @@
       </main>
 
       <footer class="footer-links">
-        <p>&copy; 2026 Lewis Wake</p>
+        <p>© 2026 Lewis Wake</p>
         <a href="privacy.html">Privacy</a>
       </footer>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const now = new Date();
-
-        // --- 1. CLEAN UP THE HTML ---
-        const gigCards = document.querySelectorAll(".gig-card");
-        let activeGigs = 0;
-
-        gigCards.forEach((card) => {
-          const timeTag = card.querySelector("time");
-          if (timeTag) {
-            // Read the datetime attribute (e.g., "2026-04-03")
-            const eventDate = new Date(timeTag.getAttribute("datetime"));
-
-            // Set time to 23:59:59 so the gig stays up until the end of the day
-            eventDate.setHours(23, 59, 59, 999);
-
-            if (now > eventDate) {
-              // The event has passed, remove it from the page
-              card.remove();
-            } else {
-              // The event is in the future
-              activeGigs++;
-            }
-          }
-        });
-
-        // Optional: Hide the "Upcoming Gigs" section entirely if there are no future gigs
-        if (activeGigs === 0) {
-          const gigSection = document.getElementById("gigs").parentElement;
-          if (gigSection) {
-            gigSection.style.display = "none";
-          }
-        }
-
-        // --- 2. CLEAN UP THE SCHEMA MARKUP ---
-        const schemaTag = document.querySelector(
-          'script[type="application/ld+json"]',
-        );
-        if (schemaTag) {
-          try {
-            const schemaData = JSON.parse(schemaTag.innerHTML);
-
-            if (schemaData && schemaData["@graph"]) {
-              // Filter out DanceEvents where the endDate is in the past
-              schemaData["@graph"] = schemaData["@graph"].filter((item) => {
-                // Keep everything that isn't a DanceEvent (your Person and Business data)
-                if (item["@type"] !== "DanceEvent") return true;
-
-                // If it is an event, check if the end date is still in the future
-                const endDate = new Date(item.endDate || item.startDate);
-                return endDate > now;
-              });
-
-              // Replace the old schema with the cleaned-up version
-              schemaTag.innerHTML = JSON.stringify(schemaData);
-            }
-          } catch (error) {
-            console.error("Error updating Schema JSON:", error);
-          }
-        }
-      });
-    </script>
   </body>
 </html>
