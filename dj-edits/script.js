@@ -1,127 +1,75 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const contentArea = document.getElementById("content-area");
-  const lastUpdatedSpan = document.getElementById("last-updated-date");
-  const tocContainer = document.getElementById("toc");
-  const artistFilter = document.getElementById("artist-filter");
+document.addEventListener("DOMContentLoaded", async () => {
+  const contentArea = document.getElementById("track-list-container");
+  const lastUpdatedSpan = document.getElementById("last-updated");
 
-  // Fetch the data from JSON file
-  fetch("data.json")
-    .then((response) => response.json())
-    .then((data) => {
-      // Set dynamic last updated date
-      if (data.lastUpdated) {
-        lastUpdatedSpan.textContent = data.lastUpdated;
-      }
+  const totalTracksSpan = document.getElementById("total-tracks-count");
 
-      // Loop through each category in the JSON
-      data.categories.forEach((category) => {
-        // Sort tracks alphabetically by artist name
-        category.tracks.sort((a, b) => {
-          const artistA = a.artist.toLowerCase();
-          const artistB = b.artist.toLowerCase();
-          if (artistA < artistB) return -1;
-          if (artistA > artistB) return 1;
-          return 0;
-        });
+  try {
+    const response = await fetch("data.json");
+    if (!response.ok) throw new Error("Network response was not ok");
+    const data = await response.json();
 
-        // Generate a URL-friendly ID for the category anchor
-        const sectionId = category.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-");
+    if (data.lastUpdated) {
+      lastUpdatedSpan.textContent = data.lastUpdated;
+    }
 
-        // Build Table of Contents Link
-        const tocLink = document.createElement("a");
-        tocLink.href = `#${sectionId}`;
-        tocLink.className = "toc-link";
-        tocLink.textContent = category.title;
-        tocContainer.appendChild(tocLink);
+    let totalTracks = 0;
 
-        // Create the section container
-        const sectionDiv = document.createElement("div");
-        sectionDiv.className = "category-section";
-        sectionDiv.id = sectionId; // Add ID for anchor jump
+    // Render Categories & Tracks
+    data.categories.forEach((category) => {
+      totalTracks += category.tracks.length;
 
-        // Create Header (H2)
-        const h2 = document.createElement("h2");
-        h2.textContent = category.title;
-        sectionDiv.appendChild(h2);
+      // Sort tracks alphabetically by artist
+      category.tracks.sort((a, b) =>
+        a.artist.toLowerCase().localeCompare(b.artist.toLowerCase()),
+      );
 
-        // Create Description
-        const descDiv = document.createElement("div");
-        descDiv.className = "section-desc";
-        descDiv.textContent = category.description;
-        sectionDiv.appendChild(descDiv);
+      const sectionId = category.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
 
-        // Create Glass container
-        const glassDiv = document.createElement("div");
-        glassDiv.className = "glass";
+      // Build Section Container
+      const section = document.createElement("section");
+      section.className = "category-section";
+      section.id = sectionId;
 
-        // Create List
-        const ul = document.createElement("ul");
+      // Build Section Header
+      const header = document.createElement("div");
+      header.className = "category-header";
+      header.innerHTML = `<h2>${category.title} <span class="count-badge">${category.tracks.length}</span></h2><p>${category.description}</p>`;
+      section.appendChild(header);
 
-        // Populate List Items
-        category.tracks.forEach((track) => {
-          const li = document.createElement("li");
-          // Store artist name as a data attribute for easy filtering
-          li.dataset.artist = track.artist.toLowerCase();
+      // Build Track Grid
+      const grid = document.createElement("div");
+      grid.className = "track-grid";
 
-          // Track Info Wrapper
-          const trackInfoDiv = document.createElement("div");
-          trackInfoDiv.className = "track-info";
+      category.tracks.forEach((track) => {
+        const card = document.createElement("div");
+        card.className = "track-card";
+        // Combine artist and title for broader search matching
+        card.dataset.searchString =
+          `${track.artist} ${track.title}`.toLowerCase();
 
-          const songTitleSpan = document.createElement("span");
-          songTitleSpan.className = "song-title";
-          songTitleSpan.textContent = track.title;
-
-          const artistNameSpan = document.createElement("span");
-          artistNameSpan.className = "artist-name";
-          artistNameSpan.textContent = track.artist;
-
-          trackInfoDiv.appendChild(songTitleSpan);
-          trackInfoDiv.appendChild(artistNameSpan);
-
-          // BPM Badge
-          const bpmSpan = document.createElement("span");
-          bpmSpan.className = "bpm";
-          bpmSpan.textContent = track.bpm;
-
-          // Assemble List Item
-          li.appendChild(trackInfoDiv);
-          li.appendChild(bpmSpan);
-
-          // Add to List
-          ul.appendChild(li);
-        });
-
-        // Assemble Section
-        glassDiv.appendChild(ul);
-        sectionDiv.appendChild(glassDiv);
-        contentArea.appendChild(sectionDiv);
+        card.innerHTML = `
+          <div class="track-info">
+            <span class="track-title">${track.title}</span>
+            <span class="track-artist">${track.artist}</span>
+          </div>
+          <span class="track-bpm">${track.bpm}</span>
+        `;
+        grid.appendChild(card);
       });
 
-      // Implement Live Filter Logic
-      artistFilter.addEventListener("input", (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const sections = document.querySelectorAll(".category-section");
+      section.appendChild(grid);
+      contentArea.appendChild(section);
+    });
 
-        sections.forEach((section) => {
-          let hasVisibleTracks = false;
-          const tracks = section.querySelectorAll("li");
-
-          tracks.forEach((track) => {
-            const artist = track.dataset.artist;
-            if (artist.includes(searchTerm)) {
-              track.style.display = "flex"; // Reset to default display
-              hasVisibleTracks = true;
-            } else {
-              track.style.display = "none"; // Hide track
-            }
-          });
-
-          // Hide the entire section if no tracks match the search
-          section.style.display = hasVisibleTracks ? "block" : "none";
-        });
-      });
-    })
-    .catch((error) => console.error("Error loading data:", error));
+    // Fetch successful, tracks rendered.
+    if (totalTracksSpan) {
+      totalTracksSpan.textContent = totalTracks;
+    }
+  } catch (err) {
+    console.error("Failed to load tracks:", err);
+    contentArea.innerHTML = `<div class="empty-state"><h3>Error loading tracks</h3><p>Please try refreshing the page.</p></div>`;
+  }
 });
