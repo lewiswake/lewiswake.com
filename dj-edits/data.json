@@ -1,16 +1,6 @@
 {
-  "lastUpdated": "1 April 2026",
+  "lastUpdated": "1 September 2026",
   "categories": [
-    {
-      "title": "Rap Replace Edits",
-      "description": "Original rap verse is replaced with another",
-      "tracks": [
-        { "artist": "Ariana Grande", "title": "Side to Side (Cruel Summer Edit)", "bpm": "160bpm" },
-        { "artist": "Ariana Grande", "title": "Side to Side (No Nicki Edit)", "bpm": "160bpm" },
-        { "artist": "Justin Bieber", "title": "Beauty and a Beat (No Nicki Edit)", "bpm": "129bpm" },
-        { "artist": "Justin Bieber", "title": "Beauty and a Beat (Pitbull Rap Edit)", "bpm": "128bpm" }
-      ]
-    },
     {
       "title": "Quantized Edits",
       "description": "Songs snapped to the beat grid",
@@ -116,6 +106,16 @@
       ]
     },
     {
+      "title": "Rap Replace Edits",
+      "description": "Original rap verse is replaced with another",
+      "tracks": [
+        { "artist": "Ariana Grande", "title": "Side to Side (Cruel Summer Edit)", "bpm": "160bpm" },
+        { "artist": "Ariana Grande", "title": "Side to Side (No Nicki Edit)", "bpm": "160bpm" },
+        { "artist": "Justin Bieber", "title": "Beauty and a Beat (No Nicki Edit)", "bpm": "129bpm" },
+        { "artist": "Justin Bieber", "title": "Beauty and a Beat (Pitbull Rap Edit)", "bpm": "128bpm" }
+      ]
+    },
+    {
       "title": "Transition Edits",
       "description": "Slick mix from one song to another",
       "tracks": [
@@ -124,6 +124,7 @@
         { "artist": "Jess Glynne x Jet2 x Benny Benassi", "title": "Hold My Hand Jet2 Edit x Satisfaction (Transition Edit)", "bpm": "127bpm" },
         { "artist": "Jess Glynne x Jet2 x Martin Solveig", "title": "Hold My Hand Jet2 Edit x Hello (Transition Edit)", "bpm": "127bpm" },
         { "artist": "Kendrick Lamar x Los del Rio", "title": "Not Like Us x Macarena (Toneplay Edit)", "bpm": "105bpm" },
+        { "artist": "One Direction x Journey", "title": "What Makes You Beautiful x Don't Stop Believin' (Lewis Wake Transition Edit)", "bpm": "" },
         { "artist": "Rihanna x Los del Rio", "title": "Umbrella x Macarena (Toneplay Edit)", "bpm": "95bpm" },
         { "artist": "Rihanna x Otto Knows x Pitbull & Ne-Yo", "title": "Umbrella x Million Voices x Give Me Everything (Toneplay Edit)", "bpm": "95bpm to 126bpm" },
         { "artist": "Usher x Carly Rae Jepsen", "title": "Yeah x Call Me Maybe (Toneplay Edit)", "bpm": "106bpm to 131bpm" }
@@ -140,12 +141,25 @@
       ]
     },
     {
+      "title": "Vocal In Edits",
+      "description": "Only vox on the first 8/16 bars",
+      "tracks": [
+        { "artist": "Ariana Grande", "title": "Break Free (Vocal In)", "bpm": "" },
+        { "artist": "Lady Gaga", "title": "Applause (Vocal In)", "bpm": "" }
+      ]
+    },
+    {
       "title": "Vocal Out Edits",
       "description": "Only vox on the last 8/16 bars",
       "tracks": [
+        { "artist": "Ariana Grande", "title": "Break Free (Vocal Out)", "bpm": "" },
+        { "artist": "Clean Bandit", "title": "Rather Be (Vocal Out)", "bpm": "" },
         { "artist": "Fatman Scoop", "title": "Be Faithful (Vocal Out)", "bpm": "101bpm" },
         { "artist": "Jay-Z", "title": "99 Problems (Intro & Vocal Out)", "bpm": "94bpm" },
+        { "artist": "Kesha", "title": "Blow (Vocal Out)", "bpm": "" },
+        { "artist": "Lady Gaga", "title": "Applause (Vocal Out)", "bpm": "" },
         { "artist": "Miley Cyrus", "title": "Party In The U.S.A (Vocal Out)", "bpm": "96bpm" },
+        { "artist": "One Direction", "title": "What Makes You Beautiful (Vocal Out)", "bpm": "" },
         { "artist": "Spice Girls", "title": "Wannabe (Intro & Vocal Out)", "bpm": "110bpm" },
         { "artist": "Taylor Swift", "title": "Opalite (Vocal Out)", "bpm": "125bpm" }
       ]
