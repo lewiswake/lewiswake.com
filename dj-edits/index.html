@@ -3,49 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lewis Wake | DJ Edit Catalogue</title>
+    <title>Lewis Wake | DJ Edits</title>
 
     <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="data.json" as="fetch" crossorigin="anonymous" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
+
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
   </head>
   <body>
-    <div class="aurora-bg"></div>
+    <!-- Ambient background -->
+    <div class="ambient-background">
+      <div class="glow-orb orb-1"></div>
+      <div class="glow-orb orb-2"></div>
+      <div class="glow-orb orb-3"></div>
+    </div>
 
-    <div class="container">
-      <header>
-        <h1>Lewis Wake DJ Edits</h1>
-        <div class="update-note">
-          Last updated: <span id="last-updated-date">...</span>
+    <div class="app-layout">
+      <!-- Hero Section with Primary CTA -->
+      <header class="hero">
+        <div class="hero-content">
+          <h1>Lewis Wake DJ Edits</h1>
+          <p class="subtitle">
+            My complete catalogue of exclusive DJ edits, quantized tracks, and
+            slick transitions.
+          </p>
+          <div class="total-badge">
+            Total Edits: <span id="total-tracks-count">...</span>
+          </div>
         </div>
       </header>
 
-      <div id="controls-container">
-        <input
-          type="text"
-          id="artist-filter"
-          class="glass-input"
-          placeholder="Filter by artist..."
-        />
-        <nav id="toc" class="glass"></nav>
-      </div>
+      <main class="main-content">
+        <!-- Sticky Controls (Top Bar) -->
+        <div class="sticky-controls">
+          <a
+            href="https://www.patreon.com/lewiswakedj"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="sticky-cta-btn"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="patreon-icon"
+              width="16"
+              height="16"
+            >
+              <path
+                d="M15.386 0c-4.764 0-8.625 3.859-8.625 8.625 0 4.764 3.861 8.625 8.625 8.625 4.766 0 8.625-3.861 8.625-8.625C24.011 3.859 20.152 0 15.386 0zM0 24h4.484V0H0v24z"
+              />
+            </svg>
+            Unlock on Patreon
+          </a>
+        </div>
 
-      <div id="content-area"></div>
+        <!-- Content Area -->
+        <div id="track-list-container" class="track-list-container">
+          <!-- Dynamically populated -->
+        </div>
+      </main>
+
+      <footer>
+        <p>Last updated: <span id="last-updated">...</span></p>
+      </footer>
     </div>
-
-    <a
-      href="https://www.patreon.com/lewiswakedj"
-      target="_blank"
-      class="sticky-cta"
-    >
-      Unlock All Tracks on Patreon
-    </a>
-
-    <script src="script.js"></script>
   </body>
 </html>
